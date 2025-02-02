@@ -1,0 +1,45 @@
+.home {}
+
+.landing {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; // Push behind everything
+  overflow: hidden;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Ensures full coverage
+  }
+}
+
+.content {
+  position: relative; // Needed for overlay effect
+  z-index: 1; // Ensures it's above video
+  width: 100%;
+  height: 100vh;
+  background: url(/bg.png) center/cover no-repeat; // Fallback background image
+}
+
+.textCentent{
+  height: 100%;
+}
+
+
+.navbarContent{
+  height: 100px;  
+}
+.headerLogo{
+  width: 3rem;
+  height: 3rem;
+}
