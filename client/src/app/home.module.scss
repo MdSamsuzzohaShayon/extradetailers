@@ -23,23 +23,61 @@
   }
 }
 
-.content {
-  position: relative; // Needed for overlay effect
-  z-index: 1; // Ensures it's above video
+.heroOverlay {
+  position: absolute; // Proper absolute positioning over video
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
-  background: url(/bg.png) center/cover no-repeat; // Fallback background image
+  z-index: 1; // Above video, below content
+  pointer-events: none; // Prevent interaction blocking
 }
 
-.textCentent{
+.content {
+  position: relative;
+  z-index: 2; // Ensures it's above both video & overlay
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.textContent {
   height: 100%;
 }
 
-
-.navbarContent{
-  height: 100px;  
+.navbarContent {
+  height: 100px;
 }
-.headerLogo{
+
+.headerLogo {
   width: 3rem;
   height: 3rem;
+}
+
+
+.service{
+
+}
+
+.serviceImgWrapper{
+
+}
+
+.serviceImg1{
+  width: 50%;
+  height: 400px;
+}
+.serviceImg1{
+  width: 50%;
+  height: 400px;
+}
+
+.srviceBox{
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 20px;
+  height: 8.5rem;
 }

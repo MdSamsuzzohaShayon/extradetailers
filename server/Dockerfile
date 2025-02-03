@@ -1,1 +1,1 @@
-# This is the docker file to create docker image
+# This is the docker file to create docker image for Django server
