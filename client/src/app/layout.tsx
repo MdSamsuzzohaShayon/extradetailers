@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   // <title>Professional Automobile Detailing Services</title>
-  title: "Professional Automobile Detailing Services",
+  title: "Extra Detailers - Professional Automobile Detailing Services",
 description: "Experience top-notch complete detailing services for your vehicle with Extra Detailers. Our experts will make your car shine inside and out.",
 };
 
