@@ -1,8 +1,9 @@
 // Override Bootstrap variables
-$primary: #11095c; // Change primary color
-$secondary: #90c9ee; // Change primary color
+$primary: #37c8abff; // Change primary color
+$secondary: #002255ff; // Change primary color
 $white: #fff;
-$border-radius: 10px; // Change border radius
+$dark: #00152aff;
+$border-radius: 3px; // Change border radius
 // $navbar-light-toggler-icon-bg:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-light-icon-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 $btn-focus-width: 0;
 $btn-focus-box-shadow: none;
@@ -17,8 +18,8 @@ $border-color:                rgba(255, 255, 255, 0.205);
 .btn-custom {
     position: relative;
     overflow: hidden;
-    background-color: $secondary;
-    color: $primary;
+    background-color: $primary;
+    color: $white;
     font-weight: bold;
     padding: 0.5rem 1.25rem;
     border-radius: $btn-border-radius;
@@ -31,14 +32,14 @@ $border-color:                rgba(255, 255, 255, 0.205);
         right: -100%;
         width: 100%;
         height: 100%;
-        background-color: $primary;
+        background-color: $secondary;
         transition: right 0.3s ease-in-out;
         z-index: -1;
     }
 
     &:hover {
         color: $white;
-        border-color: $primary;
+        border-color: $secondary;
 
         &::before {
             right: 0;
