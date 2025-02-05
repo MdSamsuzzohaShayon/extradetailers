@@ -4,7 +4,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./custom-bootstrap.scss";
 import "./globals.scss";
 import Footer from "@/components/layout/Footer";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 // import Footer from "@/components/layout/Footer";
+
+gsap.registerPlugin(useGSAP);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

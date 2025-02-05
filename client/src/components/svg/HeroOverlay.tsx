@@ -8,7 +8,6 @@ interface IHeroOverlayProps {
   className?: string;
 }
 
-gsap.registerPlugin(useGSAP);
 
 const HeroOverlay = ({ className }: IHeroOverlayProps) => {
   const rectEl = useRef<SVGRectElement | null>(null);
