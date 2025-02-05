@@ -123,9 +123,11 @@ export default function Home() {
         {/* Testimonial start  */}
         {/* rederence -> https://lifestwp.websitelayout.net/ */}
         <section className={`${styles.testimonial} section-mt`}>
-          <Testimonial />
+          <Testimonial styles={styles} />
         </section>
         {/* Testimonial end  */}
+
+        <div className="section-mt"></div>
       </main>
   );
 }
