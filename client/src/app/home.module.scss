@@ -23,23 +23,113 @@
   }
 }
 
-.content {
-  position: relative; // Needed for overlay effect
-  z-index: 1; // Ensures it's above video
+.heroOverlay {
+  position: absolute; // Proper absolute positioning over video
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
-  background: url(/bg.png) center/cover no-repeat; // Fallback background image
+  z-index: 1; // Above video, below content
+  pointer-events: none; // Prevent interaction blocking
 }
 
-.textCentent{
+.content {
+  position: relative;
+  z-index: 2; // Ensures it's above both video & overlay
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.textContent {
   height: 100%;
 }
 
-
-.navbarContent{
-  height: 100px;  
+.navbarContent {
+  height: 100px;
 }
-.headerLogo{
+
+.headerLogo {
   width: 3rem;
   height: 3rem;
+}
+
+
+.about{
+
+}
+
+.aboutImgWrapper{
+
+}
+
+.aboutImg1, .aboutImg2{
+  width: 50%;
+  height: 400px;
+  object-position: center;
+  object-fit: cover;
+}
+
+.aboutBox{
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: 100px;
+  height: 8.5rem;
+  background: white;
+}
+
+
+
+
+
+
+.process{
+  background-image: url(/imgs/car-service-1.jpg);
+  background-size: cover;
+  background-attachment: fixed; /* Enables parallax effect */
+  background-position: center;
+  padding: 80px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.process::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Optional overlay */
+  z-index: -1;
+}
+
+.testimonial{
+  
+}
+
+.reviewer1{
+  width: 20%;
+  img{
+    width: 100%;
+  }
+}
+.reviewer2{
+  width: 45%;
+  img{
+    width: 100%;
+  }
+}
+
+
+.iconBox{
+  width: 80px;
+  height: 80px;
+}
+.arrowBox{
+  width: 60px;
+  height: 60px;
 }
