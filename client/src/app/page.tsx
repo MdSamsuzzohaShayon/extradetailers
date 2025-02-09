@@ -1,14 +1,14 @@
 'use client'
 
-import Image from "next/image";
-import { CiMenuBurger } from "react-icons/ci";
-import React, { useState, useRef } from "react";
-import Link from "next/link";
+import React, { useRef } from "react";
+import { FaArrowRight } from "react-icons/fa";
 import styles from "./home.module.scss";
 import HeroOverlay from "@/components/svg/HeroOverlay";
 import Testimonial from "@/components/home/Testimonial";
 import Process from "@/components/home/Process";
 import About from "@/components/home/About";
+import Header from "@/components/layout/Header";
+import Link from "next/link";
 
 /**
  * Reference -> https://lifestwp.websitelayout.net/
@@ -17,7 +17,7 @@ import About from "@/components/home/About";
  */
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(false);
+  
   const videoRef = useRef<HTMLVideoElement>(null);
 
 
@@ -28,64 +28,28 @@ export default function Home() {
           {/* Video Background */}
           <div className={styles.videoBackground}>
             <video ref={videoRef} autoPlay muted loop playsInline>
-              <source src="https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4" type="video/mp4" />
+              <source src="/videos/car-hero-bg.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
 
           {/* SVG Overlay */}
-          <HeroOverlay className={styles.heroOverlay} />
+          <HeroOverlay />
 
 
           {/* Content */}
           <div className={styles.content}>
             {/* Navbar */}
-            <nav className={`navbar navbar-expand-lg text-white border-bottom ${styles.navbarContent}`}>
-              <div className="container">
-                <button
-                  className="navbar-toggler border"
-                  type="button"
-                  onClick={() => setIsOpen(!isOpen)}
-                  aria-controls="navbarToggler"
-                  aria-expanded={isOpen}
-                  aria-label="Toggle navigation"
-                >
-                  <CiMenuBurger color="white" />
-                </button>
-                <Link className="navbar-brand" href="/">
-                  <Image height={100} width={100} alt="extra-detailers-logo" src="/logo.png" className={styles.headerLogo} />
-                </Link>
-                <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`} id="navbarToggler">
-                  <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    {["Service", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"].map((item, index) => (
-                      <li className="nav-item" key={index}>
-                        <strong>
-                          <Link className="nav-link text-white text-uppercase" href={`/${item.toLowerCase().replace(" ", "-")}`}>
-                            {item}
-                          </Link>
-                        </strong>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="d-flex">
-                    {["Sign In"
-                      // ,"Register", "My Account"
-                    ].map((btn, index) => (
-                      <div className="btn btn-custom mx-1" key={index}>{btn} (Icon)</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </nav>
+            <Header />
 
             {/* Hero Text */}
             <div className={`${styles.textContent} container text-white py-5 d-flex align-items-center`}>
               <div className="row">
                 <div className="col-md-6">
-                  <p className="text-uppercase text-info"><strong>The Ultimate Auto Spa</strong></p>
+                  <p className="text-uppercase text-primary"><strong>The Ultimate Auto Spa</strong></p>
                   <h1 className="display-4 fw-bold"> Mobile Car Detailing Anywhere in the USA!</h1>
                   <p>Experience the luxury of a professionally detailed car. Book us and we’ll come to you anywhere in the USA.</p>
-                  <button className="btn btn-custom">Book Here</button>
+                  <Link href="/service" className="btn btn-custom">Book Here <FaArrowRight /></Link>
                 </div>
               </div>
             </div>

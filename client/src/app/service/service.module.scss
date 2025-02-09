@@ -3,15 +3,15 @@
 }
 
 // Hero Section
-.hero {
-  min-height: 450px;
-  background-image: url("/hero-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  color: #fff;
-  padding: 5rem 0;
-  text-align: center;
+// Hero Section
+.landing {
+  position: relative;
+  width: 100%;
+  height: 40vh; // Change
+  overflow: hidden;
 }
+
+
 .serviceList {
   display: flex;
   flex-direction: column;
