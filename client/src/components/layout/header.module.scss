@@ -1,0 +1,24 @@
+.navbarContent {
+  height: 100px;
+}
+
+.headerLogo {
+  width: 3rem;
+  height: 3rem;
+}
+
+
+// Mobile Offcanvas Menu
+.mobileMenu {
+  width: 75% !important; // Set width to 75% of the screen
+}
+
+.offcanvas-backdrop.show {
+  background-color: rgba(0, 0, 0, 0.5) !important; // Dark overlay background
+}
+
+
+// Close Button
+.closeButton {
+  filter: invert(1); // Makes the button white for dark themes
+}

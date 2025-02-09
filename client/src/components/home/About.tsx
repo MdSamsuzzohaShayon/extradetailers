@@ -1,6 +1,8 @@
 import { TModuleStyle } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import { MdExpandMore } from "react-icons/md";
 
 interface IAboutProps {
   styles: TModuleStyle;
@@ -25,7 +27,7 @@ function About({ styles }: IAboutProps) {
             {/* Secondary Image */}
             <Image
               className={`${styles.aboutImg2} rounded shadow`}
-              src="/imgs/car-service-1.jpg"
+              src="/imgs/car-service-2.jpg"
               height={220}
               width={220}
               alt="Car Service"
@@ -47,7 +49,7 @@ function About({ styles }: IAboutProps) {
             We provide expert car detailing services with **12 years of experience**. Our team uses the latest techniques to enhance your vehicle’s appearance, ensuring a pristine and polished finish. 
             From deep cleaning to paint protection, we cover it all!
           </p>
-          <button className="btn btn-custom">Learn More</button>
+          <Link className="btn btn-custom" href="/about-us" >Learn More <MdExpandMore /> </Link>
         </div>
       </div>
     </div>
