@@ -57,7 +57,7 @@ export default function Home() {
                 </Link>
                 <div className={`collapse navbar-collapse ${isOpen ? "show" : ""}`} id="navbarToggler">
                   <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    {["Home", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"].map((item, index) => (
+                    {["Service", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"].map((item, index) => (
                       <li className="nav-item" key={index}>
                         <strong>
                           <Link className="nav-link text-white text-uppercase" href={`/${item.toLowerCase().replace(" ", "-")}`}>
