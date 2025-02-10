@@ -5,10 +5,16 @@ import styles from "./service.module.scss";
 import { FaAngleRight, FaCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 import Landing from "@/components/layout/Landing";
+import Footer from "@/components/layout/Footer";
+
+/**
+ * Include packages here -> https://dribbble.com/shots/17885685--Pricing-Page
+ */
 
 function Service() {
   return (
-    <div>
+   <>
+    <main>
       {/* Hero Section */}
       <section className={styles.landing}>
         <Landing title="Service" />
@@ -182,7 +188,9 @@ function Service() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
+    <Footer />
+   </>
   );
 };
 

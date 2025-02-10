@@ -1,8 +1,12 @@
+import Footer from '@/components/layout/Footer'
 import React from 'react'
 
 function GalleryPage() {
   return (
-    <div>GalleryPage</div>
+    <>
+    <main>Gallery</main>
+    <Footer/>
+    </>
   )
 }
 

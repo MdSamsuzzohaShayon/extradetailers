@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-// import Header from "@/components/layout/Header";
 import "./custom-bootstrap.scss";
 import "./globals.scss";
-import Footer from "@/components/layout/Footer";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-// import Footer from "@/components/layout/Footer";
 
 gsap.registerPlugin(useGSAP);
 
@@ -36,7 +33,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {/* <Header /> */}
         {children}
-        <Footer />
 
       </body>
     </html>
