@@ -8,7 +8,7 @@ import FooterBottomShape from '../svg/FooterBottomShape';
 
 function Footer() {
   return (
-    <footer className={`${styles.footer} bg-dark text-white`}>
+    <footer className={`${styles.footer || ""} overflow-x-hidden bg-dark text-white`}>
       {/* Top Section */}
       <div className={`${styles.footerTop} border-bottom d-flex align-items-center`}>
         <div className="container py-3">
@@ -62,7 +62,7 @@ function Footer() {
               <div className="col-md-3">
                 <h4 className="text-uppercase mb-3">Contact Info</h4>
                 <p><strong>Address:</strong> 1095 Howard Street, San Francisco, USA</p>
-                <p><strong>Email:</strong> info@peacefulqode.com</p>
+                <p><strong>Email:</strong> extradetailers@gmail.com</p>
               </div>
               <div className="col-md-3">
                 <h4 className="text-uppercase mb-3">Newsletter</h4>

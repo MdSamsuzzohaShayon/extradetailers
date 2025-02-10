@@ -12,8 +12,10 @@ $btn-focus-box-shadow: none;
 $border-color:                rgba(255, 255, 255, 0.205);
 
 // Import Bootstrap's SCSS
-@import 'bootstrap/scss/bootstrap';
+// @import 'bootstrap/scss/bootstrap';
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
+// Custom Button Styling
 // Custom Button Styling
 .btn-custom {
     position: relative;

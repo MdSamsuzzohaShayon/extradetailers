@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import {
   FaFacebookF,
   FaTwitter,
@@ -13,169 +12,83 @@ import {
   FaClock,
 } from "react-icons/fa";
 import styles from "./contact.module.scss";
+import Landing from "@/components/layout/Landing";
 
-const ContactPage = () => {
+function ContactPage() {
   return (
-    <div className="container">
-      {/* Hero Section */}
-      <section className={`${styles.hero} text-white text-center py-5`}>
-        <div className="container">
-          <h1 className={`${styles.textCustom} text-uppercase fw-bold`}>
-            Contact Us
-          </h1>
-          <p>Home / Contact Us</p>
-        </div>
+    <main className={styles.contact}>
+      {/* Landing Section (Unchanged) */}
+      <section className={styles.landing}>
+        <Landing title="Contact" />
       </section>
 
       {/* Contact Section */}
-      <section className={`${styles.contact} section-mt`}>
+      <section className="py-5 bg-light">
         <div className="container">
-          <div className="row justify-content-center">
+          <div className="row g-5 align-items-center">
             {/* Contact Info */}
-            <div className="col-lg-5 m-5 mb-lg-0">
-              <h3 className={`${styles.textCustom} text-uppercase fw-bold`}>
-                Got Any Questions?
-              </h3>
+            <div className="col-lg-7">
+              <h3 className="text-primary text-uppercase fw-bold">Got Any Questions?</h3>
               <h2 className="mb-4 fw-bold">Get in Touch</h2>
-              <p>
-                For all your car needs, whether buying, selling, or servicing,
-                we're here to assist you.
-              </p>
-              {/* Contact Info Grid */}
-              <div className="row g-3">
-                {/* Location */}
-                <div
-                  className={`${styles.contactItem} col-md-6 d-flex align-items-center`}
-                >
-                  <FaMapMarkerAlt
-                    size={24}
-                    className={`${styles.textCustom} me-3 `}
-                  />
-                  <div>
-                    <p className="fw-bold text-uppercase mb-0">Location</p>
-                    <p className="mb-0">66 Guild Street 512B</p>
-                  </div>
-                </div>
+              <p className="text-muted">For all your car needs, whether buying, selling, or servicing, we&apos;re here to assist you.</p>
 
-                {/* Email */}
-                <div
-                  className={`${styles.contactItem} col-md-6 d-flex align-items-center`}
-                >
-                  <FaEnvelope
-                    size={24}
-                    className={`${styles.textCustom} me-3 `}
-                  />
-                  <div>
-                    <p className="fw-bold text-uppercase mb-0">Email</p>
-                    <p className="mb-0">extradetailers@gmail.com</p>
+              {/* Contact Details */}
+              <div className="row row-cols-1 row-cols-md-2 g-4">
+                {[
+                  { icon: <FaMapMarkerAlt />, title: "Location", detail: "66 Guild Street 512B" },
+                  { icon: <FaEnvelope />, title: "Email", detail: "extradetailers@gmail.com" },
+                  { icon: <FaPhone />, title: "Phone", detail: "(+44) 123 456 789" },
+                  { icon: <FaClock />, title: "Opening", detail: "Mon-Sat 08:00 AM - 20:00 PM" }
+                ].map((item, index) => (
+                  <div key={index} className="d-flex align-items-center bg-white p-3 shadow-sm rounded">
+                    <div className="text-primary fs-4 me-3">{item.icon}</div>
+                    <div>
+                      <p className="fw-bold text-uppercase mb-1">{item.title}</p>
+                      <p className="mb-0 text-muted">{item.detail}</p>
+                    </div>
                   </div>
-                </div>
-
-                {/* Phone */}
-                <div
-                  className={`${styles.contactItem} col-md-6 d-flex align-items-center`}
-                >
-                  <FaPhone size={24} className={`${styles.textCustom} me-3 `} />
-                  <div>
-                    <p className="fw-bold text-uppercase mb-0">Phone</p>
-                    <p className="mb-0">(+44) 123 456 789</p>
-                  </div>
-                </div>
-
-                {/* Opening Hours */}
-                <div
-                  className={`${styles.contactItem} col-md-6 d-flex align-items-center`}
-                >
-                  <FaClock size={24} className={`${styles.textCustom} me-3 `} />
-                  <div>
-                    <p className="fw-bold text-uppercase mb-0">Opening</p>
-                    <p className="mb-0">Mon-Sat 08:00 AM - 20:00 PM</p>
-                  </div>
-                </div>
+                ))}
               </div>
+
               {/* Social Media */}
-              <div className="d-flex justify-content-between align-items-center mt-5">
-                <p className="fw-bold text-uppercase mb-0">OUR SOCIAL MEDIA</p>
-                <div className="d-flex gap-3">
-                  <a
-                    href="https://www.facebook.com/extradetailers/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${styles.socialIcon} rounded-circle d-flex align-items-center justify-content-center`}
-                  >
-                    <FaFacebookF size={20} className={styles.socialIconColor} />
-                  </a>
-                  <a
-                    href="https://x.com/Extradetailers"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${styles.socialIcon} rounded-circle d-flex align-items-center justify-content-center`}
-                  >
-                    <FaTwitter size={20} className={styles.socialIconColor} />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/Extradetailers"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${styles.socialIcon} rounded-circle d-flex align-items-center justify-content-center`}
-                  >
-                    <FaInstagram size={20} className={styles.socialIconColor} />
-                  </a>
-                  <a
-                    href="https://www.youtube.com/@Extradetailers"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${styles.socialIcon} rounded-circle d-flex align-items-center justify-content-center`}
-                  >
-                    <FaYoutube size={20} className={styles.socialIconColor} />
-                  </a>
+              <div className="d-flex align-items-center mt-4">
+                <p className="fw-bold text-uppercase me-3">OUR SOCIAL MEDIA</p>
+                <div className="d-flex gap-2">
+                  {[FaFacebookF, FaTwitter, FaInstagram, FaYoutube].map((Icon, idx) => (
+                    <a key={idx} href="#" className="d-flex align-items-center justify-content-center rounded-circle shadow p-2 text-primary bg-white" style={{ width: '40px', height: '40px' }}>
+                      <Icon size={20} />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Contact Form */}
             <div className="col-lg-5">
-              <form
-                className={`${styles.contact_form} bg-white mb-5 bg-body-tertiary p-5`}
-              >
-                <div className="mb-5">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Your Name"
-                  />
-                </div>
-                <div className="mb-5">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Your Email"
-                  />
-                </div>
-                <div className="mb-5">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Subject"
-                  />
-                </div>
-                <div className="mb-5">
-                  <textarea
-                    className="form-control"
-                    rows={4}
-                    placeholder="Enter your message"
-                  ></textarea>
-                </div>
-                <button type="submit" className="btn btn-custom w-100 p-3 ">
-                  Send Message
-                </button>
-              </form>
+              <div className="p-4 bg-white shadow rounded">
+                <h4 className="fw-bold mb-4">Send a Message</h4>
+                <form>
+                  <div className="mb-3">
+                    <input type="text" className="form-control border-primary" placeholder="Your Name" required />
+                  </div>
+                  <div className="mb-3">
+                    <input type="email" className="form-control border-primary" placeholder="Your Email" required />
+                  </div>
+                  <div className="mb-3">
+                    <input type="text" className="form-control border-primary" placeholder="Subject" required />
+                  </div>
+                  <div className="mb-3">
+                    <textarea className="form-control border-primary" rows={4} placeholder="Enter your message" required></textarea>
+                  </div>
+                  <button type="submit" className="btn btn-custom w-100">Send Message</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
-};
+}
 
 export default ContactPage;

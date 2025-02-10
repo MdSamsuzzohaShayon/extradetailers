@@ -23,16 +23,6 @@
   }
 }
 
-.heroOverlay {
-  position: absolute; // Proper absolute positioning over video
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 1; // Above video, below content
-  pointer-events: none; // Prevent interaction blocking
-}
-
 .content {
   position: relative;
   z-index: 2; // Ensures it's above both video & overlay
@@ -47,14 +37,9 @@
   height: 100%;
 }
 
-.navbarContent {
-  height: 100px;
-}
 
-.headerLogo {
-  width: 3rem;
-  height: 3rem;
-}
+
+
 
 
 .about{
@@ -87,7 +72,7 @@
 
 
 .process{
-  background-image: url(/imgs/car-service-1.jpg);
+  background-image: url(/imgs/parallax-effect.jpg);
   background-size: cover;
   background-attachment: fixed; /* Enables parallax effect */
   background-position: center;
