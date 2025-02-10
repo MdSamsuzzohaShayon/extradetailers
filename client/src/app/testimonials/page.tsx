@@ -1,8 +1,16 @@
+import Footer from '@/components/layout/Footer';
 import React from 'react';
+
+/**
+ * Refernce -> https://nov-automize.myshopify.com/pages/testimonials-page
+ */
 
 function TestimonialsPage() {
   return (
-    <div>TestimonialsPage</div>
+    <>
+    <main>TestimonialsPage</main>
+    <Footer />
+    </>
   )
 }
 
