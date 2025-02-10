@@ -1,0 +1,159 @@
+.textCustom {
+  color: #37c8abff;
+}
+
+// Hero Section
+.hero {
+  min-height: 450px;
+  background-image: url("/hero-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.whyChooseUs {
+  min-height: 750px;
+  background-image: url("/whyChooseUs.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+}
+
+.paddingTop {
+  padding-top: 130px;
+  padding-bottom: 130px;
+}
+
+.achievement {
+  padding: 130px 15px 130px 45px;
+}
+
+.readMore {
+  background-color: #37c8abff;
+}
+
+.noPadding {
+  padding: 0 !important;
+}
+
+.achievementGrid {
+  display: grid;
+  color: white;
+}
+
+.achievementItem {
+  text-align: center;
+}
+
+.achievementItem h3 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.achievementItem p {
+  font-size: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* Default: ≥1120px - Grid structure */
+@media (min-width: 1120px) {
+  .achievementGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .achievementItem:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0px 0px 40px 0px;
+  }
+  .achievementItem:nth-child(2) {
+    padding: 0px 0px 40px 0px;
+  }
+  .achievementItem:nth-child(3) {
+    padding: 40px 0px 0px 0px;
+  }
+  .achievementItem:last-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 40px 0px 0px 0px;
+  }
+}
+
+/* 1025px - 1119px: Up and Down Serial */
+@media (max-width: 1119px) and (min-width: 1025px) {
+  .achievementGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievementItem:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0px 0px 40px 0px;
+  }
+  .achievementItem:nth-child(2) {
+    padding: 0px 0px 40px 0px;
+  }
+
+  .achievementItem:nth-child(3) {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 40px 0px 0px 0px;
+  }
+  .achievementItem:last-child{
+    padding: 40px 0px 0px 0px;
+  }
+}
+
+/* 768px - 1024px: Grid but WhyChooseUs and Achievement are stacked */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .achievementGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .achievementItem:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0px 0px 40px 0px;
+  }
+
+  .achievementItem:last-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 40px 0px 0px 0px;
+  }
+  .achievementItem:nth-child(3) {
+    padding: 40px 0px 0px 0px;
+  }
+
+  .whyChooseUs {
+    order: -1; /* Move section above achievement */
+  }
+}
+
+/* ≤767px: Like 1025-1119 but with bottom borders */
+@media (max-width: 767px) {
+  .achievementGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievementItem {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .achievementItem:first-child {
+    padding: 0px 0px 20px 0px;
+  }
+  .achievementItem:nth-child(2) {
+    padding: 30px 0px 20px 0px;
+  }
+  .achievementItem:nth-child(3) {
+    padding: 30px 0px 20px 0px;
+  }
+  .achievementItem:last-child {
+    padding: 30px 0px 0px 0px;
+    border-bottom: none;
+  }
+}

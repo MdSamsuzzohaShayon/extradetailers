@@ -11,7 +11,7 @@ const Service = () => {
     <div>
       {/* Hero Section */}
       <section
-        className={`${styles.hero} d-flex align-items-center text-white p-5`}
+        className={`${styles.hero} d-flex align-items-center p-5`}
       >
         <div className="container">
           <h1
