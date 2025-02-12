@@ -1,4 +1,5 @@
-.home {}
+.home {
+}
 
 .landing {
   position: relative;
@@ -37,27 +38,21 @@
   height: 100%;
 }
 
-
-
-
-
-
-.about{
-
+.about {
 }
 
-.aboutImgWrapper{
-
+.aboutImgWrapper {
 }
 
-.aboutImg1, .aboutImg2{
+.aboutImg1,
+.aboutImg2 {
   width: 50%;
   height: 400px;
   object-position: center;
   object-fit: cover;
 }
 
-.aboutBox{
+.aboutBox {
   position: absolute;
   bottom: -60px;
   right: -60px;
@@ -66,12 +61,7 @@
   background: white;
 }
 
-
-
-
-
-
-.process{
+.process {
   background-image: url(/imgs/parallax-effect.jpg);
   background-size: cover;
   background-attachment: fixed; /* Enables parallax effect */
@@ -92,29 +82,14 @@
   z-index: -1;
 }
 
-.testimonial{
-  
+.testimonial {
 }
 
-.reviewer1{
-  width: 20%;
-  img{
-    width: 100%;
-  }
-}
-.reviewer2{
-  width: 45%;
-  img{
-    width: 100%;
-  }
-}
-
-
-.iconBox{
+.iconBox {
   width: 80px;
   height: 80px;
 }
-.arrowBox{
+.arrowBox {
   width: 60px;
   height: 60px;
 }

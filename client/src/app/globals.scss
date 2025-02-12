@@ -1,13 +1,20 @@
 :root {
   --bs-border-radius: 0 !important; /* Disable Bootstrap border-radius */
 }
-.section-mt{
-    margin-top: 7rem;
+.section-mt {
+  margin-top: 7rem;
 }
 
-
-footer{
-    .footer-top{
-
-    }
+// # Testimonial
+.reviewer1 {
+  width: 20%;
+  img {
+    width: 100%;
+  }
+}
+.reviewer2 {
+  width: 45%;
+  img {
+    width: 100%;
+  }
 }
