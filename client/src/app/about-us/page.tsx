@@ -1,40 +1,30 @@
 "use client";
 
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./about.module.scss";
-import {
-  FaCheckCircle,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedin,
-} from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import Image from "next/image";
 import Landing from "@/components/layout/Landing";
-import { Carousel } from "react-bootstrap";
 
+// const teamMembers = [
+//   { name: "Alex John Martin", role: "Wax Wizard", image: "/team-01.jpg" },
+//   { name: "Emily Johnson", role: "Exterior Expert", image: "/team-02.jpg" },
+//   { name: "Liam Campbell", role: "Master Polisher", image: "/team-03.jpg" },
+//   { name: "Jordan Taylor", role: "Interior Maestro", image: "/team-04.jpg" },
+//   { name: "Caleb Martinez", role: "Wax Wizard", image: "/team-05.jpg" },
+//   { name: "Sophia Carter", role: "Detail Specialist", image: "/team-06.jpg" },
+//   { name: "Michael Brown", role: "Tire Technician", image: "/team-07.jpg" },
+//   { name: "Olivia Green", role: "Glass Care Pro", image: "/team-08.jpg" },
+// ];
 
-const teamMembers = [
-  { name: "Alex John Martin", role: "Wax Wizard", image: "/team-01.jpg" },
-  { name: "Emily Johnson", role: "Exterior Expert", image: "/team-02.jpg" },
-  { name: "Liam Campbell", role: "Master Polisher", image: "/team-03.jpg" },
-  { name: "Jordan Taylor", role: "Interior Maestro", image: "/team-04.jpg" },
-  { name: "Caleb Martinez", role: "Wax Wizard", image: "/team-05.jpg" },
-  { name: "Sophia Carter", role: "Detail Specialist", image: "/team-06.jpg" },
-  { name: "Michael Brown", role: "Tire Technician", image: "/team-07.jpg" },
-  { name: "Olivia Green", role: "Glass Care Pro", image: "/team-08.jpg" },
-];
-
-const chunkArray = (arr: any[], size: number) => {
-  return arr.reduce(
-    (acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]),
-    []
-  );
-};
+// const chunkArray = (arr: any[], size: number) => {
+//   return arr.reduce(
+//     (acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]),
+//     []
+//   );
+// };
 
 const AboutPage = () => {
-  const groupedMembers = chunkArray(teamMembers, 4); // 4 items per slide
-
   return (
     <div>
       {/* Hero Section */}
@@ -142,48 +132,6 @@ const AboutPage = () => {
           <h1 className="text-uppercase fw-bold pb-5">
             Team Excellence, Shine Together Always
           </h1>
-
-          {/* Team Carousel */}
-          <Carousel indicators={false} interval={3000}>
-            {groupedMembers.map((group, index) => (
-              <Carousel.Item key={index}>
-                <div className="row">
-                  {group.map((member, idx) => (
-                    <div key={idx} className="col-md-3 text-center">
-                      <div className={styles.teamMember}>
-                        <Image
-                          src={member.image}
-                          alt={member.name}
-                          width={280}
-                          height={350}
-                          className="w-100"
-                        />
-                        <div className={styles.socialIcons}>
-                          <a href="#">
-                            <FaInstagram />
-                          </a>
-                          <a href="#">
-                            <FaTwitter />
-                          </a>
-                          <a href="#">
-                            <FaLinkedin />
-                          </a>
-                        </div>
-                      </div>
-                      <h4 className="text-uppercase fw-bold my-3">
-                        {member.name}
-                      </h4>
-                      <h5
-                        className={`${styles.textCustom} text-uppercase fw-bold`}
-                      >
-                        {member.role}
-                      </h5>
-                    </div>
-                  ))}
-                </div>
-              </Carousel.Item>
-            ))}
-          </Carousel>
         </section>
       </section>
     </div>

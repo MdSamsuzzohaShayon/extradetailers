@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import styles from "./faq.module.scss";
 import { FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { LuPlus, LuMinus } from "react-icons/lu"; // Thinner icons
+import Footer from "@/components/layout/Footer";
 import Image from "next/image";
 
 const faqs = [
@@ -41,115 +42,118 @@ const faqs = [
 ];
 
 function FAQPage() {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const toggleFAQ = (index) => {
+  const toggleFAQ = (index: number | null) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
   return (
-    <div>
-      {/* Hero Section */}
-      <section className={styles.landing}>
-        <Landing title="FAQ" />
-      </section>
-      <section className="section-mt">
-        <section className={`${styles.paddingTB} container`}>
-          <div>
-            <span className="text-uppercase fw-bold d-flex justify-content-center align-items-center py-3">
-              Contact Info
-            </span>
-            <h2 className="text-uppercase fw-bold d-flex justify-content-center align-items-center">
-              Our Contact Info
-            </h2>
-          </div>
+    <React.Fragment>
+      <main>
+        {/* Hero Section */}
+        <section className={styles.landing}>
+          <Landing title="FAQ" />
+        </section>
+        <section className="section-mt">
+          <section className={`${styles.paddingTB} container`}>
+            <div>
+              <span className="text-uppercase fw-bold d-flex justify-content-center align-items-center py-3">
+                Contact Info
+              </span>
+              <h2 className="text-uppercase fw-bold d-flex justify-content-center align-items-center">
+                Our Contact Info
+              </h2>
+            </div>
 
-          {/* Responsive Contact Info Section */}
-          <div className="row g-4 justify-content-center py-5">
-            {[
-              {
-                icon: <FaMapMarkerAlt />,
-                title: "Location",
-                detail: "66 Guild Street 512B",
-              },
-              {
-                icon: <FaEnvelope />,
-                title: "Email",
-                detail: "extradetailers@gmail.com",
-              },
-              {
-                icon: <FaPhone />,
-                title: "Phone",
-                detail: "(+44) 123 456 789",
-              },
-            ].map((item, index) => (
-              <div key={index} className="col-12 col-md-4">
-                <div className="d-flex align-items-center bg-white p-5 shadow rounded h-100">
-                  <div className="text-primary fs-1 me-3">{item.icon}</div>
-                  <div>
-                    <p className="fw-bold mb-1">{item.title}</p>
-                    <p className="mb-0 text-muted">{item.detail}</p>
+            {/* Responsive Contact Info Section */}
+            <div className="row g-4 justify-content-center py-5">
+              {[
+                {
+                  icon: <FaMapMarkerAlt />,
+                  title: "Location",
+                  detail: "66 Guild Street 512B",
+                },
+                {
+                  icon: <FaEnvelope />,
+                  title: "Email",
+                  detail: "extradetailers@gmail.com",
+                },
+                {
+                  icon: <FaPhone />,
+                  title: "Phone",
+                  detail: "(+44) 123 456 789",
+                },
+              ].map((item, index) => (
+                <div key={index} className="col-12 col-md-4">
+                  <div className="d-flex align-items-center bg-white p-5 shadow rounded h-100">
+                    <div className="text-primary fs-1 me-3">{item.icon}</div>
+                    <div>
+                      <p className="fw-bold mb-1">{item.title}</p>
+                      <p className="mb-0 text-muted">{item.detail}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          {/* FAQ Section */}
-          <div className="py-5">
-            <span className="text-uppercase fw-bold d-flex justify-content-center align-items-center">
-              FAQ
-            </span>
-            <h2 className="text-uppercase fw-bold d-flex justify-content-center align-items-center pt-3">
-              Frequently Asked Questions
-            </h2>
-          </div>
+            {/* FAQ Section */}
+            <div className="py-5">
+              <span className="text-uppercase fw-bold d-flex justify-content-center align-items-center">
+                FAQ
+              </span>
+              <h2 className="text-uppercase fw-bold d-flex justify-content-center align-items-center pt-3">
+                Frequently Asked Questions
+              </h2>
+            </div>
 
-          {/* FAQ List */}
-          <div className="row">
-            <div className="col-md-6">
-              <div className="accordion">
-                {faqs.map((faq, index) => (
-                  <div
-                    key={index}
-                    className="mb-3 p-3 border rounded shadow"
-                    onClick={() => toggleFAQ(index)}
-                    style={{
-                      backgroundColor: "white",
-                      cursor: "pointer",
-                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow effect
-                    }}
-                  >
-                    {/* Question + Icon */}
-                    <div className="d-flex justify-content-between align-items-center">
-                      <span style={{ fontSize: "18px" }}>{faq.question}</span>
-                      {activeIndex === index ? (
-                        <LuMinus size={20} />
-                      ) : (
-                        <LuPlus size={20} />
+            {/* FAQ List */}
+            <div className="row">
+              <div className="col-md-6">
+                <div className="accordion">
+                  {faqs.map((faq, index) => (
+                    <div
+                      key={index}
+                      className="mb-3 p-3 border rounded shadow"
+                      onClick={() => toggleFAQ(index)}
+                      style={{
+                        backgroundColor: "white",
+                        cursor: "pointer",
+                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Subtle shadow effect
+                      }}
+                    >
+                      {/* Question + Icon */}
+                      <div className="d-flex justify-content-between align-items-center">
+                        <span style={{ fontSize: "18px" }}>{faq.question}</span>
+                        {activeIndex === index ? (
+                          <LuMinus size={20} />
+                        ) : (
+                          <LuPlus size={20} />
+                        )}
+                      </div>
+
+                      {/* Answer (Toggled) */}
+                      {activeIndex === index && (
+                        <p className="mt-2 mb-0 text-muted">{faq.answer}</p>
                       )}
                     </div>
-
-                    {/* Answer (Toggled) */}
-                    {activeIndex === index && (
-                      <p className="mt-2 mb-0 text-muted">{faq.answer}</p>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              <div className="col-md-6 ps-5">
+                <Image
+                  height={550}
+                  width={600}
+                  src="/faq.jpg"
+                  alt="reviewer-image"
+                />
               </div>
             </div>
-            <div className="col-md-6 ps-5">
-              <Image
-                height={550}
-                width={600}
-                src="/faq.jpg"
-                alt="reviewer-image"
-              />
-            </div>
-          </div>
+          </section>
         </section>
-      </section>
-    </div>
+      </main>
+      <Footer />
+    </React.Fragment>
   );
 }
 

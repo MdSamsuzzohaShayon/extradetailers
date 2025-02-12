@@ -13,10 +13,12 @@ import {
 } from "react-icons/fa";
 import styles from "./contact.module.scss";
 import Landing from "@/components/layout/Landing";
+import Footer from "@/components/layout/Footer";
 
 function ContactPage() {
   return (
-    <main className={styles.contact}>
+<>
+<main className={styles.contact}>
       {/* Landing Section (Unchanged) */}
       <section className={styles.landing}>
         <Landing title="Contact" />
@@ -88,6 +90,8 @@ function ContactPage() {
         </div>
       </section>
     </main>
+    <Footer />
+</>
   );
 }
 

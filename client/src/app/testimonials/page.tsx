@@ -9,24 +9,32 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import Testimonial from "@/components/home/Testimonial";
+import Footer from "@/components/layout/Footer";
+
+/**
+ * Reference -> https://nov-automize.myshopify.com/pages/testimonials-page
+ */
 
 function TestimonialsPage() {
   return (
-    <div>
-      {/* Hero Section */}
-      <section className={styles.landing}>
-        <Landing title="Testimonials" />
-      </section>
+    <React.Fragment>
+      <div>
+        {/* Hero Section */}
+        <section className={styles.landing}>
+          <Landing title="Testimonials" />
+        </section>
 
-      {/* Testimonial start  */}
-      {/* Reference -> https://lifestwp.websitelayout.net/ */}
-      <section className={`${styles.testimonial} section-mt`}>
-        <Testimonial styles={styles} />
-      </section>
-      {/* Testimonial end  */}
+        {/* Testimonial start  */}
+        {/* Reference -> https://lifestwp.websitelayout.net/ */}
+        <section className={`${styles.testimonial} section-mt`}>
+          <Testimonial styles={styles} />
+        </section>
+        {/* Testimonial end  */}
 
-      <section className="section-mt"></section>
-    </div>
+        <section className="section-mt"></section>
+      </div>
+      <Footer />
+    </React.Fragment>
   );
 }
 

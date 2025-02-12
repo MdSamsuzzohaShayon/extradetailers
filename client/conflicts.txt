@@ -1,0 +1,4 @@
+Auto-merging client/src/app/service/page.tsx
+Auto-merging client/src/app/testimonials/page.tsx
+CONFLICT (content): Merge conflict in client/src/app/testimonials/page.tsx
+Automatic merge failed; fix conflicts and then commit the result.
