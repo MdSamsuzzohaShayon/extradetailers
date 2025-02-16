@@ -3,11 +3,6 @@
 import React from "react";
 import styles from "./testimonials.module.scss";
 import Landing from "@/components/layout/Landing";
-import Image from "next/image";
-import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import Testimonial from "@/components/home/Testimonial";
 import Footer from "@/components/layout/Footer";
 
