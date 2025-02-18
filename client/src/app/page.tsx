@@ -93,7 +93,10 @@ export default function Home() {
       {/* Process end  */}
 
       {/* Testimonial start  */}
-      {/* rederence -> https://lifestwp.websitelayout.net/ */}
+      {/* 
+      Reference 1 -> https://lifestwp.websitelayout.net/ 
+      Reference 2 -> https://preview.themeforest.net/item/solutek-technology-it-services-wordpress-theme/full_screen_preview/54500724?_ga=2.37261280.1721018892.1739886211-1871772981.1710479217
+      */}
       <section className={`${styles.testimonial} section-mt`}>
         <Testimonial styles={styles} />
       </section>

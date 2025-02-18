@@ -1,5 +1,10 @@
-import Footer from '@/components/layout/Footer'
-import React from 'react'
+import Footer from '@/components/layout/Footer';
+import React from 'react';
+
+/**
+ * Reference -> https://carcareful.peacefulqode.in/our-service/
+ * Purchase now
+ */
 
 function GiftCardsPage() {
   return (
@@ -10,4 +15,4 @@ function GiftCardsPage() {
   )
 }
 
-export default GiftCardsPage
+export default GiftCardsPage;

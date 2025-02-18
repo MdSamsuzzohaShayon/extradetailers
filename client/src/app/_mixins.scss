@@ -1,0 +1,6 @@
+@mixin landing-design($height: 40vh) {
+    position: relative;
+    width: 100%;
+    height: $height;
+    overflow: hidden;
+  }

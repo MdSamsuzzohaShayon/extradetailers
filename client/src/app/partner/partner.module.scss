@@ -1,0 +1,48 @@
+@import "../variables";
+@import "../mixins";
+
+.landing {
+  @include landing-design();
+}
+
+.bodyOfCard {
+  min-height: 210px;
+}
+
+.titleOfCard {
+  min-height: 3rem;
+}
+
+.cardMain:hover {
+  background-color: $primary;
+  color: $white;
+}
+
+.headerOfCard {
+  color: $primary;
+
+  &:hover {
+    color: $white;
+    border-color: $white;
+  }
+}
+
+.num {
+  background-color: rgb(60, 86, 126);
+  width: 80px;
+  height: 80px;
+}
+
+
+.rightSide {
+  margin-left: 50%;
+}
+
+.rightSideWrapper{
+  width: 80%;
+}
+
+.icon{
+  height: 60px;
+  width: 60px;
+}
