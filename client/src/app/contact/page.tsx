@@ -82,7 +82,7 @@ function ContactPage() {
                   <div className="mb-3">
                     <textarea className="form-control border-primary" rows={4} placeholder="Enter your message" required></textarea>
                   </div>
-                  <button type="submit" className="btn btn-custom w-100">Send Message</button>
+                  <button type="submit" className="btn btn-primary w-100">Send Message</button>
                 </form>
               </div>
             </div>

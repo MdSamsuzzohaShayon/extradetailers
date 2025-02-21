@@ -21,7 +21,7 @@ function Service() {
       </section>
 
       {/* Service Section */}
-      <section className="section-mt">
+      <section className="section-pt">
         <div className="container">
           <div className="row">
             {/* Left Column */}

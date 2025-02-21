@@ -5,8 +5,23 @@
 :root {
   --bs-border-radius: 0 !important; /* Disable Bootstrap border-radius */
 }
-.section-mt{
-    margin-top: 7rem;
+.section-pt{
+    padding-top: 7rem;
 }
 
 
+.custom-calendar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.custom-calendar {
+  width: 350px !important; /* Increase width */
+  height: 350px !important; /* Increase height */
+  max-width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}

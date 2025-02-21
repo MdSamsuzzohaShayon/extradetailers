@@ -25,7 +25,7 @@ const Landing: React.FC<ILandingProps> = ({title}) => {
           <div className="row">
             <div className="col">
               <h1 className="display-4 fw-bold"> Home / {title}</h1>
-              <Link href="/service" className="btn btn-custom">
+              <Link href="/service" className="btn btn-primary">
                 Book Here <FaArrowRight />
               </Link>
             </div>

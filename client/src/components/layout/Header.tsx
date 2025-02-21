@@ -51,10 +51,10 @@ function Header() {
           </ul>
           <div className="d-flex">
             {isAuthenticated
-              ? (<Link href="/dashboard" className={`btn btn-custom`}>
+              ? (<Link href="/dashboard" className={`btn btn-primary`}>
                 Profile <MdLogin />
               </Link>)
-              : (<Link href="/signin" className={`btn btn-custom`}>
+              : (<Link href="/signin" className={`btn btn-primary`}>
                 Login <MdLogin />
               </Link>)}
 
@@ -106,10 +106,10 @@ function Header() {
           </ul>
           <div className="mt-4">
             {isAuthenticated
-              ? (<Link href="/dashboard" className={`btn btn-custom w-100`}>
+              ? (<Link href="/dashboard" className={`btn btn-primary w-100`}>
                 Profile <MdLogin />
               </Link>)
-              : (<Link href="/signin" className={`btn btn-custom w-100`}>
+              : (<Link href="/signin" className={`btn btn-primary w-100`}>
                 Login <MdLogin />
               </Link>)}
           </div>

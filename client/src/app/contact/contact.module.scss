@@ -1,12 +1,10 @@
+@import "../mixins";
 .contact{
 
 }
 // Hero Section
-.landing {
-  position: relative;
-  width: 100%;
-  height: 40vh; // Change
-  overflow: hidden;
-}
 
+.landing {
+  @include landing-design();
+}
 

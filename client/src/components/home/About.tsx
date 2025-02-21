@@ -49,7 +49,7 @@ function About({ styles }: IAboutProps) {
             We provide expert car detailing services with **12 years of experience**. Our team uses the latest techniques to enhance your vehicle’s appearance, ensuring a pristine and polished finish. 
             From deep cleaning to paint protection, we cover it all!
           </p>
-          <Link className="btn btn-custom" href="/about-us" >Learn More <MdExpandMore /> </Link>
+          <Link className="btn btn-primary" href="/about-us" >Learn More <MdExpandMore /> </Link>
         </div>
       </div>
     </div>

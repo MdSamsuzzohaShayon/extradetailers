@@ -19,7 +19,7 @@ function PartnerPage() {
                     <Landing title="Partner" />
                 </section>
                 {/* Steps start  */}
-                <section className="section-mt">
+                <section className="section-pt">
                     <div className="container">
                         <h2 className='mb-3'>We have clients for you</h2>
                         <div className="row">
@@ -71,7 +71,7 @@ function PartnerPage() {
 
                 {/* Why partner start */}
                 {/* Reference -> https://dev242.kodesolution.com/techon/about/ */}
-                <section className="section-mt bg-secondary text-white position-relative">
+                <section className="section-pt bg-secondary text-white position-relative">
                     <img src="/imgs/parallax-effect.jpg" alt="" className="position-absolute top-0 start-0 w-50 h-100 object-fit-cover" />
                     <div className={styles.rightSide}>
                         <div className={`${styles.rightSideWrapper} p-5`}>
@@ -195,7 +195,7 @@ function PartnerPage() {
                 {/* Why partner end */}
 
                 {/* Application form start  */}
-                <section className="section-mt">
+                <section className="section-pt">
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-8 col-lg-6 p-4 bg-white shadow rounded">
@@ -255,7 +255,7 @@ function PartnerPage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="submit" className="btn btn-custom">Send Message</button>
+                                    <button type="submit" className="btn btn-primary">Send Message</button>
                                 </form>
                             </div>
                         </div>
@@ -265,7 +265,7 @@ function PartnerPage() {
 
                 {/* Application form end  */}
 
-                <section className="section-mt"></section>
+                <section className="section-pt"></section>
             </main>
             <Footer />
         </React.Fragment>

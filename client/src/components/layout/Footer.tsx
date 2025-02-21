@@ -69,7 +69,7 @@ function Footer() {
                 <p>Subscribe to our newsletter for discounts and more.</p>
                 <form>
                   <input type="email" className="form-control mb-2" placeholder="Enter your email" />
-                  <button type="submit" className="btn btn-custom w-100">Subscribe</button>
+                  <button type="submit" className="btn btn-primary w-100">Subscribe</button>
                 </form>
               </div>
             </div>

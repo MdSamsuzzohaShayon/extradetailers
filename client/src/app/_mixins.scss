@@ -4,3 +4,11 @@
     height: $height;
     overflow: hidden;
   }
+
+  @mixin reviewer-style($width) {
+    width: $width;
+    
+    img {
+      width: 100%;
+    }
+  }
