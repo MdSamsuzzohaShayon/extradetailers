@@ -1,10 +1,12 @@
 @import "../mixins";
-.contact{
+
+.contact {
 
 }
-// Hero Section
 
+// Hero Section
 .landing {
   @include landing-design();
+
 }
 

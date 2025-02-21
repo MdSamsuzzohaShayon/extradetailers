@@ -12,3 +12,23 @@
       width: 100%;
     }
   }
+
+
+
+  // Mixin for image styles
+@mixin about-image-style($width, $height) {
+  width: $width;
+  height: $height;
+  object-position: center;
+  object-fit: cover;
+}
+
+// Mixin for box positioning and styling
+@mixin about-box-style($bottom, $right, $width, $height, $bg-color) {
+  position: absolute;
+  bottom: $bottom;
+  right: $right;
+  width: $width;
+  height: $height;
+  background: $bg-color;
+}
