@@ -1,3 +1,5 @@
+"use client"
+
 import { TModuleStyle } from '@/types';
 import Image from 'next/image';
 import React, { useEffect } from 'react';

@@ -36,7 +36,7 @@ function SigninPage() {
                 <label htmlFor="password" className="form-label">Password</label>
                 <input type="password" className="form-control border-primary" id="password" placeholder="Your Password" required />
               </div>
-              <button type="submit" className="btn btn-custom w-100 mb-3"> Login <MdLogin /></button>
+              <button type="submit" className="btn btn-primary w-100 mb-3"> Login <MdLogin /></button>
               <p className="text-center mb-3">Don&apos;t have an account? <Link href="/signup">Sign up</Link></p>
               <p className="text-center mb-3">Password forgotten? <Link href="/reset-password">Reset</Link></p>
             </form>
@@ -45,7 +45,7 @@ function SigninPage() {
         <div className="col-md-7 d-none d-md-block position-relative" >
           <div className={`${styles.signinCar} img-wrapper`} style={{ backgroundImage: "url(/imgs/signin-car.jpg)" }}>
             <div className="position-absolute top-0 left-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{zIndex: 1}}>
-              <h1 className={`${styles.heading} display-4 text-start text-white fw-bold text-capitalize`}>From booking to <br /> <span className='text-primary'>a brilliant shine—your</span> <br /><span className='ms-5'>car’s transformation</span> <br /> <span className='ms-5'>starts here!</span> </h1>
+              <h1 className={`${styles.heading} display-4 fw-bold text-start text-white  text-capitalize`}>From booking to <br /> <span className='text-primary'>a brilliant shine—your</span> <br /><span className='ms-5'>car’s transformation</span> <br /> <span className='ms-5'>starts here!</span> </h1>
             </div>
             <div className="position-absolute top-0 left-0 w-100 h-100 overflow-hidden">
               <HeroBackground />

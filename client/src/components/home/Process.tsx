@@ -18,7 +18,7 @@ function Process({styles}: IProcessProps) {
       </div>
 
       {/* Process Steps */}
-      <div className="d-flex flex-wrap justify-content-around align-items-center gap-4">
+      <div className="d-flex flex-wrap justify-content-around align-items-center gap-3">
         {/* Step 1 */}
         <div className="d-flex flex-column align-items-center">
           <div className={`${styles.iconBox} fs-1 rounded-circle bg-primary text-white d-flex justify-content-center align-items-center`}>

@@ -1,0 +1,13 @@
+@import "../mixins";
+
+.landing {
+  @include landing-design();
+}
+
+.reviewer1 {
+    @include reviewer-style(20%);
+  }
+  
+  .reviewer2 {
+    @include reviewer-style(45%);
+  }

@@ -1,3 +1,5 @@
+@import "./mixins";
+
 .home {}
 
 .landing {
@@ -50,20 +52,12 @@
 
 }
 
-.aboutImg1, .aboutImg2{
-  width: 50%;
-  height: 400px;
-  object-position: center;
-  object-fit: cover;
+.aboutImg1, .aboutImg2 {
+  @include about-image-style(50%, 400px);
 }
 
-.aboutBox{
-  position: absolute;
-  bottom: -60px;
-  right: -60px;
-  width: 100px;
-  height: 8.5rem;
-  background: white;
+.aboutBox {
+  @include about-box-style(-60px, -60px, 100px, 8.5rem, white);
 }
 
 
@@ -96,17 +90,12 @@
   
 }
 
-.reviewer1{
-  width: 20%;
-  img{
-    width: 100%;
-  }
+.reviewer1 {
+  @include reviewer-style(20%);
 }
-.reviewer2{
-  width: 45%;
-  img{
-    width: 100%;
-  }
+
+.reviewer2 {
+  @include reviewer-style(45%);
 }
 
 
