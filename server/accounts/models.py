@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
-from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -8,6 +7,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
+        extra_fields.setdefault('username', email)  # ✅ Ensure username doesn't break the constraint
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)

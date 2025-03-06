@@ -1,17 +1,42 @@
 from rest_framework import serializers
-from accounts.models import User
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
+from .models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+
     class Meta:
         model = User
-        fields = ['id', 'email', 'role', 'is_active', 'date_joined']
+        fields = ['email', 'first_name', 'last_name', 'password', 'role']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['role'] = user.role
-        return token
+class UserValidationSerializer(serializers.Serializer):
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        token = attrs.get("token")
+        try:
+            decoded_token = RefreshToken(token)  # Decode JWT
+            user_id = decoded_token['user_id']
+            user = User.objects.get(id=user_id)
+            if user.is_validated:
+                raise serializers.ValidationError("User already validated.")
+            user.is_validated = True
+            user.save()
+            return {"message": "User successfully validated"}
+        except Exception:
+            raise serializers.ValidationError("Invalid or expired token")
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+
+class EmptySerializer(serializers.Serializer):
+    pass  # No fields, just to satisfy DRF
