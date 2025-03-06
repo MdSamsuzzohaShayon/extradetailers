@@ -17,6 +17,7 @@ class IsGeneralUserPermission(permissions.BasePermission):
             return True
         return False
 
+
 class IsAdminPermission(permissions.BasePermission):
     """
     Custom permission to allow access only to admin users.

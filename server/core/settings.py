@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 
     "accounts"
@@ -62,8 +63,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
+    os.getenv("FRONTEND_URL"),
 ]
 
 # Allow cookies to be sent across origins
@@ -162,8 +162,8 @@ REST_FRAMEWORK = {
 
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Extra detailer',
+    'DESCRIPTION': 'This project is a car detailing booking platform built with **Next.js** for the frontend and **Django** for the backend.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
@@ -177,8 +177,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),  # 10 minutes
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3),  # 7 Days
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),  # 10 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,

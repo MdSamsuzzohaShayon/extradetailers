@@ -10,10 +10,18 @@ class GeneralUserPermissionMixin:
     permission_classes = [permissions.IsAuthenticated, IsGeneralUserPermission]
 
 
-class PublicPermissionMixin():
+class PublicPermissionMixin:
     permission_classes = [permissions.AllowAny, IsPublicPermission]
     authentication_classes = [BasicAuthentication, SessionAuthentication]
 
 
-class AdminPermissionMixin():
+class AdminPermissionMixin:
     permission_classes = [permissions.IsAuthenticated, IsAdminPermission]
+
+
+class CustomerPermissionMixin:
+    permission_classes = [permissions.IsAuthenticated, IsCustomerPermission]
+
+
+class DetailerPermissionMixin:
+    permission_classes = [permissions.IsAuthenticated, IsDetailerPermission]
