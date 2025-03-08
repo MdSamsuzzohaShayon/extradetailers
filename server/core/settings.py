@@ -14,6 +14,9 @@ from pathlib import Path
 from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
+import pymysql
+
+pymysql.install_as_MySQLdb()  # Required if using pymysql
 
 load_dotenv()  # take environment variables from .env.
 
@@ -34,6 +37,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    # Django in-built
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,13 +45,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # External
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 
-    "accounts"
+    # Internal
+    "accounts",
+    "services",
+    "bookings",
+    "detailers",
+    "payment",
+    "customers"
 ]
 
 MIDDLEWARE = [
@@ -96,10 +107,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME", None),
+        'USER': os.getenv("DB_USERNAME", None),  # Replace with your MySQL username
+        'PASSWORD': os.getenv("DB_PASSWORD", None),  # Replace with your MySQL password
+        'HOST': os.getenv("DB_HOST", None),  # Change if using a remote database
+        'PORT': os.getenv("DB_PORT", None),  # Default MySQL port
     }
 }
 
@@ -159,7 +182,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
-
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Extra detailer',

@@ -4,6 +4,7 @@ import "./custom-bootstrap.scss";
 import "./globals.scss";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import QueryProvider from "@/lib/QueryProvider";
 
 gsap.registerPlugin(useGSAP);
 
@@ -20,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   // <title>Professional Automobile Detailing Services</title>
   title: "Extra Detailers - Professional Automobile Detailing Services",
-description: "Experience top-notch complete detailing services for your vehicle with Extra Detailers. Our experts will make your car shine inside and out.",
+  description: "Experience top-notch complete detailing services for your vehicle with Extra Detailers. Our experts will make your car shine inside and out.",
 };
 
 export default function RootLayout({
@@ -31,9 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* <Header /> */}
-        {children}
-
+        <QueryProvider>
+          {/* <Header /> */}
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );
