@@ -1,19 +1,25 @@
 type TModuleStyle = { readonly [key: string]: string; };
 
 
-interface IProduct{
+interface IService{
     id: number;
     title: string;
     price: number;
     time: string;
-    desc: string;
+    description: string;
 }
 
-interface IOrder{
+interface IBooking{
     id: number;
     productId: number;
     date: Date;
     slot: string;
 }
 
-export type { TModuleStyle, IProduct, IOrder }
+export enum EUserRole {
+    ADMIN = 'admin',
+    CUSTOMER = 'customer',
+    DETAILER = 'detailer'
+}   
+
+export type { TModuleStyle, IService, IBooking }

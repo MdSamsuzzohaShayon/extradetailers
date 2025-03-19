@@ -13,7 +13,7 @@ class GeneralUserPermissionMixin:
 class PublicPermissionMixin:
     permission_classes = [permissions.AllowAny, IsPublicPermission]
     authentication_classes = [BasicAuthentication, SessionAuthentication]
-
+    # authentication_classes = []
 
 class AdminPermissionMixin:
     permission_classes = [permissions.IsAuthenticated, IsAdminPermission]

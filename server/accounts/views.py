@@ -115,23 +115,32 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
 
-        response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Login successful", "access_token": access, "refresh_token": str(refresh)}, status=status.HTTP_200_OK)
 
         # Set cookies with HttpOnly & Secure flags
         response.set_cookie(
             key="access_token",
             value=access,
             httponly=True,  # Prevent JavaScript access
-            secure=True,  # Use HTTPS
-            samesite="None",  # Allow cross-origin cookies
+            secure=False,  # Use HTTPS
+            samesite="Lax",  # Allow cross-origin cookies, "None" requires HTTPS, use "Lax" for localhost
             max_age=60 * 30,  # 30 minutes
         )
         response.set_cookie(
             key="refresh_token",
             value=str(refresh),
             httponly=True,
-            secure=True,
-            samesite="None",
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 60 * 24 * 7,  # 7 days
+        )
+
+        response.set_cookie(
+            key="user_role",
+            value=str(user.role),
+            httponly=True,
+            secure=False,
+            samesite="Lax",
             max_age=60 * 60 * 24 * 7,  # 7 days
         )
 

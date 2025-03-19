@@ -5,6 +5,11 @@ export const signupUser = async (userData: FormData) => {
     return response.data;
 };
 
+export const signinUser = async (userData: FormData) => {
+  const response = await axiosInstance.post("/accounts/login/", userData);
+  return response.data;
+};
+
 
 // Server component 
 export async function validateUser(token?: string) {

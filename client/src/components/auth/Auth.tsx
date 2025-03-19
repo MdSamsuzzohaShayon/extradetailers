@@ -7,7 +7,8 @@ import Image from 'next/image';
 import { MdLogin } from 'react-icons/md';
 import HeroBackground from '@/components/svg/HeroBackground';
 import { useMutation } from '@tanstack/react-query';
-import { signupUser } from '@/app/_requests/auth';
+import { signinUser, signupUser } from '@/app/_requests/auth';
+import { useRouter } from 'next/navigation';
 
 interface IAuthProps {
     headTest: string;
@@ -19,15 +20,18 @@ interface IAuthProps {
  */
 
 function Auth({ headTest, signin }: IAuthProps) {
+    const router = useRouter(); 
     const mutation = useMutation({
-        mutationFn: signupUser,
+        mutationFn: signin ? signinUser :signupUser,
         onSuccess: (data) => {
-            console.log("Signup successful", data);
-            alert("Signup successful!"); // Replace with better UI feedback
+            console.log(`${signin ? "Signin" : "Signup"} successful`, data);
+            // alert(`${signin ? "Signin" : "Signup"} successful!`); // Replace with better UI feedback
+            // Redirect user to dashboard
+            router.push("/dashboard"); 
         },
         onError: (error) => {
             console.error("Signup failed", error);
-            alert("Signup failed. Please try again.");
+            // alert("Signup failed. Please try again.");
         }
     });
 
@@ -37,6 +41,16 @@ function Auth({ headTest, signin }: IAuthProps) {
         const formData = new FormData(form);
         mutation.mutate(formData);
     };
+
+    // useEffect(() => {
+    //     const cookies = document.cookie.split('; ').reduce((acc, cookie) => {
+    //         const [name, value] = cookie.split('=');
+    //         acc[name] = value;
+    //         return acc;
+    //     }, {} as Record<string, string>);
+    //     console.log(cookies.access_token);
+        
+    // }, [])
 
     return (
         <div className="d-flex w-100 h-100">

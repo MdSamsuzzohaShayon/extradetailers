@@ -12,7 +12,7 @@ export default async function ValidateUserPage({
   const validationResult = await validateUser(token);
 
   if(!validationResult.isError){
-    redirect("/dashboard");
+    redirect("/signin");
   }
 
   return (

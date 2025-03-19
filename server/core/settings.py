@@ -73,12 +73,15 @@ MIDDLEWARE = [
 
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    os.getenv("FRONTEND_URL"),
-]
+
 
 # Allow cookies to be sent across origins
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+"http://localhost:3000",
+    # os.getenv("FRONTEND_URL"),
+]
 
 CORS_ALLOW_METHODS = (
     *default_methods,
@@ -166,6 +169,13 @@ AUTH_USER_MODEL = 'accounts.User'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ✅ Allow session-based authentication with cookies
+CSRF_COOKIE_SECURE = False  # Set True in production
+SESSION_COOKIE_SECURE = False  # Set True in production
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
