@@ -1,9 +1,31 @@
-import React from 'react';
+// app/booking/page.tsx
+import { bookingsOptions } from "@/app/_requests/bookings";
+import styles from "./booking.module.scss";
+import { getQueryClient } from "@/lib/get-query-client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import BookingList from "@/components/booking/BookingList";
 
 async function BookingPage() {
-  // const allBookings = await getBookings()
+
+  const queryClient = getQueryClient();
+
+  try {
+    // Always use await to properly handle errors
+    await queryClient.prefetchQuery(bookingsOptions);
+  } catch (error) {
+    console.error("Prefetch error:", error);
+    // The error will automatically propagate to error.tsx
+    throw error;
+  }
+
   return (
-    <div>BookingPage</div>
+    <div className={styles.bookingContainer}>
+      <h1 className={styles.title}>Manage Bookings</h1>
+      
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <BookingList styles={styles} />
+      </HydrationBoundary>
+    </div>
   );
 }
 

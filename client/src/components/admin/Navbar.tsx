@@ -1,19 +1,33 @@
 'use client';
 
+import { IMenuItem } from '@/types';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-function Navbar() {
+interface INavbarProps{
+    className: string;
+    title: string;
+    menuList: IMenuItem[];
+}
+
+function Navbar({className, title, menuList}: INavbarProps) {
     const pathname = usePathname();
 
     const isActive = (path: string) => pathname === path ? "active" : "text-white";
 
+    // admin, admin/bookings, admin/services, admin/customers
+
     return (
-        <nav className="d-flex flex-column p-3 bg-dark text-white min-vh-100">
-            <h4 className="text-center mb-3">Admin Panel</h4>
+        <nav className={`d-flex flex-column bg-dark text-white ${className}`}>
+            <h4 className="mb-3 px-3">{title}</h4>
             <ul className="nav nav-pills flex-column mb-auto">
-                <li className="nav-item">
+                {menuList.map((item)=> (<li key={item.id} className="nav-item">
+                    <Link href={item.link} className={`nav-link ${isActive(item.link)}`}>
+                        {item.text}
+                    </Link>
+                </li>))}
+                {/* <li className="nav-item">
                     <Link href="/admin" className={`nav-link ${isActive("/admin")}`}>
                         Home
                     </Link>
@@ -22,7 +36,7 @@ function Navbar() {
                     <Link href="/admin/booking" className={`nav-link ${isActive("/admin/booking")}`}>
                         Bookings
                     </Link>
-                    {/* <ul className="nav flex-column ms-3">
+                    <ul className="nav flex-column ms-3">
                         <li className="nav-item">
                             <Link href="/admin/booking/create" className="nav-link text-white">Create</Link>
                         </li>
@@ -32,7 +46,7 @@ function Navbar() {
                         <li className="nav-item">
                             <Link href="/admin/booking/update" className="nav-link text-white">Update</Link>
                         </li>
-                    </ul> */}
+                    </ul>
                 </li>
                 <li className="nav-item">
                     <Link href="/admin/service" className={`nav-link ${isActive("/admin/service")}`}>
@@ -43,7 +57,7 @@ function Navbar() {
                     <Link href="/admin/customer" className={`nav-link ${isActive("/admin/customer")}`}>
                         Customers
                     </Link>
-                </li>
+                </li> */}
             </ul>
         </nav>
     );

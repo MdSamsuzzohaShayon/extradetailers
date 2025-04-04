@@ -1,7 +1,7 @@
 type TModuleStyle = { readonly [key: string]: string; };
 
 
-interface IService{
+interface IService {
     id: number;
     title: string;
     price: number;
@@ -9,17 +9,52 @@ interface IService{
     description: string;
 }
 
-interface IBooking{
+interface IBooking {
     id: number;
-    productId: number;
-    date: Date;
-    slot: string;
+    user: string;
+    service: number;
+    service_details: IService;
+    order_date: string;
+    status: EBookingStatus;
+    // slot: string;
+}
+
+interface IAPIError {
+    response?: {
+        data?: { message?: string };
+        status?: number;
+    };
+    message?: string;
+};
+
+interface IUser{
+    accessToken: string;
+    userRole: string;
+}
+
+interface IMenuItem{
+    id: number;
+    text: string;
+    link: string;
+}
+
+
+interface IMessage{
+    error: boolean;
+    text: string;
 }
 
 export enum EUserRole {
     ADMIN = 'admin',
     CUSTOMER = 'customer',
     DETAILER = 'detailer'
-}   
+}
 
-export type { TModuleStyle, IService, IBooking }
+export enum EBookingStatus {
+    PENDING = "pending",
+    COMPLETED = "completed",
+    CANCELED = "canceled",
+}
+
+
+export type { TModuleStyle, IService, IBooking, IAPIError, IMessage, IUser, IMenuItem }

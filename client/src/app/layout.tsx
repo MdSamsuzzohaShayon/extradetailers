@@ -5,6 +5,8 @@ import "./globals.scss";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import QueryProvider from "@/lib/QueryProvider";
+import ToastProvider from "@/lib/ToastProvider";
+import MessageToast from "@/components/elements/MessageToast";
 
 gsap.registerPlugin(useGSAP);
 
@@ -32,10 +34,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <QueryProvider>
-          {/* <Header /> */}
-          {children}
-        </QueryProvider>
+        <ToastProvider>
+          <QueryProvider>
+            <MessageToast /> {/*  Absolute position */}
+            {children}
+          </QueryProvider>
+        </ToastProvider>
       </body>
     </html>
   );

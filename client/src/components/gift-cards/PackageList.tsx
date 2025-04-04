@@ -3,14 +3,15 @@
 import Image from 'next/image';
 import React, { useState, useEffect, useRef } from 'react';
 import PackageCard from './PackageCard';
-import { IOrder, IProduct, TModuleStyle } from '@/types';
+import { IService, TModuleStyle } from '@/types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import LocalStorage from '@/utils/LocalStorage';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { servicesOptions } from '@/app/_requests/services';
+// import LocalStorage from '@/utils/LocalStorage';
 
 interface IPackageListProps {
     styles: TModuleStyle;
-    serviceList: IProduct[];
 }
 
 const timeSlots = {
@@ -19,9 +20,13 @@ const timeSlots = {
     Evening: ["5:00pm"]
 };
 
-function PackageList({ styles, serviceList }: IPackageListProps) {
+function PackageList({ styles }: IPackageListProps) {
+    const { data: allServices } = useSuspenseQuery(servicesOptions);
+    console.log({allServices});
+    
+
     const modalEl = useRef(null);
-    const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<IService | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
 
@@ -42,7 +47,7 @@ function PackageList({ styles, serviceList }: IPackageListProps) {
         }
     }, [selectedProduct]);
 
-    const handleSelectProduct = (product: IProduct) => {
+    const handleSelectProduct = (product: IService) => {
         setSelectedProduct(product);
     };
 
@@ -58,14 +63,13 @@ function PackageList({ styles, serviceList }: IPackageListProps) {
         if (!selectedProduct || !selectedDate) return;
         setSelectedTimeSlot(slot);
         // Set order to local storage
-        const newOrder: IOrder = {
-            id: 1,
-            date: selectedDate,
-            productId: selectedProduct.id,
-            slot,
-        };
-        const localStorage = new LocalStorage();
-        localStorage.setOrder(newOrder);
+        // const newOrder: IBooking = {
+        //     id: 1,
+        //     date: selectedDate,
+        //     productId: selectedProduct.id,
+        //     slot,
+        // };
+        // LocalStorage.setOrder(newOrder);
     };
 
     const handleCloseModal = () => {
@@ -89,10 +93,10 @@ function PackageList({ styles, serviceList }: IPackageListProps) {
             <div className="row">
                 <div className="col-md-8">
                     <ul className={`${styles.packageList} d-flex flex-column justify-content-between align-items-stretch h-100 w-100`}>
-                        {serviceList.map((product, index) => (
+                        {allServices.map((service, index) => (
                             <PackageCard
                                 index={index}
-                                product={product}
+                                service={service}
                                 styles={styles}
                                 key={index}
                                 onSelect={handleSelectProduct}

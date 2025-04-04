@@ -1,8 +1,8 @@
 'use client'
 
-import { createService } from '@/app/_requests/services';
+import { createServiceOptions } from '@/app/_requests/services';
 import { IService } from '@/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { DefaultError, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
 
@@ -15,16 +15,7 @@ function ServiceAdd({ styles }: IServiceAddProps) {
     const [editingService, setEditingService] = useState<Partial<IService>>({});
 
     // ✅ UseMutation for creating a service
-    const createServiceMutation = useMutation({
-        mutationFn: createService,
-        onSuccess: () => {
-            console.log("Service created successfully!");
-            queryClient.invalidateQueries({ queryKey: ["services"] }); // ✅ Refetch services list
-        },
-        onError: (error) => {
-            console.error("Create Service Error:", error);
-        },
-    });
+    const createServiceMutation = useMutation<unknown, DefaultError, FormData>(createServiceOptions(queryClient));
 
 
 

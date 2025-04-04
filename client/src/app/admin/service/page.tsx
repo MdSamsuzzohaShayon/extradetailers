@@ -1,11 +1,15 @@
+import { servicesOptions } from "@/app/_requests/services";
 import styles from "./service.module.scss";
-import { getServices,  } from '@/app/_requests/services';
-import ServiceAdd from "@/components/admin/ServiceAdd";
-import ServiceCard from "@/components/admin/ServiceCard";
-import { IService } from '@/types';
+import ServiceAdd from "@/components/service/ServiceAdd";
+import { getQueryClient } from "@/lib/get-query-client";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import ServiceList from "@/components/service/ServiceList";
 
 async function ServicePage() {
-  const allServices = await getServices();
+
+  const queryClient = getQueryClient()
+
+  await queryClient.prefetchQuery(servicesOptions);
 
   return (
     <div className={styles.serviceContainer}>
@@ -15,11 +19,10 @@ async function ServicePage() {
       <ServiceAdd styles={styles} />
       
       {/* Service List */}
-      <div className="d-flex flex-wrap gap-2 mt-3">
-        {allServices.map((service: IService) => (
-          <ServiceCard key={service.id} service={service} styles={styles} />
-        ))}
-      </div>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ServiceList styles={styles} />
+      </HydrationBoundary>
+      
     </div>
   );
 }

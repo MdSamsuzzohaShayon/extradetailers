@@ -9,6 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .models import User
 from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer
 from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin
+from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
 
 class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
@@ -115,7 +116,7 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
 
-        response = Response({"message": "Login successful", "access_token": access, "refresh_token": str(refresh)}, status=status.HTTP_200_OK)
+        response = Response({"message": "Login successful", "user_role": user.role, "access_token": access, "refresh_token": str(refresh)}, status=status.HTTP_200_OK)
 
         # Set cookies with HttpOnly & Secure flags
         response.set_cookie(
@@ -124,7 +125,7 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
             httponly=True,  # Prevent JavaScript access
             secure=False,  # Use HTTPS
             samesite="Lax",  # Allow cross-origin cookies, "None" requires HTTPS, use "Lax" for localhost
-            max_age=60 * 30,  # 30 minutes
+            max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES,  # 30 minutes
         )
         response.set_cookie(
             key="refresh_token",
@@ -132,7 +133,7 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
             httponly=True,
             secure=False,
             samesite="Lax",
-            max_age=60 * 60 * 24 * 7,  # 7 days
+            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
         )
 
         response.set_cookie(
@@ -141,7 +142,7 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
             httponly=True,
             secure=False,
             samesite="Lax",
-            max_age=60 * 60 * 24 * 7,  # 7 days
+            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
         )
 
         return response
@@ -182,8 +183,8 @@ class RefreshTokenView(PublicPermissionMixin, generics.CreateAPIView):
                 "refresh_token": str(new_refresh_token)
             }, status=status.HTTP_200_OK)
 
-            response.set_cookie("access_token", access_token, httponly=True, secure=True, samesite="None", max_age=60 * 30)
-            response.set_cookie("refresh_token", str(new_refresh_token), httponly=True, secure=True, samesite="None", max_age=60 * 60 * 24)
+            response.set_cookie("access_token", access_token, httponly=True, secure=True, samesite="None", max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES)
+            response.set_cookie("refresh_token", str(new_refresh_token), httponly=True, secure=True, samesite="None", max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS)
 
             return response
         except User.DoesNotExist:
@@ -203,6 +204,7 @@ class LogoutView(PublicPermissionMixin, generics.CreateAPIView):
         # Delete authentication cookies
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
+        response.delete_cookie("user_role")
 
         return response
 

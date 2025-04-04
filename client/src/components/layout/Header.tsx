@@ -1,15 +1,30 @@
+
+'use client'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { CiMenuBurger } from 'react-icons/ci';
-import { MdLogin } from 'react-icons/md';
+import { MdDashboard, MdLogin, MdLogout } from 'react-icons/md';
 import styles from './header.module.scss';
+import useUser from '@/hooks/useUser';
+import { EUserRole } from '@/types';
+import { DefaultError, useMutation } from '@tanstack/react-query';
+import { useSignoutOptions } from '@/app/_requests/auth';
 
 const menuItems: string[] = ["Service", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"];
 
 function Header() {
 
-  const isAuthenticated = false;
+  const signoutMutation = useMutation<unknown, DefaultError>(useSignoutOptions());
+  const user = useUser();
+
+  const handleSignout = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    signoutMutation.mutate();
+
+  }
+
   return (
     <nav className={`navbar navbar-expand-lg text-white border-bottom ${styles.navbarContent}`}>
       <div className="container">
@@ -49,15 +64,26 @@ function Header() {
               </li>
             ))}
           </ul>
-          <div className="d-flex">
-            {isAuthenticated
-              ? (<Link href="/dashboard" className={`btn btn-primary`}>
-                Profile <MdLogin />
-              </Link>)
-              : (<Link href="/signin" className={`btn btn-primary`}>
-                Login <MdLogin />
-              </Link>)}
+          <div className="d-flex gap-2">
+            {user ? (
+              <>
+                {user.userRole === EUserRole.ADMIN ? (<Link href="/admin" className="btn btn-outline-light">
+                  <MdDashboard /> Admin
+                </Link>) : (
+                  <Link href="/dashboard" className="btn btn-outline-light">
+                    <MdDashboard /> Dashboard
+                  </Link>
+                )}
 
+                <button onClick={handleSignout} type="button" className="btn btn-danger">
+                  <MdLogout /> Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/signin" className="btn btn-primary">
+                <MdLogin /> Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -105,13 +131,24 @@ function Header() {
             )}
           </ul>
           <div className="mt-4">
-            {isAuthenticated
-              ? (<Link href="/dashboard" className={`btn btn-primary w-100`}>
-                Profile <MdLogin />
-              </Link>)
-              : (<Link href="/signin" className={`btn btn-primary w-100`}>
-                Login <MdLogin />
-              </Link>)}
+            {user ? (
+              <>
+                {user.userRole === EUserRole.ADMIN ? (<Link href="/admin" className="btn btn-outline-light w-100 mb-2">
+                  <MdDashboard /> Admin
+                </Link>) : (
+                  <Link href="/dashboard" className="btn btn-outline-light w-100 mb-2">
+                    <MdDashboard /> Dashboard
+                  </Link>
+                )}
+                <button onClick={handleSignout} type="button" className="btn btn-danger w-100">
+                  <MdLogout /> Logout
+                </button>
+              </>
+            ) : (
+              <Link href="/signin" className="btn btn-primary w-100">
+                <MdLogin /> Login
+              </Link>
+            )}
           </div>
         </div>
       </div>

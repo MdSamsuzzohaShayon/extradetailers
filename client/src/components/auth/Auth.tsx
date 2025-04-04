@@ -6,9 +6,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MdLogin } from 'react-icons/md';
 import HeroBackground from '@/components/svg/HeroBackground';
-import { useMutation } from '@tanstack/react-query';
-import { signinUser, signupUser } from '@/app/_requests/auth';
-import { useRouter } from 'next/navigation';
+import { DefaultError, useMutation } from '@tanstack/react-query';
+import { useSigninOptions, useSignupOptions } from '@/app/_requests/auth';
+import Loader from '../elements/Loader';
 
 interface IAuthProps {
     headTest: string;
@@ -20,26 +20,20 @@ interface IAuthProps {
  */
 
 function Auth({ headTest, signin }: IAuthProps) {
-    const router = useRouter(); 
-    const mutation = useMutation({
-        mutationFn: signin ? signinUser :signupUser,
-        onSuccess: (data) => {
-            console.log(`${signin ? "Signin" : "Signup"} successful`, data);
-            // alert(`${signin ? "Signin" : "Signup"} successful!`); // Replace with better UI feedback
-            // Redirect user to dashboard
-            router.push("/dashboard"); 
-        },
-        onError: (error) => {
-            console.error("Signup failed", error);
-            // alert("Signup failed. Please try again.");
-        }
-    });
+
+    // Show error
+    const signinMutation = useMutation<unknown, DefaultError, FormData>(useSigninOptions());
+    const signupMutation = useMutation<unknown, DefaultError, FormData>(useSignupOptions());
 
     const handleAuth = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
         const formData = new FormData(form);
-        mutation.mutate(formData);
+        if(signin){
+            signinMutation.mutate(formData);
+        }else{
+            signupMutation.mutate(formData);
+        }
     };
 
     // useEffect(() => {
@@ -51,6 +45,8 @@ function Auth({ headTest, signin }: IAuthProps) {
     //     console.log(cookies.access_token);
         
     // }, [])
+
+    if(signinMutation.isPending || signupMutation.isPending) return <Loader />
 
     return (
         <div className="d-flex w-100 h-100">
@@ -109,7 +105,7 @@ function Auth({ headTest, signin }: IAuthProps) {
             <div className="col-md-7 d-none d-md-block position-relative" >
                 <div className={`${styles.authCar} img-wrapper`} style={{ backgroundImage: "url(/imgs/auth-car.jpg)" }}>
                     <div className="position-absolute top-0 left-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ zIndex: 1 }}>
-                        <h1 className={`${styles.heading} display-4 fw-bold text-start text-white  text-capitalize`}>From booking to <br /> <span className='text-primary'>a brilliant shine—your</span> <br /><span className='ms-5'>car’s transformation</span> <br /> <span className='ms-5'>starts here!</span> </h1>
+                        <h1 className={`${styles.heading} display-4 fw-bold text-start text-white  text-capitalize`}>From booking to <br /> <span className='text-primary'>a brilliant shine—your</span> <br /><span className='ms-5'>car&apos;s transformation</span> <br /> <span className='ms-5'>starts here!</span> </h1>
                     </div>
                     <div className="position-absolute top-0 left-0 w-100 h-100 overflow-hidden">
                         <HeroBackground />

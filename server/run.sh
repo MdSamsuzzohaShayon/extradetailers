@@ -10,16 +10,19 @@ sudo dnf install postgresql16-devel
 
 # Connect to postgresql
 sudo -u postgres psql
-      #\dn # Show All Users/Roles
-      #postgres=# CREATE USER shayon with PASSWORD 'Test1234';
-      #postgres=# CREATE DATABASE extradetailers_db;
-      #postgres=# GRANT ALL PRIVILEGES ON DATABASE extradetailers_db TO shayon;
+      # \dn # Show All Users/Roles
+      # postgres=# CREATE USER shayon with PASSWORD 'Test1234';
+      # postgres=# CREATE DATABASE extradetailers_db;
+      # postgres=# GRANT ALL PRIVILEGES ON DATABASE extradetailers_db TO shayon;
       # \q
 
-      #\l # List All Databases
-      #\c extradetailers_db # Switch to a Specific Database
-      #\dt *.* # Show All Tables in the Current Database
-      #\d accounts_user # Describe Table Structure (Columns, Data Types, etc.)
+      # \l # List All Databases
+      # \c extradetailers_db # Switch to a Specific Database
+      # \dt *.* # Show All Tables in the Current Database
+      # \d accounts_user # Describe Table Structure (Columns, Data Types, etc.)
+
+      # SELECT * FROM accounts_user;
+
 
 
 

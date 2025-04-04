@@ -1,24 +1,59 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { EUserRole } from './types';
+// import { refreshAccessToken } from './app/_requests/auth';
 
 // This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  console.log('Middleware:', request.nextUrl.pathname);
-  
+export async function middleware(request: NextRequest) {
 
-   // Define an array of protected pages
-   const protectedPages = ["/dashboard", "/admin"]; 
+
+
+  // Define an array of protected pages
+  const protectedPages = ["/dashboard", "/admin"];
+
+  const unauthenticatedPages = ["/signin", "/signup"];
 
   // Check to access protected pages
-  const {pathname} = request.nextUrl;
+  const { pathname } = request.nextUrl;
+  // It is not working with secure true
+  // Get cookies in here 
+  const cookies = request.cookies;
+
+  if (unauthenticatedPages.some((page) => pathname.startsWith(page))) {
+    const user_role = cookies.get('user_role')?.value;
+    const access_token = cookies.get('access_token')?.value;
+    if(user_role && access_token){
+      if(user_role === EUserRole.ADMIN){
+        return NextResponse.redirect(new URL('/admin', request.url));
+      }
+  
+      if(user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER){
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+    }
+  }
+
+
   // Instead of checking one protedtected page /dashboard, check list/array of pages
   if (protectedPages.some((page) => pathname.startsWith(page))) {
-    // It is not working with secure true
-    // Get cookies in here 
-    const cookies = request.cookies;
+
     // Get access_token from cookies
     const access_token = cookies.get('access_token')?.value;
+
+
+    /*
+    if(!access_token){
+      const refresh_token = cookies.get('refresh_token')?.value;
+      if(!refresh_token) return NextResponse.redirect(new URL('/signin', request.url));
+      // Create a request with refresh token
+      const response = await refreshAccessToken();
+      if(response.status === 200){
+        access_token = cookies.get('access_token')?.value;
+      }else{
+        return NextResponse.redirect(new URL('/signin', request.url));
+      }
+    }
+    */
     const user_role = cookies.get('user_role')?.value;
 
     if (!access_token || !user_role) {
@@ -30,17 +65,17 @@ export function middleware(request: NextRequest) {
 
     // Check admin user
     if (user_role === EUserRole.ADMIN) {
-      if(pathname.startsWith('/admin')) { 
+      if (pathname.startsWith('/admin')) {
         return NextResponse.next();
       }
       return NextResponse.redirect(new URL('/admin', request.url));
       // Check customer and detailer user
     } else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
-      if(pathname.startsWith('/dashboard')) { 
+      if (pathname.startsWith('/dashboard')) {
         return NextResponse.next();
       }
       return NextResponse.redirect(new URL('/dashboard', request.url));
-    } 
+    }
   }
 
 

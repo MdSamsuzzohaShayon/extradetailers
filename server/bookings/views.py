@@ -9,7 +9,11 @@ class BookingListView(GeneralUserPermissionMixin, generics.ListAPIView):
     serializer_class = BookingSerializer
 
     def get_queryset(self):
-        return Booking.objects.filter(user=self.request.user)  # Only user's bookings
+        user = self.request.user
+
+        if user.is_authenticated and user.role == "admin":
+            return Booking.objects.all()  # Admin sees all bookings
+        return Booking.objects.filter(user=user)  # Non-admin users see their own bookings only
 
 
 # Create a new booking (User can only create for themselves)

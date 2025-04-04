@@ -15,6 +15,7 @@ from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
 import pymysql
+from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
 pymysql.install_as_MySQLdb()  # Required if using pymysql
 
@@ -209,8 +210,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),  # 10 minutes
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=ACCESS_TOKEN_LIFETIME_IN_MINUTES),  # 10 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=REFRESH_TOKEN_LIFETIME_IN_DAYS),  # 7 Days
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,

@@ -1,31 +1,23 @@
-'use client';
+'use client'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React, { createContext, PropsWithChildren, useContext } from 'react';
+/**
+ * Reference - https://github.com/TanStack/query/tree/main/examples/react
+ * App prefetching - https://github.com/TanStack/query/blob/main/examples/react/nextjs-app-prefetching/app/page.tsx
+ * Suspense streaming - https://github.com/TanStack/query/blob/main/examples/react/nextjs-suspense-streaming/src/app/providers.tsx
+ * Next.js - https://github.com/TanStack/query/tree/main/examples/react/nextjs
+ */
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type * as React from 'react';
+import { getQueryClient } from './get-query-client';
 
+export default function Providers({ children }: { children: React.ReactNode }) {
+  const queryClient = getQueryClient()
 
-// Create a context that holds both ldoIdUrl and ldoId
-interface LdoContextType {
-  ldoIdUrl: string;
-  ldoId: string | null;
+  return (
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools />
+    </QueryClientProvider>
+  )
 }
-
-export const LdoContext = createContext<LdoContextType>({
-  ldoIdUrl: '',
-  ldoId: null,
-});
-
-export function useLdoId() {
-  return useContext(LdoContext);
-}
-
-function QueryProvider({ children }: PropsWithChildren) {
-
-    const queryClient = new QueryClient()
-
-
-
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-}
-
-export default QueryProvider;
