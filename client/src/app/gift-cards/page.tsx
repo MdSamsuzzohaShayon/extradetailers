@@ -2,8 +2,10 @@ import Footer from '@/components/layout/Footer';
 import React from 'react';
 import styles from "./gift-cards.module.scss";
 import Landing from '@/components/layout/Landing';
-import { IProduct } from '@/types';
 import PackageList from '@/components/gift-cards/PackageList';
+import { getQueryClient } from '@/lib/get-query-client';
+import { servicesOptions } from '../_requests/services';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 /**
  * Reference -> https://carcareful.peacefulqode.in/our-service/
@@ -12,33 +14,20 @@ import PackageList from '@/components/gift-cards/PackageList';
  */
 
 
-const serviceList: IProduct[] = [
-  {
-    id: 1,
-    title: "Ceramic Coat Windshield",
-    price: 100,
-    time: '1 hour',
-    desc: "Coat windshield to have better visibility while driving in the rain"
-  },
-  {
-    id: 2,
-    title: "Platinum Sedan Package",
-    price: 249,
-    time: '3 hours, 30 minutes',
-    desc: "Package Includes: Comprehensive interior cleaning, including vacuuming, dashboard treatment, and carpet cleaning Complete exterior detailing with hand wash & wax Tire and rim detailing Window cleaning inside and out"
-  },
+async function GiftCardsPage() {
 
-  {
-    id: 3,
-    title: "Motor Home/ RV/ Tractors ($20-35/sqft)",
-    price: 249,
-    time: '1 hour',
-    desc: "Services Include Steam Wash / Polish / Wax / Oxidation Removal / RV Interior Priced upon inspection"
-  },
+  const queryClient = getQueryClient();
+  
+    try {
+      // Always use await to properly handle errors
+      await queryClient.prefetchQuery(servicesOptions);
+    } catch (error) {
+      console.error("Prefetch error:", error);
+      // The error will automatically propagate to error.tsx
+      throw error;
+    }
 
-];
 
-function GiftCardsPage() {
   return (
     <>
       <main>
@@ -46,7 +35,9 @@ function GiftCardsPage() {
           <Landing title="Gift Cards" />
         </section>
         <section className="section-pt">
-          <PackageList serviceList={serviceList} styles={styles} />
+          <HydrationBoundary state={dehydrate(queryClient)}>
+          <PackageList styles={styles} />
+      </HydrationBoundary>
         </section>
         <section className="section-pt"></section>
       </main>

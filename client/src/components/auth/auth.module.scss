@@ -1,0 +1,29 @@
+.authImage {
+    object-fit: cover;
+}
+
+.authCar {
+    background-position: center;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.contentBox {
+    width: 70%;
+    margin-left: 15%;
+    padding: 0 20px;
+
+    @media(max-width : 768px) {
+        width: 90%;
+        margin-left: 5%;
+    }
+
+}
+
+.heading {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: italic;
+}

@@ -38,5 +38,13 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
 class EmptySerializer(serializers.Serializer):
     pass  # No fields, just to satisfy DRF
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    token = serializers.CharField()

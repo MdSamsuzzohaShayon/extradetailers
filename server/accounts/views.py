@@ -1,15 +1,15 @@
+import os
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny, IsAuthenticated  # Allow any user (unauthenticated too)
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication  # Authentication options
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
-from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer
-from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin
+from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer
+from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin
+from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
 
 class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
@@ -28,11 +28,11 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
                 token = RefreshToken.for_user(user)
 
                 # Resend Validation Email
-                validation_link = f"http://localhost:8000/api/auth/validate-user/?token={str(token.access_token)}"
+                validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
                 send_mail(
                     "Validate Your Account",
                     f"Click the link to validate your account: {validation_link}",
-                    "mdsamsuzzoha5222@gmail.com",
+                    os.getenv('EMAIL_HOST_USER'),
                     [user.email],
                     fail_silently=False,
                 )
@@ -52,11 +52,11 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
         token = RefreshToken.for_user(user)
 
         # Send Validation Email
-        validation_link = f"http://localhost:8000/api/auth/validate-user/?token={str(token.access_token)}"
+        validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
         send_mail(
             "Validate Your Account",
             f"Click the link to validate your account: {validation_link}",
-            "mdsamsuzzoha5222@gmail.com",
+            os.getenv('EMAIL_HOST_USER'),
             [user.email],
             fail_silently=False,
         )
@@ -116,24 +116,33 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
         refresh = RefreshToken.for_user(user)
         access = str(refresh.access_token)
 
-        response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+        response = Response({"message": "Login successful", "user_role": user.role, "access_token": access, "refresh_token": str(refresh)}, status=status.HTTP_200_OK)
 
         # Set cookies with HttpOnly & Secure flags
         response.set_cookie(
             key="access_token",
             value=access,
             httponly=True,  # Prevent JavaScript access
-            secure=True,  # Use HTTPS
-            samesite="None",  # Allow cross-origin cookies
-            max_age=60 * 30,  # 30 minutes
+            secure=False,  # Use HTTPS
+            samesite="Lax",  # Allow cross-origin cookies, "None" requires HTTPS, use "Lax" for localhost
+            max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES,  # 30 minutes
         )
         response.set_cookie(
             key="refresh_token",
             value=str(refresh),
             httponly=True,
-            secure=True,
-            samesite="None",
-            max_age=60 * 60 * 24 * 7,  # 7 days
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
+        )
+
+        response.set_cookie(
+            key="user_role",
+            value=str(user.role),
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
         )
 
         return response
@@ -149,15 +158,41 @@ class RefreshTokenView(PublicPermissionMixin, generics.CreateAPIView):
             return Response({"error": "Refresh token missing"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
+            # Decode the refresh token
             refresh = RefreshToken(refresh_token)
-            access_token = str(refresh.access_token)
 
-            response = Response({"access_token": access_token}, status=status.HTTP_200_OK)
-            response.set_cookie("access_token", access_token, httponly=True, secure=True, samesite="None", max_age=60 * 30)
+            # Get user ID from the token payload
+            user_id = refresh.payload.get("user_id")  # Default claim is "user_id"
+
+            if not user_id:
+                return Response({"error": "Invalid refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+
+            # Fetch the user instance from the database
+            user = User.objects.get(id=user_id)
+
+            # Blacklist the old refresh token (if enabled in SIMPLE_JWT settings)
+            refresh.blacklist()
+
+            # Create new refresh & access tokens
+            new_refresh_token = RefreshToken.for_user(user)
+            access_token = str(new_refresh_token.access_token)
+
+            # Set new tokens in cookies
+            response = Response({
+                "access_token": access_token,
+                "refresh_token": str(new_refresh_token)
+            }, status=status.HTTP_200_OK)
+
+            response.set_cookie("access_token", access_token, httponly=True, secure=True, samesite="None", max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES)
+            response.set_cookie("refresh_token", str(new_refresh_token), httponly=True, secure=True, samesite="None", max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS)
 
             return response
-        except Exception:
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except AttributeError:
             return Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({"error": f"Invalid or expired refresh token: {str(e)}"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogoutView(PublicPermissionMixin, generics.CreateAPIView):
@@ -169,6 +204,7 @@ class LogoutView(PublicPermissionMixin, generics.CreateAPIView):
         # Delete authentication cookies
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
+        response.delete_cookie("user_role")
 
         return response
 
@@ -179,3 +215,66 @@ class ProtectedView(GeneralUserPermissionMixin, APIView):
 
     def get(self, request):
         return Response({"message": "You are authenticated!"})
+
+
+class ForgotPasswordView(PublicPermissionMixin, generics.CreateAPIView):
+    serializer_class = ForgotPasswordSerializer
+
+    def create(self, request, *args, **kwargs):
+        email = request.data.get("email")
+
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(email=email)
+
+            # Check if there's an existing valid reset token (assuming tokens expire in 15 mins)
+            existing_token = RefreshToken.for_user(user)
+            existing_access_token = str(existing_token.access_token)
+
+            reset_link = f"{os.getenv('FRONTEND_URL')}/auth/reset-password/?token={existing_access_token}"
+
+            # Send email with reset link
+            send_mail(
+                "Reset Your Password",
+                f"Click the link to reset your password: {reset_link}",
+                os.getenv('EMAIL_HOST_USER'),
+                [user.email],
+                fail_silently=False,
+            )
+
+            return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response({"error": "User with this email does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordView(PublicPermissionMixin, generics.CreateAPIView):
+    serializer_class = EmptySerializer
+
+    def create(self, request, *args, **kwargs):
+        token = request.data.get("token")
+        new_password = request.data.get("new_password")
+
+        if not token or not new_password:
+            return Response({"error": "Token and new password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            decoded_token = AccessToken(token)
+            user = User.objects.get(id=decoded_token["user_id"])
+
+            # Set new password
+            user.set_password(new_password)
+            user.save()
+
+            return Response({"message": "Password has been reset successfully"}, status=status.HTTP_200_OK)
+
+        except AuthenticationFailed:
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_401_UNAUTHORIZED)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

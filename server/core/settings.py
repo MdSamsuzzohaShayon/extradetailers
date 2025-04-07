@@ -14,6 +14,10 @@ from pathlib import Path
 from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
+import pymysql
+from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
+
+pymysql.install_as_MySQLdb()  # Required if using pymysql
 
 load_dotenv()  # take environment variables from .env.
 
@@ -34,6 +38,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 # Application definition
 
 INSTALLED_APPS = [
+    # Django in-built
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,12 +46,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # External
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 
-    "accounts"
+    # Internal
+    "accounts",
+    "services",
+    "bookings",
+    "detailers",
+    "payment",
+    "customers"
 ]
 
 MIDDLEWARE = [
@@ -61,13 +74,15 @@ MIDDLEWARE = [
 
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-]
+
 
 # Allow cookies to be sent across origins
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+"http://localhost:3000",
+    # os.getenv("FRONTEND_URL"),
+]
 
 CORS_ALLOW_METHODS = (
     *default_methods,
@@ -96,10 +111,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME", None),
+        'USER': os.getenv("DB_USERNAME", None),  # Replace with your MySQL username
+        'PASSWORD': os.getenv("DB_PASSWORD", None),  # Replace with your MySQL password
+        'HOST': os.getenv("DB_HOST", None),  # Change if using a remote database
+        'PORT': os.getenv("DB_PORT", None),  # Default MySQL port
     }
 }
 
@@ -144,6 +171,13 @@ AUTH_USER_MODEL = 'accounts.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# ✅ Allow session-based authentication with cookies
+CSRF_COOKIE_SECURE = False  # Set True in production
+SESSION_COOKIE_SECURE = False  # Set True in production
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -160,10 +194,9 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Extra detailer',
+    'DESCRIPTION': 'This project is a car detailing booking platform built with **Next.js** for the frontend and **Django** for the backend.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     # OTHER SETTINGS
@@ -177,8 +210,8 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),  # 10 minutes
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3),  # 7 Days
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=ACCESS_TOKEN_LIFETIME_IN_MINUTES),  # 10 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=REFRESH_TOKEN_LIFETIME_IN_DAYS),  # 7 Days
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,

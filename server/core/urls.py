@@ -31,5 +31,8 @@ urlpatterns = [
         url_name="schema",
         permission_classes=[AllowAny],  # Allow everyone to access docs
         authentication_classes=[]), name="docs"),
-    path('api/accounts/', include("accounts.urls"))
+    path('api/accounts/', include("accounts.urls")),
+
+    path('api/bookings/', include("bookings.urls")),
+    path('api/services/', include("services.urls")),
 ]
