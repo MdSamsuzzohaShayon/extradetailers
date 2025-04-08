@@ -22,7 +22,7 @@ const timeSlots = {
 
 function PackageList({ styles }: IPackageListProps) {
     const { data: allServices } = useSuspenseQuery(servicesOptions);
-    console.log({allServices});
+    // console.log({allServices});
     
 
     const modalEl = useRef(null);

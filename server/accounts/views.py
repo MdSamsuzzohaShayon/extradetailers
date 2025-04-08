@@ -11,6 +11,16 @@ from .serializers import UserRegistrationSerializer, UserValidationSerializer, L
 from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
+# Validate COOKIE_HTTP_ONLY, COOKIE_SECURE, and COOKIE_SAMESITE
+COOKIE_HTTP_ONLY = os.getenv("HTTP_ONLY", "false").lower() == "true"
+COOKIE_SECURE = os.getenv("COOKIE_SECURE", "false").lower() == "true"
+COOKIE_SAMESITE = os.getenv("COOKIE_SAMESITE", "None").lower() if os.getenv("COOKIE_SAMESITE") else None
+# 30 minutes
+COOKIE_ACCESS_TOKEN_AGE = 60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES
+# 7 Days
+COOKIE_REFRESH_TOKEN_AGE = 60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS
+
+
 
 class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
     queryset = User.objects.all()
@@ -110,7 +120,7 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
         user = authenticate(request, email=email, password=password)
 
         if user is None:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Generate JWT tokens
         refresh = RefreshToken.for_user(user)
@@ -122,27 +132,27 @@ class LoginView(PublicPermissionMixin, generics.CreateAPIView):
         response.set_cookie(
             key="access_token",
             value=access,
-            httponly=True,  # Prevent JavaScript access
-            secure=False,  # Use HTTPS
-            samesite="Lax",  # Allow cross-origin cookies, "None" requires HTTPS, use "Lax" for localhost
-            max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES,  # 30 minutes
+            httponly=COOKIE_HTTP_ONLY,  # Prevent JavaScript access
+            secure=COOKIE_SECURE,  # Use HTTPS
+            samesite=COOKIE_SAMESITE,  # Allow cross-origin cookies, "None" requires HTTPS, use "Lax" for localhost
+            max_age=COOKIE_ACCESS_TOKEN_AGE,  # 30 minutes
         )
         response.set_cookie(
             key="refresh_token",
             value=str(refresh),
-            httponly=True,
-            secure=False,
-            samesite="Lax",
-            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
+            httponly=COOKIE_HTTP_ONLY,
+            secure=COOKIE_SECURE,
+            samesite=COOKIE_SAMESITE,
+            max_age=COOKIE_REFRESH_TOKEN_AGE,  # 7 days
         )
 
         response.set_cookie(
             key="user_role",
             value=str(user.role),
-            httponly=True,
-            secure=False,
-            samesite="Lax",
-            max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS,  # 7 days
+            httponly=COOKIE_HTTP_ONLY,
+            secure=COOKIE_SECURE,
+            samesite=COOKIE_SAMESITE,
+            max_age=COOKIE_REFRESH_TOKEN_AGE,  # 7 days
         )
 
         return response
@@ -176,23 +186,36 @@ class RefreshTokenView(PublicPermissionMixin, generics.CreateAPIView):
             # Create new refresh & access tokens
             new_refresh_token = RefreshToken.for_user(user)
             access_token = str(new_refresh_token.access_token)
+            refresh_token_str = str(new_refresh_token)
 
             # Set new tokens in cookies
             response = Response({
                 "access_token": access_token,
-                "refresh_token": str(new_refresh_token)
+                "refresh_token": refresh_token_str
             }, status=status.HTTP_200_OK)
 
-            response.set_cookie("access_token", access_token, httponly=True, secure=True, samesite="None", max_age=60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES)
-            response.set_cookie("refresh_token", str(new_refresh_token), httponly=True, secure=True, samesite="None", max_age=60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS)
+            response.set_cookie("access_token", access_token, httponly=COOKIE_HTTP_ONLY, secure=COOKIE_SECURE, samesite=COOKIE_SAMESITE, max_age=COOKIE_ACCESS_TOKEN_AGE)
+            response.set_cookie("refresh_token", refresh_token_str, httponly=COOKIE_HTTP_ONLY, secure=COOKIE_SECURE, samesite=COOKIE_SAMESITE, max_age=COOKIE_REFRESH_TOKEN_AGE)
 
             return response
         except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            response = Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+            response.delete_cookie('user_role')
+            return response
         except AttributeError:
-            return Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({"error": "Invalid or expired refresh token"}, status=status.HTTP_401_UNAUTHORIZED)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+            response.delete_cookie('user_role')
+            return response
         except Exception as e:
-            return Response({"error": f"Invalid or expired refresh token: {str(e)}"}, status=status.HTTP_401_UNAUTHORIZED)
+            response = Response({"error": f"Invalid or expired refresh token: {str(e)}"}, status=status.HTTP_401_UNAUTHORIZED)
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+            response.delete_cookie('user_role')
+            return response
 
 
 class LogoutView(PublicPermissionMixin, generics.CreateAPIView):

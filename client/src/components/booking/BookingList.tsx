@@ -4,7 +4,7 @@ import { IBooking } from '@/types';
 import React from 'react';
 import BookingCard from './BookingCard';
 import { DefaultError, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { deleteBookingOptions, bookingsOptions } from '@/app/_requests/bookings';
+import { bookingsOptions, useDeleteBookingOptions } from '@/app/_requests/bookings';
 // import { useError } from '@/lib/ErrorProvider';
 
 
@@ -16,7 +16,7 @@ function BookingList({ styles }: BookingListProps) {
     const queryClient = useQueryClient(); // ✅ React Query Client
     const { data: allBookings } = useSuspenseQuery(bookingsOptions);
 
-    const deleteBookingMutation = useMutation<unknown, DefaultError, number>(deleteBookingOptions(queryClient));
+    const deleteBookingMutation = useMutation<unknown, DefaultError, number>(useDeleteBookingOptions(queryClient));
 
 
     const handleDeleteBooking = async (e: React.SyntheticEvent, bookingId: number) => {

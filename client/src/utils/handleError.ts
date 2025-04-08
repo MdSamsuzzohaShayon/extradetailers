@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 export function handleApiError(error: IAPIError): string {
   if (error instanceof AxiosError) {
     const status = error.response?.status;
-    const errorMessage = error.response?.data?.error || error.response?.data?.message || error.message;
+    // axiosError.response.data?.detail
+    const errorMessage = error.response?.data?.detail || error.response?.data?.error || error.response?.data?.message || error.message;
 
     if (errorMessage) {
       return `Error ${status}: ${errorMessage}`;

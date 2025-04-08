@@ -39,6 +39,7 @@ export async function middleware(request: NextRequest) {
 
     // Get access_token from cookies
     const access_token = cookies.get('access_token')?.value;
+    const refresh_token = cookies.get('refresh_token')?.value;
 
 
     /*
@@ -56,7 +57,11 @@ export async function middleware(request: NextRequest) {
     */
     const user_role = cookies.get('user_role')?.value;
 
-    if (!access_token || !user_role) {
+    if (!refresh_token && !access_token) {
+      return NextResponse.redirect(new URL('/signin', request.url));
+    }
+
+    if(!user_role){
       return NextResponse.redirect(new URL('/signin', request.url));
     }
 
