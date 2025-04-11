@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
 
   // Define an array of protected pages
-  const protectedPages = ["/dashboard", "/admin"];
+  const protectedPages = ["/dashboard", "/admin", "/checkout"];
 
   const unauthenticatedPages = ["/signin", "/signup"];
 
@@ -75,11 +75,12 @@ export async function middleware(request: NextRequest) {
       }
       return NextResponse.redirect(new URL('/admin', request.url));
       // Check customer and detailer user
-    } else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
+    } 
+
+    else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
       if (pathname.startsWith('/dashboard')) {
         return NextResponse.next();
       }
-      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 

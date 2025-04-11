@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "services",
     "bookings",
     "detailers",
-    "payment",
+    "payments",
     "customers"
 ]
 

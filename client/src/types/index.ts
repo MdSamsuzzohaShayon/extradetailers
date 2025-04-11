@@ -10,13 +10,13 @@ interface IService {
 }
 
 interface IBooking {
-    id: number;
-    user: string;
+    id?: number;
+    user?: string;
     service: number;
-    service_details: IService;
+    service_details?: IService;
     order_date: string;
-    status: EBookingStatus;
-    // slot: string;
+    slot: string;
+    status?: EBookingStatus;
 }
 
 interface IAPIError {

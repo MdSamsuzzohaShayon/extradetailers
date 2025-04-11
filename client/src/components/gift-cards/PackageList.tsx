@@ -3,11 +3,14 @@
 import Image from 'next/image';
 import React, { useState, useEffect, useRef } from 'react';
 import PackageCard from './PackageCard';
-import { IService, TModuleStyle } from '@/types';
+import { EBookingStatus, IBooking, IService, TModuleStyle } from '@/types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { servicesOptions } from '@/app/_requests/services';
+import LocalStorage from '@/utils/LocalStorage';
+import useUser from '@/hooks/useUser';
+import { useRouter } from 'next/navigation';
 // import LocalStorage from '@/utils/LocalStorage';
 
 interface IPackageListProps {
@@ -21,7 +24,12 @@ const timeSlots = {
 };
 
 function PackageList({ styles }: IPackageListProps) {
+    const router = useRouter();
+
+
     const { data: allServices } = useSuspenseQuery(servicesOptions);
+    const user = useUser();
+    const [cartItems, setCartItems] = useState<IBooking[]>([]);
     // console.log({allServices});
     
 
@@ -29,6 +37,7 @@ function PackageList({ styles }: IPackageListProps) {
     const [selectedProduct, setSelectedProduct] = useState<IService | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+    const [showCheckout, setShowCheckout] = useState<boolean>(false);
 
 
     useEffect(() => {
@@ -54,7 +63,10 @@ function PackageList({ styles }: IPackageListProps) {
     const handleDateChange = (date: Date | null, event?: React.SyntheticEvent<unknown>) => {
         event?.preventDefault();
         if (date) {
-            setSelectedDate(date);
+            // Set time to 00:00:00 while keeping the date
+            const normalizedDate = new Date(date);
+            normalizedDate.setHours(0, 0, 0, 0);
+            setSelectedDate(normalizedDate);
         }
         setSelectedTimeSlot(null);
     };
@@ -62,14 +74,6 @@ function PackageList({ styles }: IPackageListProps) {
     const handleSelectTimeSlot = (slot: string) => {
         if (!selectedProduct || !selectedDate) return;
         setSelectedTimeSlot(slot);
-        // Set order to local storage
-        // const newOrder: IBooking = {
-        //     id: 1,
-        //     date: selectedDate,
-        //     productId: selectedProduct.id,
-        //     slot,
-        // };
-        // LocalStorage.setOrder(newOrder);
     };
 
     const handleCloseModal = () => {
@@ -83,8 +87,23 @@ function PackageList({ styles }: IPackageListProps) {
 
     const handleProceedToCheckout = () => {
         if (selectedProduct && selectedDate && selectedTimeSlot) {
-            alert(`Proceeding to checkout with ${selectedProduct.title} on ${selectedDate.toDateString()} at ${selectedTimeSlot}`);
-            handleCloseModal();
+            const booking: IBooking = {
+                service: selectedProduct.id,
+                order_date: selectedDate.toISOString(),
+                slot: selectedTimeSlot
+            };
+            
+            // If user is logged in, add to cart and show checkout button
+            setCartItems([...cartItems, booking]);
+            LocalStorage.addOrder(booking);
+            if (user) {
+                setShowCheckout(true);
+            } else {
+                // @ts-ignore
+                if (modalEl.current) modalEl.current.hide();
+                // Show signin button
+                router.push('/signin');
+            }
         }
     };
 
@@ -198,14 +217,37 @@ function PackageList({ styles }: IPackageListProps) {
                             >
                                 Remove
                             </button>
-                            <button
-                                type="button"
-                                className="btn btn-success fw-bold px-4"
-                                disabled={!selectedDate || !selectedTimeSlot}
-                                onClick={handleProceedToCheckout}
-                            >
-                                Proceed to Checkout
-                            </button>
+                            {!user ? (
+                                <button
+                                    type="button"
+                                    className="btn btn-primary fw-bold px-4"
+                                    disabled={!selectedDate || !selectedTimeSlot}
+                                    onClick={handleProceedToCheckout}
+                                >
+                                    Add to Cart
+                                </button>
+                            ) : (
+                                <>
+                                    {showCheckout ? (
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary fw-bold px-4"
+                                            disabled={!selectedDate || !selectedTimeSlot || !selectedTimeSlot}
+                                            onClick={handleProceedToCheckout}
+                                        >
+                                            Add to Cart
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            className="btn btn-success fw-bold px-4"
+                                            onClick={() => window.location.href = '/checkout'}
+                                        >
+                                            Proceed to Checkout
+                                        </button>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
