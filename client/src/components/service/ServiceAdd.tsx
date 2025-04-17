@@ -1,6 +1,6 @@
 'use client'
 
-import { createServiceOptions } from '@/app/_requests/services';
+import { useCreateServiceOptions } from '@/app/_requests/services';
 import { IService } from '@/types';
 import { DefaultError, useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ function ServiceAdd({ styles }: IServiceAddProps) {
     const [editingService, setEditingService] = useState<Partial<IService>>({});
 
     // ✅ UseMutation for creating a service
-    const createServiceMutation = useMutation<unknown, DefaultError, FormData>(createServiceOptions(queryClient));
+    const createServiceMutation = useMutation<unknown, DefaultError, FormData>(useCreateServiceOptions(queryClient));
 
 
 

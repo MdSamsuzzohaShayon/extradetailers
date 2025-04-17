@@ -1,5 +1,7 @@
 import axiosInstance from "@/config/axios";
+import { useMessage } from "@/lib/ToastProvider";
 import { IService } from "@/types";
+import { handleApiError } from "@/utils/handleError";
 import { QueryClient } from "@tanstack/react-query";
 
 
@@ -28,7 +30,8 @@ async function createService(formData: FormData) {
   return response.data;
 }
 
-export function createServiceOptions(queryClient: QueryClient): Record<string, unknown>{
+export function useCreateServiceOptions(queryClient: QueryClient): Record<string, unknown>{
+    const { setMessage } = useMessage();
   return {
           mutationFn: createService,
           onSuccess: () => {
@@ -37,7 +40,8 @@ export function createServiceOptions(queryClient: QueryClient): Record<string, u
           },
           onError: (error: never) => {
               console.error("Create Service Error:", error);
-              new Error(error);
+              const errorMessage = handleApiError(error);
+              setMessage({ error: true, text: errorMessage });
           },
       }
 }

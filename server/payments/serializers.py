@@ -11,4 +11,4 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 
 # ✅ Simple serializer to validate incoming `items`
 class PaymentIntentSerializer(Serializer):
-    items = ListField(child=DictField(), allow_empty=False)
+    bookings = ListField(child=DictField(), allow_empty=False)

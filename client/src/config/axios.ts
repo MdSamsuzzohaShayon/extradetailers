@@ -61,6 +61,9 @@ const PROTECTED_API_ROUTES = [
   {url: "/services/<int:pk>/", method: "GET"},
   {url: "/services/<int:pk>/update/", method: "PATCH"},
   {url: "/services/<int:pk>/delete/", method: "DELETE"},
+  
+  
+  {url: "/payments/create-payment-intent/", method: "POST"},
 
   ];
 

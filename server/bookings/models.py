@@ -11,9 +11,11 @@ class Booking(models.Model):
     slot=models.CharField(null=True, blank=True) # Time slot
     status = models.CharField(
         max_length=20,
-        choices=[("pending", "Pending"), ("completed", "Completed"), ("canceled", "Canceled")],
-        default="pending"
+        choices=[("initialized", "Initialized"), ("pending", "Pending"), ("completed", "Completed"), ("canceled", "Canceled")],
+        default="initialized"
     )
+    payment_intent_id = models.CharField(max_length=255, null=True, blank=True)  # New field
+    paid = models.BooleanField(default=False)  # ✅ New field
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"

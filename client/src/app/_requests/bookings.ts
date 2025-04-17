@@ -3,7 +3,6 @@ import { useMessage } from "@/lib/ToastProvider";
 import { IAPIError, IBooking } from "@/types";
 import { handleApiError } from "@/utils/handleError";
 import { QueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 
 export const bookingsOptions = {
   queryKey: ["bookings"] as const,

@@ -44,6 +44,11 @@ interface IMessage{
     text: string;
 }
 
+
+interface IPaymentIntentResponse {
+    client_secret: string;
+  }
+
 export enum EUserRole {
     ADMIN = 'admin',
     CUSTOMER = 'customer',
@@ -57,4 +62,4 @@ export enum EBookingStatus {
 }
 
 
-export type { TModuleStyle, IService, IBooking, IAPIError, IMessage, IUser, IMenuItem }
+export type { TModuleStyle, IService, IBooking, IAPIError, IMessage, IUser, IMenuItem, IPaymentIntentResponse }

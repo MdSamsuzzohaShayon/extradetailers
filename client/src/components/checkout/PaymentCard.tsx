@@ -1,41 +1,35 @@
-'use client'
+"use client";
 
 import { TModuleStyle } from "@/types";
 import LocalStorage from "@/utils/LocalStorage";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "./CheckoutForm";
+
 interface IPaymentCardProps {
   total: number;
   styles: TModuleStyle;
+  clientSecret: string | null;
 }
 
-function PaymentCard({ total, styles }: IPaymentCardProps) {
-  const router = useRouter();
+// Make sure to call loadStripe outside of a component’s render to avoid
+// recreating the Stripe object on every render.
+// This is a public sample test API key.
+// Don’t submit any personally identifiable information in requests made with this key.
+// Sign in to see your own test API key embedded in code samples.
+const stripePromise = loadStripe(
+  "pk_test_51E42CcE15Lqo4v04FHj1EOv6iAY09udHeoDXN1JN10OcnBN0Ifx002HhH6mGQCxTTJiE1kKQeK6FAD721vg3dflD00a6EctJsj"
+);
 
-  const handlePayPalSuccess = async (details) => {
-    // Save order details and clear cart
-    LocalStorage.clearOrders();
-    router.push("/dashboard");
+function PaymentCard({ total, styles, clientSecret }: IPaymentCardProps) {
+  const appearance = {
+    theme: "stripe",
   };
-
-  const handleStripePayment = async () => {
-    // const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY);
-    // const response = await fetch('/api/create-checkout-session', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ items: cartItems }),
-    // });
-    // const session = await response.json();
-    // const result = await stripe.redirectToCheckout({
-    //   sessionId: session.id,
-    // });
-    // if (result.error) {
-    //   console.error(result.error);
-    // }
-  };
+  // Enable the skeleton loader UI for optimal loading.
+  const loader = "auto";
 
   return (
     <div className={`card border-0 shadow-sm ${styles.glassEffect} p-3`}>
@@ -54,27 +48,14 @@ function PaymentCard({ total, styles }: IPaymentCardProps) {
           <span>${total}</span>
         </div>
         <div className="d-grid gap-3">
-          {/* <PayPalButtons
-          createOrder={(data, actions) => {
-            return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: total.toString()
-                }
-              }]
-            });
-          }}
-          onApprove={(data, actions) => {
-            return actions.order.capture().then(handlePayPalSuccess);
-          }}
-        /> */}
-
-          <button className="btn btn-primary">
-            💳 Pay with Stripe
-          </button>
-          <button className="btn btn-warning">
-            🅿️ Pay with PayPal
-          </button>
+          {clientSecret && (
+            <Elements
+              options={{ clientSecret, appearance, loader }}
+              stripe={stripePromise}
+            >
+              <CheckoutForm />
+            </Elements>
+          )}
         </div>
       </div>
     </div>
