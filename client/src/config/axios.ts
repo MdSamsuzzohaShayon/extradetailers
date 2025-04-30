@@ -65,6 +65,12 @@ const PROTECTED_API_ROUTES = [
   {url: "/services/addon-services/create/", method: "POST"},
   {url: "/services/addon-services/<int:pk>/delete/", method: "DELETE"},
   {url: "/services/addon-services/<int:pk>/update/", method: "PUT"},
+
+  // Service feature
+  {url: "/services/service-features/create/", method: "POST"},
+  {url: "/services/service-features/<int:pk>delete/", method: "DELETE"},
+  {url: "/services/service-features/<int:pk>update/", method: "PUT"},
+
   
   {url: "/payments/create-payment-intent/", method: "POST"},
   

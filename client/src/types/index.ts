@@ -1,14 +1,16 @@
 type TModuleStyle = { readonly [key: string]: string; };
 
-// Service Interfaces
-interface IServiceCategory {
+interface IDefaultModel{
     id?: number;
+}
+
+// Service Interfaces
+interface IServiceCategory extends IDefaultModel {
     name: string;
   }
 
-interface IService {
-    id?: number;
-    serviceName: string;
+interface IService extends IDefaultModel {
+    title: string;
     description: string;
     price: number;
     category: IServiceCategory; // Relationship to Category model
@@ -16,19 +18,21 @@ interface IService {
     image: File | null; // Storing image as a File object (it can also be a URL in a real-world case)
 }
 
-interface IAddOnService{
-    id?: number;
+interface IAddOnService extends IDefaultModel{
     name: string;
     description: string;
     price_min: string;
     price_max: string;
     category: number;
 }
+interface IServiceFeature extends IDefaultModel{
+    service: number;
+    feature_description: string;
+}
 
 
 // Booking Interface
-interface IBooking {
-    id?: number;
+interface IBooking extends IDefaultModel {
     user?: string;
     service: number;
     service_details?: IService;
@@ -91,5 +95,5 @@ export enum EBookingStatus {
 
 export type { 
     TModuleStyle, 
-    IService, IAddOnService, IServiceCategory,
+    IService, IAddOnService, IServiceCategory, IServiceFeature,
     IBooking, IAPIError, IMessage, IUser, IMenuItem, IPaymentIntentResponse, ISubMenuItem }

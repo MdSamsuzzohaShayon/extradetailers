@@ -1,30 +1,30 @@
 import axiosInstance from "@/config/axios";
 import { useMessage } from "@/lib/ToastProvider";
-import { IAddOnService } from "@/types";
+import { IServiceFeature } from "@/types";
 import { handleApiError } from "@/utils/handleError";
 import { cleanFormData } from "@/utils/helpers";
 import { QueryClient } from "@tanstack/react-query";
 
-export const addOnServicesOptions = {
-  queryKey: ["addOnServices"],
-  queryFn: async (): Promise<IAddOnService[]> => {
+export const serviceFeaturesOptions = {
+  queryKey: ["serviceFeatures"],
+  queryFn: async (): Promise<IServiceFeature[]> => {
     try {
-      const response = await axiosInstance.get("/services/addon-services/");
+      const response = await axiosInstance.get("/services/service-features/");
       return response.data;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       throw new Error(
         // @ts-ignore
-        error?.response?.data?.message || "Failed to fetch addOnServices."
+        error?.response?.data?.message || "Failed to fetch serviceFeatures."
       );
     }
   },
 };
 
-async function createAddOnService(formData: FormData) {
+async function createServiceFeature(formData: FormData) {
   const response = await axiosInstance.post(
-    "/services/addon-services/create/",
+    "/services/service-features/create/",
     formData,
     {
       headers: {
@@ -35,18 +35,18 @@ async function createAddOnService(formData: FormData) {
   return response.data;
 }
 
-export function useCreateAddOnServiceOptions(
+export function useCreateServiceFeatureOptions(
   queryClient: QueryClient
 ): Record<string, unknown> {
   const { setMessage } = useMessage();
   return {
-    mutationFn: createAddOnService,
+    mutationFn: createServiceFeature,
     onSuccess: () => {
-      console.log("AddOnService created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["addOnServices"] }); // ✅ Refetch addOnServices list
+      console.log("ServiceFeature created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["serviceFeatures"] }); // ✅ Refetch serviceFeatures list
     },
     onError: (error: never) => {
-      console.error("Create AddOnService Error:", error);
+      console.error("Create ServiceFeature Error:", error);
       const errorMessage = handleApiError(error);
       setMessage({ error: true, text: errorMessage });
     },
@@ -55,15 +55,15 @@ export function useCreateAddOnServiceOptions(
 
 
 
-interface IUpdateAddOnServiceProps {
+interface IUpdateServiceFeatureProps {
   id: number;
   formData: FormData;
 }
 
-async function updateAddOnService({ id, formData }: IUpdateAddOnServiceProps) {
+async function updateServiceFeature({ id, formData }: IUpdateServiceFeatureProps) {
   const cleanedFormData = cleanFormData(formData);
   const response = await axiosInstance.put(
-    `/services/addon-services/${id}/update/`,
+    `/services/service-features/${id}/update/`,
     cleanedFormData,
     {
       headers: {
@@ -74,42 +74,42 @@ async function updateAddOnService({ id, formData }: IUpdateAddOnServiceProps) {
   return response.data;
 }
 
-export function useUpdateAddOnServiceOptions(
+export function useUpdateServiceFeatureOptions(
   queryClient: QueryClient
 ): Record<string, unknown> {
   const { setMessage } = useMessage();
   return {
-    mutationFn: updateAddOnService,
+    mutationFn: updateServiceFeature,
     onSuccess: () => {
-      console.log("AddOnService updated successfully!");
-      queryClient.invalidateQueries({ queryKey: ["addOnServices"] }); // ✅ Refetch addOnServices list
+      console.log("ServiceFeature updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["serviceFeatures"] }); // ✅ Refetch serviceFeatures list
     },
     onError: (error: never) => {
-      console.error("update AddOnService Error:", error);
+      console.error("update ServiceFeature Error:", error);
       const errorMessage = handleApiError(error);
       setMessage({ error: true, text: errorMessage });
     },
   };
 }
 
-async function deleteAddOnService(addOnServiceId: number) {
+async function deleteServiceFeature(serviceFeatureId: number) {
   const response = await axiosInstance.delete(
-    `/services/addon-services/${addOnServiceId}/delete/`
+    `/services/service-features/${serviceFeatureId}/delete/`
   );
   return response.data;
 }
 
-export function deleteAddOnServiceOptions(
+export function deleteServiceFeatureOptions(
   queryClient: QueryClient
 ): Record<string, unknown> {
   return {
-    mutationFn: deleteAddOnService,
+    mutationFn: deleteServiceFeature,
     onSuccess: () => {
-      console.log("AddOnService deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["addOnServices"] }); // ✅ Refetch addOnServices list
+      console.log("ServiceFeature deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["serviceFeatures"] }); // ✅ Refetch serviceFeatures list
     },
     onError: (error: never) => {
-      console.error("Create AddOnService Error:", error);
+      console.error("Create ServiceFeature Error:", error);
     },
   };
 }

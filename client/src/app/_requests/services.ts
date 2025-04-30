@@ -8,12 +8,13 @@ export const servicesOptions = {
   queryKey: ["services"],
   queryFn: async (): Promise<IService[]> => {
     try {
-      const response = await axiosInstance.get("/services/");
+      const response = await axiosInstance.get("/services/main/");
       return response.data;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       throw new Error(
+        // @ts-ignore
         error?.response?.data?.message || "Failed to fetch services."
       );
     }

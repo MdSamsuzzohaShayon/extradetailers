@@ -11,6 +11,7 @@ function AddOnServiceAdd({
   selectedAddOnService,
 }: IAddOnServiceAdd) {
   
+  
   return (
     <React.Fragment>
       <div className="mb-3">
@@ -85,9 +86,7 @@ function AddOnServiceAdd({
             name="category"
             id="category"
             className="form-control border-primary"
-            defaultValue={
-              selectedAddOnService ? selectedAddOnService.category : ""
-            }
+            {...(selectedAddOnService? {value: selectedAddOnService.category} : {})}
             required={!selectedAddOnService ? true : false}
           >
             <option value="">Select a category</option>

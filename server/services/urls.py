@@ -15,11 +15,11 @@ from .views import (
 
 urlpatterns = [
     # Service URLs
-    path('services/', ServiceListView.as_view()),
-    path('services/create/', ServiceCreateView.as_view()),
-    path('services/<int:pk>/', ServiceRetrieveView.as_view()),
-    path('services/<int:pk>/update/', ServiceUpdateView.as_view()),
-    path('services/<int:pk>/delete/', ServiceDeleteView.as_view()),
+    path('main/', ServiceListView.as_view()),
+    path('main/create/', ServiceCreateView.as_view()),
+    path('main/<int:pk>/', ServiceRetrieveView.as_view()),
+    path('main/<int:pk>/update/', ServiceUpdateView.as_view()),
+    path('main/<int:pk>/delete/', ServiceDeleteView.as_view()),
 
     # ServiceCategory URLs
     path('service-categories/', ServiceCategoryListView.as_view()),
