@@ -33,7 +33,6 @@ axiosInstance.interceptors.request.use(
 
     }
     
-    console.log('Request:', config.url);
     return config;
   },
   (error) => {
@@ -62,8 +61,13 @@ const PROTECTED_API_ROUTES = [
   {url: "/services/<int:pk>/update/", method: "PATCH"},
   {url: "/services/<int:pk>/delete/", method: "DELETE"},
   
+  // Add on service
+  {url: "/services/addon-services/create/", method: "POST"},
+  {url: "/services/addon-services/<int:pk>/delete/", method: "DELETE"},
+  {url: "/services/addon-services/<int:pk>/update/", method: "PUT"},
   
   {url: "/payments/create-payment-intent/", method: "POST"},
+  
 
   ];
 

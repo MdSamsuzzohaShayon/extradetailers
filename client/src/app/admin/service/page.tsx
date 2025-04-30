@@ -4,6 +4,7 @@ import ServiceAdd from "@/components/service/ServiceAdd";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import ServiceList from "@/components/service/ServiceList";
+import ServiceMain from "@/components/service/ServiceMain";
 
 async function ServicePage() {
 
@@ -16,11 +17,12 @@ async function ServicePage() {
       <h1 className={styles.title}>Manage Services</h1>
       
       {/* Create / Edit Form */}
-      <ServiceAdd styles={styles} />
+      {/* <ServiceAdd styles={styles} /> */}
       
       {/* Service List */}
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ServiceList styles={styles} />
+        {/* <ServiceList styles={styles} /> */}
+        <ServiceMain />
       </HydrationBoundary>
       
     </div>
