@@ -30,6 +30,10 @@ interface IServiceFeature extends IDefaultModel{
     feature_description: string;
 }
 
+interface IVehicleType extends IDefaultModel{
+    name: string;
+}
+
 
 // Booking Interface
 interface IBooking extends IDefaultModel {
@@ -95,5 +99,5 @@ export enum EBookingStatus {
 
 export type { 
     TModuleStyle, 
-    IService, IAddOnService, IServiceCategory, IServiceFeature,
+    IService, IAddOnService, IServiceCategory, IServiceFeature, IVehicleType,
     IBooking, IAPIError, IMessage, IUser, IMenuItem, IPaymentIntentResponse, ISubMenuItem }
