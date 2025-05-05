@@ -5,7 +5,7 @@ import {
   DefaultError,
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  useQuery,
 } from "@tanstack/react-query";
 import {
   addOnServicesOptions,
@@ -25,7 +25,7 @@ function AddOnServiceList({ styles, allServiceCategories }: AddOnServiceListProp
   const [addOnId, setAddOnId] = useState<number | null>(null);
   
   const queryClient = useQueryClient(); // ✅ React Query Client
-  const { data: allAddOnServices } = useSuspenseQuery(addOnServicesOptions);
+  const { data: allAddOnServices } = useQuery(addOnServicesOptions);
   const updateAddOnServiceMutation = useMutation<unknown, DefaultError, { id: number; formData: FormData }>(useUpdateAddOnServiceOptions(queryClient));
 
 
@@ -59,7 +59,7 @@ function AddOnServiceList({ styles, allServiceCategories }: AddOnServiceListProp
   }
 
   const selectedAddOnService = useMemo(()=>{
-    if(!addOnId) return null;
+    if(!addOnId || !allAddOnServices) return null;
     return allAddOnServices.find((aos)=> aos.id === addOnId);
   }, [addOnId, allAddOnServices]);
 

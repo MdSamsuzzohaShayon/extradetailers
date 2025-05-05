@@ -4,6 +4,7 @@ import {
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { Layout } from "@stripe/stripe-js";
 import { useMessage } from "@/lib/ToastProvider";
 
 export default function CheckoutForm() {
@@ -47,7 +48,7 @@ export default function CheckoutForm() {
   };
 
   const paymentElementOptions = {
-    layout: "accordion"
+    layout: "accordion" as Layout
   }
 
   return (

@@ -11,7 +11,8 @@ import ItemList from "./ItemList";
 import PaymentCard from "./PaymentCard";
 import {
   useMutation,
-  useSuspenseQuery,
+  useQuery,
+  // useSuspenseQuery,
 } from "@tanstack/react-query";
 import { servicesOptions } from "@/app/_requests/services";
 import { useCreatePaymentIntentOptions } from "@/app/_requests/payments";
@@ -25,12 +26,13 @@ function Checkout({ styles }: ICheckoutProps) {
   const [bookings, setBookings] = useState<IBooking[]>([]);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-  const { data: allServices } = useSuspenseQuery(servicesOptions);
+  const { data: allServices } = useQuery(servicesOptions);
 
   
 
   const serviceMap = useMemo(() => {
-    return new Map<number, IService>(allServices.map((s) => [s.id, s]));
+    if(!allServices) return new Map();
+    return new Map<number, IService>(allServices.map((s) => [s.id as number, s]));
   }, [allServices]);
 
   const total = useMemo(() => {

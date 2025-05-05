@@ -3,7 +3,7 @@
 import { IService } from '@/types';
 import React from 'react';
 import ServiceCard from './ServiceCard';
-import { DefaultError, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { DefaultError, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteServiceOptions, servicesOptions } from '@/app/_requests/services';
 // import { useError } from '@/lib/ErrorProvider';
 
@@ -14,7 +14,7 @@ interface ServiceListProps {
 function ServiceList({ styles }: ServiceListProps) {
     // const { setError } = useError();
     const queryClient = useQueryClient(); // ✅ React Query Client
-    const { data: allServices } = useSuspenseQuery(servicesOptions);
+    const { data: allServices } = useQuery(servicesOptions);
     console.log({allServices});
     
 
@@ -34,7 +34,7 @@ function ServiceList({ styles }: ServiceListProps) {
                 Trigger Error
             </button> */}
 
-            {allServices.map((service: IService) => (
+            {allServices&& allServices.map((service: IService) => (
                 <ServiceCard key={service.id} service={service} styles={styles} handleDeleteService={handleDeleteService} />
             ))}
         </div>

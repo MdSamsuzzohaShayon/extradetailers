@@ -121,11 +121,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME", None),
-        'USER': os.getenv("DB_USERNAME", None),  # Replace with your MySQL username
-        'PASSWORD': os.getenv("DB_PASSWORD", None),  # Replace with your MySQL password
-        'HOST': os.getenv("DB_HOST", None),  # Change if using a remote database
-        'PORT': os.getenv("DB_PORT", None),  # Default MySQL port
+        'NAME': os.getenv("POSTGRES_DB", "extradetailers_db"),
+        'USER': os.getenv("POSTGRES_USER", "shayon"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "Test1234"),
+        'HOST': os.getenv("DB_HOST", "localhost"),  # 'db' is the name of the PostgreSQL container in docker-compose
+        'PORT': os.getenv("DB_PORT", "5432"),
     }
 }
 
@@ -247,3 +247,5 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+
+STATIC_ROOT = os.getenv('STATIC_ROOT', os.path.join(BASE_DIR, 'staticfiles'))

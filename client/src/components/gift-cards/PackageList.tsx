@@ -6,7 +6,7 @@ import PackageCard from './PackageCard';
 import { EBookingStatus, IBooking, IService, TModuleStyle } from '@/types';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { servicesOptions } from '@/app/_requests/services';
 import LocalStorage from '@/utils/LocalStorage';
 import useUser from '@/hooks/useUser';
@@ -27,7 +27,7 @@ function PackageList({ styles }: IPackageListProps) {
     const router = useRouter();
 
 
-    const { data: allServices } = useSuspenseQuery(servicesOptions);
+    const { data: allServices } = useQuery(servicesOptions);
     const user = useUser();
     const [cartItems, setCartItems] = useState<IBooking[]>([]);
     // console.log({allServices});
@@ -88,7 +88,7 @@ function PackageList({ styles }: IPackageListProps) {
     const handleProceedToCheckout = () => {
         if (selectedProduct && selectedDate && selectedTimeSlot) {
             const booking: IBooking = {
-                service: selectedProduct.id,
+                service: selectedProduct.id as number,
                 order_date: selectedDate.toISOString(),
                 slot: selectedTimeSlot
             };
@@ -112,7 +112,7 @@ function PackageList({ styles }: IPackageListProps) {
             <div className="row">
                 <div className="col-md-8">
                     <ul className={`${styles.packageList} d-flex flex-column justify-content-between align-items-stretch h-100 w-100`}>
-                        {allServices.map((service, index) => (
+                        {allServices && allServices.map((service, index) => (
                             <PackageCard
                                 index={index}
                                 service={service}

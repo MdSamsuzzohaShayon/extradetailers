@@ -1,6 +1,12 @@
 res
+.env
+/client/.env
+/client/.env.local
+/client/plan.txt
+/client/packages.txt
 /client/node_modules
 /client/.next
+
 /server/.venv
 /server/.idea
 /server/.env
