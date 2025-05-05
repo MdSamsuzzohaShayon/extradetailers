@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { Appearance } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
 
 interface IPaymentCardProps {
@@ -15,18 +16,18 @@ interface IPaymentCardProps {
   clientSecret: string | null;
 }
 
-// Make sure to call loadStripe outside of a component’s render to avoid
+// Make sure to call loadStripe outside of a component's render to avoid
 // recreating the Stripe object on every render.
 // This is a public sample test API key.
-// Don’t submit any personally identifiable information in requests made with this key.
+// Don't submit any personally identifiable information in requests made with this key.
 // Sign in to see your own test API key embedded in code samples.
 const stripePromise = loadStripe(
   "pk_test_51E42CcE15Lqo4v04FHj1EOv6iAY09udHeoDXN1JN10OcnBN0Ifx002HhH6mGQCxTTJiE1kKQeK6FAD721vg3dflD00a6EctJsj"
 );
 
 function PaymentCard({ total, styles, clientSecret }: IPaymentCardProps) {
-  const appearance = {
-    theme: "stripe",
+  const appearance: Appearance = {
+    theme: "stripe" as const
   };
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";

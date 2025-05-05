@@ -1,0 +1,47 @@
+# Create common file to share docker settings betweeb both environment (development and production)
+
+services:
+  db:
+    image: postgres:17
+    container_name: postgres_db
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
+
+  backend:
+    build: 
+      context: ./server
+    volumes:
+      - ./server:/app
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    # command: /bin/bash /entrypoint.sh
+
+  frontend:
+    build: ./client
+    volumes:
+      - ./client:/app
+    env_file:
+      - ./client/.env
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/extradetailers.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  pgdata:

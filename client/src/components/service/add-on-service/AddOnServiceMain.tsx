@@ -6,7 +6,7 @@ import {
   DefaultError,
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  useQuery,
 } from "@tanstack/react-query";
 import {
   useCreateAddOnServiceOptions,
@@ -24,7 +24,7 @@ function AddOnServiceMain({ styles }: AddOnServiceMainProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const createAddOnServiceMutation = useMutation<unknown, DefaultError, FormData>(useCreateAddOnServiceOptions(queryClient));
-  const { data: allServiceCategories } = useSuspenseQuery(
+  const { data: allServiceCategories } = useQuery(
     serviceCategoriesOptions
   );
 
@@ -38,7 +38,7 @@ function AddOnServiceMain({ styles }: AddOnServiceMainProps) {
     setIsOpen(false);
   };
 
-  if(createAddOnServiceMutation.isPending) return <Loader />
+  if(createAddOnServiceMutation.isPending || !allServiceCategories) return <Loader />
 
   return (
     <div className="AddOnServiceMain">

@@ -19,7 +19,7 @@ function PackageCard({ styles, service, index, onSelect }: IPackageCardProps) {
                     <h4 className='fw-bold'>{service.title}</h4>
                     <p>
                         <span className='display-6 fw-bold text-uppercase'>{service.price}</span>
-                        <span className={`${index % 2 !== 0 ? "text-white" : "text-primary"}`}> / {service.time}</span>
+                        {/* <span className={`${index % 2 !== 0 ? "text-white" : "text-primary"}`}> / {service.time}</span> */}
                     </p>
                 </div>
                 <div className={`${styles.descriptionBox}`}>

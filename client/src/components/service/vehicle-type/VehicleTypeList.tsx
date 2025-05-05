@@ -4,7 +4,7 @@ import {
   DefaultError,
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  useQuery,
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
@@ -20,7 +20,7 @@ function VehicleTypeList({ styles }: VehicleTypeListProps) {
   const [addOnId, setAddOnId] = useState<number | null>(null);
   
   const queryClient = useQueryClient(); // ✅ React Query Client
-  const { data: allVehicleTypes } = useSuspenseQuery(vehicleTypesOptions);
+  const { data: allVehicleTypes } = useQuery(vehicleTypesOptions);
   const updateVehicleTypeMutation = useMutation<unknown, DefaultError, { id: number; formData: FormData }>(useUpdateVehicleTypeOptions(queryClient));
 
 
@@ -54,7 +54,7 @@ function VehicleTypeList({ styles }: VehicleTypeListProps) {
   }
 
   const selectedVehicleType = useMemo(()=>{
-    if(!addOnId) return null;
+    if(!addOnId || !allVehicleTypes) return null;
     return allVehicleTypes.find((aos)=> aos.id === addOnId);
   }, [addOnId, allVehicleTypes]);
 

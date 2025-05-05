@@ -1,6 +1,7 @@
 import React from 'react';
 import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
 import { IMenuItem } from '@/types';
+import styles from "./dashboard.module.scss";
 
 const menuList: IMenuItem[] = [
   {
@@ -19,7 +20,7 @@ const menuList: IMenuItem[] = [
 function DashboardLayout({children}: React.PropsWithChildren) {
   return (
     <React.Fragment>
-      <AdminDashboardLayout title='Dashboard' menuList={menuList} >{children}</AdminDashboardLayout>
+      <AdminDashboardLayout title='Dashboard' styles={styles} >{children}</AdminDashboardLayout>
     </React.Fragment>
   )
 }

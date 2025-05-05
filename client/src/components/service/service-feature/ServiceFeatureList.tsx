@@ -4,7 +4,7 @@ import {
   DefaultError,
   useMutation,
   useQueryClient,
-  useSuspenseQuery,
+  useQuery,
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
@@ -21,7 +21,7 @@ function ServiceFeatureList({ styles, allServices }: ServiceFeatureListProps) {
   const [addOnId, setAddOnId] = useState<number | null>(null);
   
   const queryClient = useQueryClient(); // ✅ React Query Client
-  const { data: allServiceFeatures } = useSuspenseQuery(serviceFeaturesOptions);
+  const { data: allServiceFeatures } = useQuery(serviceFeaturesOptions);
   const updateServiceFeatureMutation = useMutation<unknown, DefaultError, { id: number; formData: FormData }>(useUpdateServiceFeatureOptions(queryClient));
 
 
@@ -55,7 +55,7 @@ function ServiceFeatureList({ styles, allServices }: ServiceFeatureListProps) {
   }
 
   const selectedServiceFeature = useMemo(()=>{
-    if(!addOnId) return null;
+    if(!addOnId || !allServiceFeatures) return null;
     return allServiceFeatures.find((aos)=> aos.id === addOnId);
   }, [addOnId, allServiceFeatures]);
 

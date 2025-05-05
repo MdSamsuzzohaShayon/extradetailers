@@ -3,7 +3,7 @@
 import { IBooking } from '@/types';
 import React from 'react';
 import BookingCard from './BookingCard';
-import { DefaultError, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { DefaultError, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { bookingsOptions, useDeleteBookingOptions } from '@/app/_requests/bookings';
 // import { useError } from '@/lib/ErrorProvider';
 
@@ -14,7 +14,7 @@ interface BookingListProps {
 function BookingList({ styles }: BookingListProps) {
     // const { setError } = useError();
     const queryClient = useQueryClient(); // ✅ React Query Client
-    const { data: allBookings } = useSuspenseQuery(bookingsOptions);
+    const { data: allBookings } = useQuery(bookingsOptions);
 
     const deleteBookingMutation = useMutation<unknown, DefaultError, number>(useDeleteBookingOptions(queryClient));
 
@@ -34,7 +34,7 @@ function BookingList({ styles }: BookingListProps) {
                 Trigger Error
             </button> */}
 
-            {allBookings.length > 0 
+            {allBookings && allBookings.length > 0 
             ? allBookings.map((booking: IBooking) => (
                 <BookingCard key={booking.id} booking={booking} styles={styles} handleDeleteBooking={handleDeleteBooking} />
             ))
