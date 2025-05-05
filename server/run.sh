@@ -28,3 +28,15 @@ sudo -u postgres psql
 
 sudo find / -name "pg_hba.conf"
 sudo nano /var/lib/pgsql/data/pg_hba.conf
+
+
+python manage.py makemigrations
+python manage.py makemigrations accounts
+python manage.py migrate
+python manage.py migrate accounts
+
+
+python seed_data.py
+
+
+

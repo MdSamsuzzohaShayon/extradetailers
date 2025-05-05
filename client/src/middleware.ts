@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
 
   // Define an array of protected pages
-  const protectedPages = ["/dashboard", "/admin"];
+  const protectedPages = ["/dashboard", "/admin", "/checkout"];
 
   const unauthenticatedPages = ["/signin", "/signup"];
 
@@ -39,6 +39,7 @@ export async function middleware(request: NextRequest) {
 
     // Get access_token from cookies
     const access_token = cookies.get('access_token')?.value;
+    const refresh_token = cookies.get('refresh_token')?.value;
 
 
     /*
@@ -56,7 +57,11 @@ export async function middleware(request: NextRequest) {
     */
     const user_role = cookies.get('user_role')?.value;
 
-    if (!access_token || !user_role) {
+    if (!refresh_token && !access_token) {
+      return NextResponse.redirect(new URL('/signin', request.url));
+    }
+
+    if(!user_role){
       return NextResponse.redirect(new URL('/signin', request.url));
     }
 
@@ -70,11 +75,12 @@ export async function middleware(request: NextRequest) {
       }
       return NextResponse.redirect(new URL('/admin', request.url));
       // Check customer and detailer user
-    } else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
+    } 
+
+    else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
       if (pathname.startsWith('/dashboard')) {
         return NextResponse.next();
       }
-      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 

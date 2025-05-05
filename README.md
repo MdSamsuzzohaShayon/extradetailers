@@ -105,5 +105,5 @@ Create `.env` files in both `client/` and `server/` folders with necessary API k
 This project is licensed under the MIT License.
 
 ## Contact
-For any issues, feel free to reach out at [your-email@example.com](mailto:your-email@example.com).
+For any issues, feel free to reach out at [mdsamsuzzoha5222@gmail.com](mailto:mdsamsuzzoha5222@gmail.com).
 

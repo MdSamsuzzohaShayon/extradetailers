@@ -1,22 +1,48 @@
 type TModuleStyle = { readonly [key: string]: string; };
 
-
-interface IService {
-    id: number;
-    title: string;
-    price: number;
-    time: string;
-    description: string;
+interface IDefaultModel{
+    id?: number;
 }
 
-interface IBooking {
-    id: number;
-    user: string;
+// Service Interfaces
+interface IServiceCategory extends IDefaultModel {
+    name: string;
+  }
+
+interface IService extends IDefaultModel {
+    title: string;
+    description: string;
+    price: number;
+    category: IServiceCategory; // Relationship to Category model
+    available: boolean;
+    image: File | null; // Storing image as a File object (it can also be a URL in a real-world case)
+}
+
+interface IAddOnService extends IDefaultModel{
+    name: string;
+    description: string;
+    price_min: string;
+    price_max: string;
+    category: number;
+}
+interface IServiceFeature extends IDefaultModel{
     service: number;
-    service_details: IService;
+    feature_description: string;
+}
+
+interface IVehicleType extends IDefaultModel{
+    name: string;
+}
+
+
+// Booking Interface
+interface IBooking extends IDefaultModel {
+    user?: string;
+    service: number;
+    service_details?: IService;
     order_date: string;
-    status: EBookingStatus;
-    // slot: string;
+    slot: string;
+    status?: EBookingStatus;
 }
 
 interface IAPIError {
@@ -32,10 +58,17 @@ interface IUser{
     userRole: string;
 }
 
+interface ISubMenuItem{
+    id: number;
+    text: string;
+    link: string;
+}
+
 interface IMenuItem{
     id: number;
     text: string;
     link: string;
+    subMenu?: ISubMenuItem[];
 }
 
 
@@ -44,6 +77,13 @@ interface IMessage{
     text: string;
 }
 
+
+interface IPaymentIntentResponse {
+    client_secret: string;
+  }
+
+
+//   Enum 
 export enum EUserRole {
     ADMIN = 'admin',
     CUSTOMER = 'customer',
@@ -57,4 +97,7 @@ export enum EBookingStatus {
 }
 
 
-export type { TModuleStyle, IService, IBooking, IAPIError, IMessage, IUser, IMenuItem }
+export type { 
+    TModuleStyle, 
+    IService, IAddOnService, IServiceCategory, IServiceFeature, IVehicleType,
+    IBooking, IAPIError, IMessage, IUser, IMenuItem, IPaymentIntentResponse, ISubMenuItem }

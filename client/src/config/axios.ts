@@ -33,7 +33,6 @@ axiosInstance.interceptors.request.use(
 
     }
     
-    console.log('Request:', config.url);
     return config;
   },
   (error) => {
@@ -47,6 +46,53 @@ axiosInstance.interceptors.request.use(
 );
 
 
+const PROTECTED_API_ROUTES = [
+  {url: "/accounts/protected/", method: "GET"},
+
+  {url: "/bookings/", method: "GET"},
+  {url: "/bookings/create/", method: "POST"},
+  {url: "/bookings/<int:pk>/", method: "GET"},
+  {url: "/bookings/<int:pk>/update/", method: "PATCH"},
+  {url: "/bookings/<int:pk>/delete/", method: "DELETE"},
+
+  {url: "/services/", method: "GET"},
+  {url: "/services/create/", method: "POST"},
+  {url: "/services/<int:pk>/", method: "GET"},
+  {url: "/services/<int:pk>/update/", method: "PATCH"},
+  {url: "/services/<int:pk>/delete/", method: "DELETE"},
+  
+  // Add on service
+  {url: "/services/addon-services/create/", method: "POST"},
+  {url: "/services/addon-services/<int:pk>/delete/", method: "DELETE"},
+  {url: "/services/addon-services/<int:pk>/update/", method: "PUT"},
+
+  // Service feature
+  {url: "/services/service-features/create/", method: "POST"},
+  {url: "/services/service-features/<int:pk>delete/", method: "DELETE"},
+  {url: "/services/service-features/<int:pk>update/", method: "PUT"},
+
+    // Vehicle Types
+    {url: "/services/vehicle-types/create/", method: "POST"},
+    {url: "/services/vehicle-types/<int:pk>delete/", method: "DELETE"},
+    {url: "/services/vehicle-types/<int:pk>update/", method: "PUT"},
+
+  
+  {url: "/payments/create-payment-intent/", method: "POST"},
+  
+
+  ];
+
+// Helper function to check if a request matches any protected route
+const isProtectedRoute = (url: string, method: string) => {
+  return PROTECTED_API_ROUTES.some(route => {
+    // Convert the URL pattern to a regex (handle dynamic segments like <int:pk>)
+    const urlPattern = route.url.replace(/<.*?>/g, '[^/]+');
+    const urlRegex = new RegExp(`^${urlPattern}$`);
+    
+    return urlRegex.test(url) && route.method.toUpperCase() === method.toUpperCase();
+  });
+};
+
 
 // Flag to prevent multiple refresh token requests
 let isRefreshing = false;
@@ -57,9 +103,11 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const requestUrl = new URL(originalRequest.url, originalRequest.baseURL).pathname;
+    const isProtected = isProtectedRoute(requestUrl, originalRequest.method);
 
     // Check if the error is due to an expired access token (401 Unauthorized)
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if ( isProtected && error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
         // If a refresh token request is already in progress, queue the failed request
         return new Promise((resolve, reject) => {

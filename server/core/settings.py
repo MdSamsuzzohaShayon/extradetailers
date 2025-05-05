@@ -14,10 +14,9 @@ from pathlib import Path
 from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
-import pymysql
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
-pymysql.install_as_MySQLdb()  # Required if using pymysql
+
 
 load_dotenv()  # take environment variables from .env.
 
@@ -58,7 +57,7 @@ INSTALLED_APPS = [
     "services",
     "bookings",
     "detailers",
-    "payment",
+    "payments",
     "customers"
 ]
 

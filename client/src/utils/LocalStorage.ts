@@ -25,28 +25,31 @@ class LocalStorage {
         return orderList;
 
     }
-    setOrder(order: IBooking) {
-        console.log(`Need to set order ${order}`);
+
+    clearOrders() {
+        localStorage.removeItem(this.ORDER);
+    }
+
+    addOrder(order: IBooking) {
         
-        // const prevOrders = this.getOrders();
-        // const findPrevIndex = prevOrders.findIndex((o) => o.productId === order.productId && o.date === order.date);
-        // if (findPrevIndex !== -1) {
-        //     // Update order
-        //     prevOrders[findPrevIndex] = { ...prevOrders[findPrevIndex], ...order, id: prevOrders[findPrevIndex].id };
-        // } else {
-        //     prevOrders.push({ ...order, id: prevOrders.length + 1 });
-        // }
-        // localStorage.setItem(this.ORDER, JSON.stringify(prevOrders));
+        const prevOrders = this.getOrders();
+        const findPrevIndex = prevOrders.findIndex((o) => o.service === order.service && o.order_date === order.order_date && o.slot === order.slot);
+        if (findPrevIndex !== -1) {
+            // Update order
+            prevOrders[findPrevIndex] = { ...prevOrders[findPrevIndex], ...order, id: prevOrders[findPrevIndex].id };
+        } else {
+            prevOrders.push({ ...order, id: prevOrders.length + 1 });
+        }
+        localStorage.setItem(this.ORDER, JSON.stringify(prevOrders));
+        console.log(`Order added ${order}`);    
 
     }
 
-    removeOrder(serviceId: number, orderDate: Date) {
-        console.log(`Need to remove booking ${serviceId} created at ${orderDate}`);
-        
-        // const prevOrders = this.getOrders();
-        // const newOrders = prevOrders.filter((o) => o.serviceId !== serviceId && o.date !== orderDate);
-        // localStorage.setItem(this.ORDER, JSON.stringify(newOrders));
-
+    removeOrder(serviceId: number, orderDate: string, slot: string) {
+        const prevOrders = this.getOrders();
+        const newOrders = prevOrders.filter((o) => o.service !== serviceId && o.order_date !== orderDate && o.slot !== slot);
+        localStorage.setItem(this.ORDER, JSON.stringify(newOrders));
+        console.log(`Order removed ${serviceId} created at ${orderDate} at ${slot}`);
     }
 
     

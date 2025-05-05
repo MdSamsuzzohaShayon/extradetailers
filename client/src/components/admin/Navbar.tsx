@@ -1,66 +1,90 @@
-'use client';
+import { adminMenuList } from "@/utils/staticData";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useState } from "react";
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 
-import { IMenuItem } from '@/types';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React from 'react';
-
-interface INavbarProps{
-    className: string;
-    title: string;
-    menuList: IMenuItem[];
+interface INavbarProps {
+  className: string;
+  title: string;
 }
 
-function Navbar({className, title, menuList}: INavbarProps) {
-    const pathname = usePathname();
+function Navbar({ className, title }: INavbarProps) {
+  const pathname = usePathname();
+  const [openMenus, setOpenMenus] = useState<number[]>([]);
 
-    const isActive = (path: string) => pathname === path ? "active" : "text-white";
-
-    // admin, admin/bookings, admin/services, admin/customers
-
-    return (
-        <nav className={`d-flex flex-column bg-dark text-white ${className}`}>
-            <h4 className="mb-3 px-3">{title}</h4>
-            <ul className="nav nav-pills flex-column mb-auto">
-                {menuList.map((item)=> (<li key={item.id} className="nav-item">
-                    <Link href={item.link} className={`nav-link ${isActive(item.link)}`}>
-                        {item.text}
-                    </Link>
-                </li>))}
-                {/* <li className="nav-item">
-                    <Link href="/admin" className={`nav-link ${isActive("/admin")}`}>
-                        Home
-                    </Link>
-                </li>
-                <li className="nav-item">
-                    <Link href="/admin/booking" className={`nav-link ${isActive("/admin/booking")}`}>
-                        Bookings
-                    </Link>
-                    <ul className="nav flex-column ms-3">
-                        <li className="nav-item">
-                            <Link href="/admin/booking/create" className="nav-link text-white">Create</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/admin/booking/list" className="nav-link text-white">List</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link href="/admin/booking/update" className="nav-link text-white">Update</Link>
-                        </li>
-                    </ul>
-                </li>
-                <li className="nav-item">
-                    <Link href="/admin/service" className={`nav-link ${isActive("/admin/service")}`}>
-                        Services
-                    </Link>
-                </li>
-                <li className="nav-item">
-                    <Link href="/admin/customer" className={`nav-link ${isActive("/admin/customer")}`}>
-                        Customers
-                    </Link>
-                </li> */}
-            </ul>
-        </nav>
+  const toggleSubMenu = (menuId: number) => {
+    setOpenMenus((prev) =>
+      prev.includes(menuId)
+        ? prev.filter((id) => id !== menuId)
+        : [...prev, menuId]
     );
+  };
+
+  return (
+    <nav className={`d-flex flex-column bg-dark text-white p-2 p-md-3 rounded ${className}`}>
+      {title && <h4 className="mb-3 mb-md-4">{title}</h4>}
+
+      <ul className="nav nav-pills flex-column mb-auto overflow-auto">
+        {adminMenuList.map((item) => {
+          const hasSubMenu = item.subMenu && item.subMenu.length > 0;
+          const isExpanded = openMenus.includes(item.id);
+
+          // Highlight parent only if EXACT match
+          const activeTopLevel = pathname === item.link;
+
+          return (
+            <li key={item.id} className="nav-item mb-1">
+              <div className="d-flex align-items-center justify-content-between">
+                <Link
+                  href={item.link}
+                  className={`nav-link flex-grow-1 text-truncate ${
+                    activeTopLevel ? "active bg-primary" : "text-white"
+                  }`}
+                >
+                  {item.text}
+                </Link>
+
+                {hasSubMenu && (
+                  <button
+                    type="button"
+                    className="btn btn-link p-0 ms-2 text-white flex-shrink-0"
+                    onClick={() => toggleSubMenu(item.id)}
+                    aria-expanded={isExpanded}
+                    aria-label="Toggle submenu"
+                  >
+                    {isExpanded ? <FiChevronDown /> : <FiChevronRight />}
+                  </button>
+                )}
+              </div>
+
+              {item.subMenu && (
+                <ul className="nav flex-column mt-2 ms-3 border-start border-secondary ps-2">
+                  {item.subMenu.map((subItem) => {
+                    const fullSubItemLink = `${item.link}${subItem.link}`;
+                    const activeSubLevel = pathname === fullSubItemLink;
+
+                    return (
+                      <li key={subItem.id} className="nav-item">
+                        <Link
+                          href={fullSubItemLink}
+                          className={`nav-link text-truncate ${
+                            activeSubLevel ? "active bg-primary" : "text-white"
+                          }`}
+                        >
+                          {subItem.text}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
 }
 
 export default Navbar;

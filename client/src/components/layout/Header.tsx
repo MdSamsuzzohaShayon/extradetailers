@@ -3,14 +3,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CiMenuBurger } from 'react-icons/ci';
-import { MdDashboard, MdLogin, MdLogout } from 'react-icons/md';
+import { MdDashboard, MdLogin, MdLogout, MdShoppingCartCheckout } from 'react-icons/md';
 import styles from './header.module.scss';
 import useUser from '@/hooks/useUser';
-import { EUserRole } from '@/types';
+import { EUserRole, IBooking } from '@/types';
 import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useSignoutOptions } from '@/app/_requests/auth';
+import LocalStorage from '@/utils/LocalStorage';
 
 const menuItems: string[] = ["Service", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"];
 
@@ -18,12 +19,16 @@ function Header() {
 
   const signoutMutation = useMutation<unknown, DefaultError>(useSignoutOptions());
   const user = useUser();
-
+  const [cartItems, setCartItems] = useState<IBooking[]>([]);
   const handleSignout = (e: React.SyntheticEvent) => {
     e.preventDefault();
     signoutMutation.mutate();
-
   }
+
+  useEffect(()=>{
+    const items = LocalStorage.getOrders();
+    setCartItems(items);
+  }, []);
 
   return (
     <nav className={`navbar navbar-expand-lg text-white border-bottom ${styles.navbarContent}`}>
@@ -64,7 +69,10 @@ function Header() {
               </li>
             ))}
           </ul>
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 align-items-center">
+          <Link href="/checkout" className="mb-4">
+                <MdShoppingCartCheckout  size={40}           /> {cartItems.length > 0 ? cartItems.length : ""}
+            </Link>
             {user ? (
               <>
                 {user.userRole === EUserRole.ADMIN ? (<Link href="/admin" className="btn btn-outline-light">
@@ -131,6 +139,9 @@ function Header() {
             )}
           </ul>
           <div className="mt-4">
+            <Link href="/checkout" className="mb-4">
+                <MdShoppingCartCheckout  size={40}           /> {cartItems.length > 0 ? cartItems.length : ""}
+            </Link>
             {user ? (
               <>
                 {user.userRole === EUserRole.ADMIN ? (<Link href="/admin" className="btn btn-outline-light w-100 mb-2">
