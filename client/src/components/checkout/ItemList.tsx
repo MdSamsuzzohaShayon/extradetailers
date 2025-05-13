@@ -21,7 +21,7 @@ function ItemList({cartItems, styles}: IItemListProps) {
         <h6 className="my-1">{item.service_details?.title}</h6>
         <small className="text-muted">{item.service_details?.description}</small>
       </div>
-      <span className="text-muted">${item.service_details?.price}</span>
+      <span className="text-muted">Need to change dynamically</span>
     </li>
   ))}
 </ul>

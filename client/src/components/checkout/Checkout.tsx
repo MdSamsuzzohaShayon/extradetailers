@@ -37,7 +37,7 @@ function Checkout({ styles }: ICheckoutProps) {
 
   const total = useMemo(() => {
     return cartItems.reduce(
-      (sum, item) => sum + (item.service_details?.price || 0),
+      (sum, item) => sum + 120,
       0
     );
   }, [cartItems]);
