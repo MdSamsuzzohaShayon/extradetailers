@@ -110,13 +110,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
+DATABASE_HOST = "db" if DEBUG is not True else "localhost"
 
 DATABASES = {
     'default': {
@@ -124,7 +118,7 @@ DATABASES = {
         'NAME': os.getenv("POSTGRES_DB", "extradetailers_db"),
         'USER': os.getenv("POSTGRES_USER", "shayon"),
         'PASSWORD': os.getenv("POSTGRES_PASSWORD", "Test1234"),
-        'HOST': os.getenv("DB_HOST", "localhost"),  # 'db' is the name of the PostgreSQL container in docker-compose
+        'HOST': DATABASE_HOST,  # 'db' is the name of the PostgreSQL container in docker-compose
         'PORT': os.getenv("DB_PORT", "5432"),
     }
 }

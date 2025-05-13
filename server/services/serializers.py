@@ -49,3 +49,30 @@ class FullDataSerializer(serializers.Serializer):
     service_prices = ServicePriceSerializer(many=True)
     service_features = ServiceFeatureSerializer(many=True)
     addon_services = AddOnServiceSerializer(many=True)
+
+
+class PopulatedAddOnServiceSerializer(serializers.ModelSerializer):
+    category = ServiceCategorySerializer(read_only=True)
+
+    class Meta:
+        model = AddOnService
+        fields = '__all__'
+
+class PopulatedServiceSerializer(serializers.ModelSerializer):
+    prices = ServicePriceSerializer(many=True, read_only=True)
+    features = ServiceFeatureSerializer(many=True, read_only=True)
+    category = ServiceCategorySerializer(read_only=True)
+
+    class Meta:
+        model = Service
+        fields = [
+            'id', 'title', 'description', 'estimated_time_min',
+            'estimated_time_max', 'category', 'features', 'prices'
+        ]
+
+
+class CombinedServicesSerializer(serializers.Serializer):
+    services = PopulatedServiceSerializer(many=True)
+    addon_services = PopulatedAddOnServiceSerializer(many=True)
+    vehicle_types = VehicleTypeSerializer(many=True)
+    service_categories = ServiceCategorySerializer(many=True)

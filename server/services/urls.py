@@ -10,7 +10,7 @@ from .views import (
     ServiceFeatureListView, ServiceFeatureCreateView, ServiceFeatureRetrieveView,
     ServiceFeatureUpdateView, ServiceFeatureDeleteView,
     AddOnServiceListView, AddOnServiceCreateView, AddOnServiceRetrieveView,
-    AddOnServiceUpdateView, AddOnServiceDeleteView, FullDataView
+    AddOnServiceUpdateView, AddOnServiceDeleteView, FullDataView, CombinedServicesView
 )
 
 urlpatterns = [
@@ -22,11 +22,11 @@ urlpatterns = [
     path('main/<int:pk>/delete/', ServiceDeleteView.as_view()),
 
     # ServiceCategory URLs
-    path('service-categories/', ServiceCategoryListView.as_view()),
-    path('service-categories/create/', ServiceCategoryCreateView.as_view()),
-    path('service-categories/<int:pk>/', ServiceCategoryRetrieveView.as_view()),
-    path('service-categories/<int:pk>/update/', ServiceCategoryUpdateView.as_view()),
-    path('service-categories/<int:pk>/delete/', ServiceCategoryDeleteView.as_view()),
+    path('categories/', ServiceCategoryListView.as_view()),
+    path('categories/create/', ServiceCategoryCreateView.as_view()),
+    path('categories/<int:pk>/', ServiceCategoryRetrieveView.as_view()),
+    path('categories/<int:pk>/update/', ServiceCategoryUpdateView.as_view()),
+    path('categories/<int:pk>/delete/', ServiceCategoryDeleteView.as_view()),
 
     # VehicleType URLs
     path('vehicle-types/', VehicleTypeListView.as_view()),
@@ -36,26 +36,27 @@ urlpatterns = [
     path('vehicle-types/<int:pk>/delete/', VehicleTypeDeleteView.as_view()),
 
     # ServicePrice URLs
-    path('service-prices/', ServicePriceListView.as_view()),
-    path('service-prices/create/', ServicePriceCreateView.as_view()),
-    path('service-prices/<int:pk>/', ServicePriceRetrieveView.as_view()),
-    path('service-prices/<int:pk>/update/', ServicePriceUpdateView.as_view()),
-    path('service-prices/<int:pk>/delete/', ServicePriceDeleteView.as_view()),
+    path('prices/', ServicePriceListView.as_view()),
+    path('prices/create/', ServicePriceCreateView.as_view()),
+    path('prices/<int:pk>/', ServicePriceRetrieveView.as_view()),
+    path('prices/<int:pk>/update/', ServicePriceUpdateView.as_view()),
+    path('prices/<int:pk>/delete/', ServicePriceDeleteView.as_view()),
 
     # ServiceFeature URLs
-    path('service-features/', ServiceFeatureListView.as_view()),
-    path('service-features/create/', ServiceFeatureCreateView.as_view()),
-    path('service-features/<int:pk>/', ServiceFeatureRetrieveView.as_view()),
-    path('service-features/<int:pk>/update/', ServiceFeatureUpdateView.as_view()),
-    path('service-features/<int:pk>/delete/', ServiceFeatureDeleteView.as_view()),
+    path('features/', ServiceFeatureListView.as_view()),
+    path('features/create/', ServiceFeatureCreateView.as_view()),
+    path('features/<int:pk>/', ServiceFeatureRetrieveView.as_view()),
+    path('features/<int:pk>/update/', ServiceFeatureUpdateView.as_view()),
+    path('features/<int:pk>/delete/', ServiceFeatureDeleteView.as_view()),
 
     # AddOnService URLs
-    path('addon-services/', AddOnServiceListView.as_view()),
-    path('addon-services/create/', AddOnServiceCreateView.as_view()),
-    path('addon-services/<int:pk>/', AddOnServiceRetrieveView.as_view()),
-    path('addon-services/<int:pk>/update/', AddOnServiceUpdateView.as_view()),
-    path('addon-services/<int:pk>/delete/', AddOnServiceDeleteView.as_view()),
+    path('addons/', AddOnServiceListView.as_view()),
+    path('addons/create/', AddOnServiceCreateView.as_view()),
+    path('addons/<int:pk>/', AddOnServiceRetrieveView.as_view()),
+    path('addons/<int:pk>/update/', AddOnServiceUpdateView.as_view()),
+    path('addons/<int:pk>/delete/', AddOnServiceDeleteView.as_view()),
 
-    path('services/full-data/', FullDataView.as_view()),
+    path('full-data/', FullDataView.as_view()),
+    path('combined-data/', CombinedServicesView.as_view()),
 
 ]

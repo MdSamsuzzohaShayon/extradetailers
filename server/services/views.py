@@ -8,7 +8,7 @@ from .models import (
 from .serializers import (
     ServiceSerializer, ServiceCategorySerializer, VehicleTypeSerializer,
     ServicePriceSerializer, ServiceFeatureSerializer, AddOnServiceSerializer,
-    FullDataSerializer
+    FullDataSerializer, CombinedServicesSerializer, PopulatedServiceSerializer, PopulatedAddOnServiceSerializer
 )
 from accounts.mixins import PublicPermissionMixin, AdminPermissionMixin
 
@@ -139,6 +139,7 @@ class AddOnServiceDeleteView(AdminPermissionMixin, generics.DestroyAPIView):
     serializer_class = AddOnServiceSerializer
 
 
+# Custom Views
 class FullDataView(PublicPermissionMixin, APIView):
     serializer_class = FullDataSerializer
 
@@ -163,3 +164,26 @@ class FullDataView(PublicPermissionMixin, APIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data)
+
+
+
+class CombinedServicesView(PublicPermissionMixin, APIView):
+    serializer_class = CombinedServicesSerializer
+
+    def get(self, request, *args, **kwargs):
+        services = Service.objects.prefetch_related(
+            'features',
+            'prices',
+            'prices__vehicle_type'
+        ).select_related('category').all()
+
+        addon_services = AddOnService.objects.select_related('category').all()
+        vehicle_types = VehicleType.objects.all()
+
+        response_data = {
+            "services": PopulatedServiceSerializer(services, many=True).data,
+            "addon_services": PopulatedAddOnServiceSerializer(addon_services, many=True).data,
+            "vehicle_types": VehicleTypeSerializer(vehicle_types, many=True).data,
+        }
+
+        return Response(response_data)

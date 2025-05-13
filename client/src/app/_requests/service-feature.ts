@@ -9,7 +9,7 @@ export const serviceFeaturesOptions = {
   queryKey: ["serviceFeatures"],
   queryFn: async (): Promise<IServiceFeature[]> => {
     try {
-      const response = await axiosInstance.get("/services/service-features/");
+      const response = await axiosInstance.get("/services/features/");
       return response.data;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -24,7 +24,7 @@ export const serviceFeaturesOptions = {
 
 async function createServiceFeature(formData: FormData) {
   const response = await axiosInstance.post(
-    "/services/service-features/create/",
+    "/services/features/create/",
     formData,
     {
       headers: {
@@ -63,7 +63,7 @@ interface IUpdateServiceFeatureProps {
 async function updateServiceFeature({ id, formData }: IUpdateServiceFeatureProps) {
   const cleanedFormData = cleanFormData(formData);
   const response = await axiosInstance.put(
-    `/services/service-features/${id}/update/`,
+    `/services/features/${id}/update/`,
     cleanedFormData,
     {
       headers: {
@@ -94,7 +94,7 @@ export function useUpdateServiceFeatureOptions(
 
 async function deleteServiceFeature(serviceFeatureId: number) {
   const response = await axiosInstance.delete(
-    `/services/service-features/${serviceFeatureId}/delete/`
+    `/services/features/${serviceFeatureId}/delete/`
   );
   return response.data;
 }

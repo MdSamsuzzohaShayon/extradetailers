@@ -53,7 +53,7 @@ def create_superuser():
     # Uncomment the next line to delete data before running the rest of the operations
     # delete_existing_data()
     User = get_user_model()
-    email = "mdsamsuzzoha5222@gmail.com"
+    email = "mdshayon0@gmail.com"
 
     if not User.objects.filter(username=email).exists():
         user = User.objects.create_superuser(
@@ -143,7 +143,7 @@ def seed_add_on_services(add_ons):
 
 def run():
     # Uncomment to delete existing data first
-    # delete_existing_data()
+    delete_existing_data()
 
     # Create superuser
     create_superuser()

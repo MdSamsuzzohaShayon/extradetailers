@@ -9,50 +9,50 @@ import {
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
-import { useCreateServiceOptions } from "@/app/_requests/services";
-import ServiceAdd from "./ServiceAdd";
-import ServiceList from "./ServiceList";
+import { useCreateServiceCategoryOptions } from "@/app/_requests/service-categories";
+import ServiceCategoryAdd from "./ServiceCategoryAdd";
+import ServiceCategoryList from "./ServiceCategoryList";
 import { TModuleStyle } from "@/types";
 
-interface ServiceMainProps {
+interface ServiceCategoryMainProps {
   styles: TModuleStyle;
 }
-function ServiceMain({ styles }: ServiceMainProps) {
+function ServiceCategoryMain({ styles }: ServiceCategoryMainProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const createServiceMutation = useMutation<unknown, DefaultError, FormData>(useCreateServiceOptions(queryClient));
+  const createServiceCategoryMutation = useMutation<unknown, DefaultError, FormData>(useCreateServiceCategoryOptions(queryClient));
 
 
-  const handleCreateService = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateServiceCategory = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
-    createServiceMutation.mutate(formData);
+    createServiceCategoryMutation.mutate(formData);
     form.reset();
     setIsOpen(false);
   };
 
-  if(createServiceMutation.isPending) return <Loader />
+  if(createServiceCategoryMutation.isPending) return <Loader />
 
   return (
-    <div className="ServiceMain">
+    <div className="ServiceCategoryMain">
       <button className="btn btn-primary d-flex justify-content-center align-items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
         <IoMdAdd size={25} />
         Create New
       </button>
       <Modal
         isOpen={isOpen}
-        title="Create a new Service"
+        title="Create a new Service Category"
         submitButtonText="Create"
         children={
-          <ServiceAdd />
+          <ServiceCategoryAdd />
         }
-        onSubmit={handleCreateService}
+        onSubmit={handleCreateServiceCategory}
         onClose={() => setIsOpen(!isOpen)}
       /> 
-      <ServiceList styles={styles} />
+      <ServiceCategoryList styles={styles} />
     </div>
   );
 }
 
-export default ServiceMain;
+export default ServiceCategoryMain;

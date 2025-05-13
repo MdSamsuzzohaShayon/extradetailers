@@ -9,7 +9,7 @@ export const addOnServicesOptions = {
   queryKey: ["addOnServices"],
   queryFn: async (): Promise<IAddOnService[]> => {
     try {
-      const response = await axiosInstance.get("/services/addon-services/");
+      const response = await axiosInstance.get("/services/addons/");
       return response.data;
     } catch (error: unknown) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -24,7 +24,7 @@ export const addOnServicesOptions = {
 
 async function createAddOnService(formData: FormData) {
   const response = await axiosInstance.post(
-    "/services/addon-services/create/",
+    "/services/addons/create/",
     formData,
     {
       headers: {
@@ -63,7 +63,7 @@ interface IUpdateAddOnServiceProps {
 async function updateAddOnService({ id, formData }: IUpdateAddOnServiceProps) {
   const cleanedFormData = cleanFormData(formData);
   const response = await axiosInstance.put(
-    `/services/addon-services/${id}/update/`,
+    `/services/addons/${id}/update/`,
     cleanedFormData,
     {
       headers: {
@@ -94,7 +94,7 @@ export function useUpdateAddOnServiceOptions(
 
 async function deleteAddOnService(addOnServiceId: number) {
   const response = await axiosInstance.delete(
-    `/services/addon-services/${addOnServiceId}/delete/`
+    `/services/addons/${addOnServiceId}/delete/`
   );
   return response.data;
 }
