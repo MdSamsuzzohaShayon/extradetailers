@@ -55,26 +55,36 @@ const PROTECTED_API_ROUTES = [
   {url: "/bookings/<int:pk>/update/", method: "PATCH"},
   {url: "/bookings/<int:pk>/delete/", method: "DELETE"},
 
-  {url: "/services/", method: "GET"},
-  {url: "/services/create/", method: "POST"},
-  {url: "/services/<int:pk>/", method: "GET"},
-  {url: "/services/<int:pk>/update/", method: "PATCH"},
-  {url: "/services/<int:pk>/delete/", method: "DELETE"},
+  {url: "/services/main/", method: "GET"},
+  {url: "/services/main/create/", method: "POST"},
+  {url: "/services/main/<int:pk>/", method: "GET"},
+  {url: "/services/main/<int:pk>/update/", method: "PATCH"},
+  {url: "/services/main/<int:pk>/delete/", method: "DELETE"},
   
   // Add on service
-  {url: "/services/addon-services/create/", method: "POST"},
-  {url: "/services/addon-services/<int:pk>/delete/", method: "DELETE"},
-  {url: "/services/addon-services/<int:pk>/update/", method: "PUT"},
+  {url: "/services/addons/create/", method: "POST"},
+  {url: "/services/addons/<int:pk>/delete/", method: "DELETE"},
+  {url: "/services/addons/<int:pk>/update/", method: "PUT"},
 
   // Service feature
-  {url: "/services/service-features/create/", method: "POST"},
-  {url: "/services/service-features/<int:pk>delete/", method: "DELETE"},
-  {url: "/services/service-features/<int:pk>update/", method: "PUT"},
+  {url: "/services/features/create/", method: "POST"},
+  {url: "/services/features/<int:pk>delete/", method: "DELETE"},
+  {url: "/services/features/<int:pk>update/", method: "PUT"},
 
     // Vehicle Types
     {url: "/services/vehicle-types/create/", method: "POST"},
     {url: "/services/vehicle-types/<int:pk>delete/", method: "DELETE"},
     {url: "/services/vehicle-types/<int:pk>update/", method: "PUT"},
+
+    // Service Categories
+    {url: "/services/categories/create/", method: "POST"},
+    {url: "/services/categories/<int:pk>delete/", method: "DELETE"},
+    {url: "/services/categories/<int:pk>update/", method: "PUT"},
+
+    // Service Prices
+    {url: "/services/prices/create/", method: "POST"},
+    {url: "/services/prices/<int:pk>delete/", method: "DELETE"},
+    {url: "/services/prices/<int:pk>update/", method: "PUT"},
 
   
   {url: "/payments/create-payment-intent/", method: "POST"},

@@ -9,13 +9,23 @@ interface IServiceCategory extends IDefaultModel {
     name: string;
   }
 
-interface IService extends IDefaultModel {
+interface IServiceCommon extends IDefaultModel{
     title: string;
     description: string;
-    price: number;
+    estimated_time_min: number;
+    estimated_time_max: number;
+}
+
+interface IService extends IServiceCommon {
+    category: number; // Relationship to Category model
+    features: number[];
+    prices: number[];
+}
+
+interface IServicePopulated extends IServiceCommon {
     category: IServiceCategory; // Relationship to Category model
-    available: boolean;
-    image: File | null; // Storing image as a File object (it can also be a URL in a real-world case)
+    features: IServiceFeature[];
+    prices: IServicePrice[];
 }
 
 interface IAddOnService extends IDefaultModel{
@@ -25,6 +35,15 @@ interface IAddOnService extends IDefaultModel{
     price_max: string;
     category: number;
 }
+
+interface IAddOnServicePopulated extends IDefaultModel{
+    name: string;
+    description: string;
+    price_min: string;
+    price_max: string;
+    category: IServiceCategory;
+}
+
 interface IServiceFeature extends IDefaultModel{
     service: number;
     feature_description: string;
@@ -33,6 +52,14 @@ interface IServiceFeature extends IDefaultModel{
 interface IVehicleType extends IDefaultModel{
     name: string;
 }
+
+interface IServicePrice extends IDefaultModel{
+    service: number;
+    vehicle_type: number;
+    price: number;
+}
+
+
 
 
 // Booking Interface
@@ -99,5 +126,6 @@ export enum EBookingStatus {
 
 export type { 
     TModuleStyle, 
-    IService, IAddOnService, IServiceCategory, IServiceFeature, IVehicleType,
+    IService, IAddOnService, IServiceCategory, IServiceFeature, IVehicleType, IServicePrice, 
+    IServicePopulated, IAddOnServicePopulated,
     IBooking, IAPIError, IMessage, IUser, IMenuItem, IPaymentIntentResponse, ISubMenuItem }

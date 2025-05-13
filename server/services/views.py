@@ -6,9 +6,9 @@ from .models import (
     ServicePrice, ServiceFeature, AddOnService
 )
 from .serializers import (
-    ServiceSerializer, ServiceCategorySerializer, VehicleTypeSerializer,
+    ServiceSerializer, ServiceCategorySerializer, VehicleTypeSerializer, ServiceCreateSerializer,
     ServicePriceSerializer, ServiceFeatureSerializer, AddOnServiceSerializer,
-    FullDataSerializer
+    FullDataSerializer, CombinedServicesSerializer, PopulatedServiceSerializer, PopulatedAddOnServiceSerializer
 )
 from accounts.mixins import PublicPermissionMixin, AdminPermissionMixin
 
@@ -19,7 +19,7 @@ class ServiceListView(PublicPermissionMixin, generics.ListAPIView):
 
 class ServiceCreateView(AdminPermissionMixin, generics.CreateAPIView):
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
+    serializer_class = ServiceCreateSerializer
 
 class ServiceRetrieveView(PublicPermissionMixin, generics.RetrieveAPIView):
     queryset = Service.objects.all()
@@ -139,27 +139,56 @@ class AddOnServiceDeleteView(AdminPermissionMixin, generics.DestroyAPIView):
     serializer_class = AddOnServiceSerializer
 
 
+# Custom Views
 class FullDataView(PublicPermissionMixin, APIView):
     serializer_class = FullDataSerializer
 
     def get(self, request, *args, **kwargs):
-        services = Service.objects.all()
+        services = Service.objects.prefetch_related(
+            'features',
+            'prices',
+            'prices__vehicle_type'
+        ).select_related('category')
+
+        addon_services = AddOnService.objects.select_related('category')
         vehicle_types = VehicleType.objects.all()
         service_categories = ServiceCategory.objects.all()
-        service_prices = ServicePrice.objects.all()
-        service_features = ServiceFeature.objects.all()
-        addon_services = AddOnService.objects.all()
+        service_prices = ServicePrice.objects.select_related('vehicle_type', 'service')
+        service_features = ServiceFeature.objects.select_related('service')
 
         response_data = {
-            "services": ServiceSerializer(services, many=True).data,
+            "services": PopulatedServiceSerializer(services, many=True).data,
+            "addon_services": PopulatedAddOnServiceSerializer(addon_services, many=True).data,
             "vehicle_types": VehicleTypeSerializer(vehicle_types, many=True).data,
             "service_categories": ServiceCategorySerializer(service_categories, many=True).data,
             "service_prices": ServicePriceSerializer(service_prices, many=True).data,
             "service_features": ServiceFeatureSerializer(service_features, many=True).data,
-            "addon_services": AddOnServiceSerializer(addon_services, many=True).data,
         }
 
-        serializer = FullDataSerializer(data=response_data)
-        serializer.is_valid(raise_exception=True)
+        return Response(response_data)
 
-        return Response(serializer.data)
+
+class CombinedServicesView(PublicPermissionMixin, APIView):
+    serializer_class = CombinedServicesSerializer
+
+    def get(self, request, *args, **kwargs):
+        services = Service.objects.prefetch_related(
+            'features',
+            'prices',
+            'prices__vehicle_type'
+        ).select_related('category').all()
+
+        addon_services = AddOnService.objects.select_related('category').all()
+        vehicle_types = VehicleType.objects.all()
+
+        response_data = {
+            "services": PopulatedServiceSerializer(services, many=True).data,
+            "addon_services": PopulatedAddOnServiceSerializer(addon_services, many=True).data,
+            "vehicle_types": VehicleTypeSerializer(vehicle_types, many=True).data,
+        }
+
+        return Response(response_data)
+
+
+
+

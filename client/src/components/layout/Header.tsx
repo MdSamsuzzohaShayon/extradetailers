@@ -13,7 +13,7 @@ import { DefaultError, useMutation } from '@tanstack/react-query';
 import { useSignoutOptions } from '@/app/_requests/auth';
 import LocalStorage from '@/utils/LocalStorage';
 
-const menuItems: string[] = ["Service", "About Us", "Gallery", "Gift Cards", "Contact", "FAQ", "Testimonials"];
+const menuItems: string[] = ["Service", "About Us", "Gallery", "Packages", "Contact", "FAQ", "Testimonials"];
 
 function Header() {
 
@@ -62,7 +62,7 @@ function Header() {
             {menuItems.map((item, index) => (
               <li className="nav-item" key={index}>
                 <strong>
-                  <Link className="nav-link text-white text-uppercase" href={`/${item.toLowerCase().replace(" ", "-")}`}>
+                  <Link className="nav-link text-white text-uppercase" href={`/${item.toLowerCase()}`}>
                     {item}
                   </Link>
                 </strong>
