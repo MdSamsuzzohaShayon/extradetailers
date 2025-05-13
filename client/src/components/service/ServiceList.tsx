@@ -10,7 +10,7 @@ import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
 import ServiceAdd from "./ServiceAdd";
 import ServiceCard from "./ServiceCard";
-import { deleteServiceOptions, useUpdateServiceOptions, servicesOptions } from "@/app/_requests/services";
+import { deleteServiceOptions, useUpdateServiceOptions, servicesOptions, serviceFullDataOptions } from "@/app/_requests/services";
 
 interface ServiceListProps {
   styles: TModuleStyle;
@@ -20,7 +20,7 @@ function ServiceList({ styles }: ServiceListProps) {
   const [serviceId, setServiceId] = useState<number | null>(null);
   
   const queryClient = useQueryClient(); // ✅ React Query Client
-  const { data: allServices } = useQuery(servicesOptions);
+  const {data: serviceFullData} = useQuery(serviceFullDataOptions);
   const updateServiceMutation = useMutation<unknown, DefaultError, { id: number; formData: FormData }>(useUpdateServiceOptions(queryClient));
 
 
@@ -54,9 +54,9 @@ function ServiceList({ styles }: ServiceListProps) {
   }
 
   const selectedService = useMemo(()=>{
-    if(!serviceId || !allServices) return null;
-    return allServices.find((aos)=> aos.id === serviceId);
-  }, [serviceId, allServices]);
+    if(!serviceId || !serviceFullData) return null;
+    return serviceFullData.services.find((aos)=> aos.id === serviceId);
+  }, [serviceId, serviceFullData]);
 
 
   if (deleteServiceMutation.isPending) return <Loader />;
@@ -68,13 +68,13 @@ function ServiceList({ styles }: ServiceListProps) {
         title="Update Vehicle Type"
         submitButtonText="Update"
         children={
-          <ServiceAdd selectedService={selectedService} />
+          <ServiceAdd selectedService={selectedService} serviceCategories={[]} serviceFixtures={[]} servicePrices={[]} />
         }
         onSubmit={handleUpdateService}
         onClose={() => setServiceId(null)}
       /> 
       
-      {allServices && allServices.map((service: IService) => (
+      {serviceFullData && serviceFullData.services && serviceFullData.services.map((service: IService) => (
         <ServiceCard
           key={service.id}
           service={service}

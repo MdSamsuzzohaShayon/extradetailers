@@ -55,11 +55,11 @@ const PROTECTED_API_ROUTES = [
   {url: "/bookings/<int:pk>/update/", method: "PATCH"},
   {url: "/bookings/<int:pk>/delete/", method: "DELETE"},
 
-  {url: "/services/", method: "GET"},
-  {url: "/services/create/", method: "POST"},
-  {url: "/services/<int:pk>/", method: "GET"},
-  {url: "/services/<int:pk>/update/", method: "PATCH"},
-  {url: "/services/<int:pk>/delete/", method: "DELETE"},
+  {url: "/services/main/", method: "GET"},
+  {url: "/services/main/create/", method: "POST"},
+  {url: "/services/main/<int:pk>/", method: "GET"},
+  {url: "/services/main/<int:pk>/update/", method: "PATCH"},
+  {url: "/services/main/<int:pk>/delete/", method: "DELETE"},
   
   // Add on service
   {url: "/services/addons/create/", method: "POST"},

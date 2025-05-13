@@ -22,11 +22,17 @@ interface IServiceFullData {
   service_prices: IServicePrice[];
   service_features: IServiceFeature[];
   addon_services: IAddOnService[];
+  /*
+
+  service_categories: IServiceCategory[];
+  service_prices: IServicePrice[];
+  service_features: IServiceFeature[];
+  */
 }
 
-const servicesFullData = async (): Promise<IServiceFullData[]> => {
+const servicesFullData = async (): Promise<IServiceFullData> => {
   try {
-    const response = await axiosInstance.get("/services/main/");
+    const response = await axiosInstance.get("/services/full-data/");
     return response.data;
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -85,7 +91,7 @@ export const servicesOptions = {
 };
 
 async function createService(formData: FormData) {
-  const response = await axiosInstance.post("/services/create/", formData, {
+  const response = await axiosInstance.post("/services/main/create/", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

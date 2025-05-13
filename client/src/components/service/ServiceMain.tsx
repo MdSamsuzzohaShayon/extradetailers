@@ -5,11 +5,12 @@ import { IoMdAdd } from "react-icons/io";
 import {
   DefaultError,
   useMutation,
+  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
-import { useCreateServiceOptions } from "@/app/_requests/services";
+import { serviceFullDataOptions, useCreateServiceOptions } from "@/app/_requests/services";
 import ServiceAdd from "./ServiceAdd";
 import ServiceList from "./ServiceList";
 import { TModuleStyle } from "@/types";
@@ -21,6 +22,8 @@ function ServiceMain({ styles }: ServiceMainProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const createServiceMutation = useMutation<unknown, DefaultError, FormData>(useCreateServiceOptions(queryClient));
+
+  const {data: serviceFullData} = useQuery(serviceFullDataOptions);
 
 
   const handleCreateService = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,6 +37,7 @@ function ServiceMain({ styles }: ServiceMainProps) {
 
   if(createServiceMutation.isPending) return <Loader />
 
+
   return (
     <div className="ServiceMain">
       <button className="btn btn-primary d-flex justify-content-center align-items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
@@ -45,7 +49,7 @@ function ServiceMain({ styles }: ServiceMainProps) {
         title="Create a new Service"
         submitButtonText="Create"
         children={
-          <ServiceAdd />
+          <ServiceAdd serviceCategories={serviceFullData?.service_categories || []} serviceFixtures={serviceFullData?.service_features || []} servicePrices={serviceFullData?.service_prices || []}  />
         }
         onSubmit={handleCreateService}
         onClose={() => setIsOpen(!isOpen)}
