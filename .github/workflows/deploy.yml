@@ -23,6 +23,22 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ${{ secrets.DEPLOY_DIR }}
             git pull origin master
+            
+            # Stop existing containers
             sudo docker compose down
-            sudo docker compose up -d --build
+            
+            # First run - start everything except certbot
+            sudo docker compose up -d --build db backend frontend nginx
+            
+            # Wait for nginx to be ready
+            sleep 10
+            
+            # Run certbot to get initial certificates
+            sudo docker compose run --rm certbot
+            
+            # Restart nginx with SSL config
+            sudo docker compose restart nginx
+            
+            # Start everything normally
+            sudo docker compose up -d
           EOF
