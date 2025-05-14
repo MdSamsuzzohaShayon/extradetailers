@@ -1,6 +1,6 @@
 "use client";
 
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import PackageList from "./PackageList";
 import AddOnServiceList from "./AddOnServiceList";
@@ -11,6 +11,7 @@ interface IPackageMainProps{
 }
 
 function PackageMain({styles}: IPackageMainProps) {
+  const queryClient = useQueryClient(); // ✅ React Query Client
   return (
     <div className="row g-4">
       <div className="col-lg-8 order-lg-1 order-2">
