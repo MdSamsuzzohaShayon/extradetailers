@@ -19,7 +19,7 @@ services:
     env_file:
       - ./server/.env
     depends_on:
-      db
+      - db
     networks:
       - app-network
     restart: unless-stopped
