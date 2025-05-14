@@ -27,14 +27,23 @@ jobs:
             # Stop existing containers
             sudo docker compose down
             
+            # Create required directories
+            mkdir -p certbot/www certbot/conf
+            
             # First run - start everything except certbot
             sudo docker compose up -d --build db backend frontend nginx
             
             # Wait for nginx to be ready
-            sleep 10
+            sleep 15
             
-            # Run certbot to get initial certificates
-            sudo docker compose run --rm certbot
+            # Run certbot to get initial certificates (with retries)
+            max_retries=3
+            retry_count=0
+            until sudo docker compose run --rm certbot || [ $retry_count -eq $max_retries ]; do
+              retry_count=$((retry_count+1))
+              echo "Certbot failed. Retry attempt $retry_count..."
+              sleep 10
+            done
             
             # Restart nginx with SSL config
             sudo docker compose restart nginx

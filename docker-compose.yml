@@ -68,8 +68,18 @@ services:
       - nginx
     networks:
       - app-network
-    command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@example.com --agree-tos --no-eff-email --force-renewal -d extradetailers.com -d www.extradetailers.com
-    
+    entrypoint: ""
+    command: >
+      sh -c "
+        if [ ! -f /etc/letsencrypt/live/extradetailers.com/fullchain.pem ]; then
+          certbot certonly --non-interactive --webroot --webroot-path=/var/www/certbot
+            --email your-email@example.com --agree-tos
+            --domain extradetailers.com --domain www.extradetailers.com;
+        else
+          certbot renew --non-interactive;
+        fi
+      "
+
 volumes:
   pgdata:
 
