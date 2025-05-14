@@ -11,3 +11,6 @@ res
 /server/.idea
 /server/.env
 /server/**__pycache__**
+
+certbot/*
+!certbot/README.md  # Optional: keep a readme or any instruction file
