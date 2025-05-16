@@ -12,6 +12,8 @@ interface IPackageCardProps {
   service: IServicePopulated;
   vehicleTypes: IVehicleType[];
   index: number;
+  isActive: boolean;
+  onToggle: () => void;
   onSelect: (service: IServicePopulated) => void;
 }
 
@@ -20,8 +22,11 @@ function PackageCard({
   service,
   index,
   vehicleTypes,
+  isActive,
+  onToggle,
   onSelect,
 }: IPackageCardProps) {
+  
   const vehicleTypeMap: Map<number, IVehicleType> = useMemo(() => {
     if (!vehicleTypes) return new Map();
     return new Map(vehicleTypes.map((vt) => [vt.id, vt]));
@@ -33,9 +38,8 @@ function PackageCard({
         <button
           className="accordion-button collapsed bg-white text-dark fw-bold py-3"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseOne"
-          aria-expanded="false"
+          onClick={onToggle}
+          aria-expanded={isActive}
           aria-controls="collapseOne"
         >
           <div className="d-flex align-items-center">
@@ -49,7 +53,7 @@ function PackageCard({
       </h3>
       <div
         id="collapseOne"
-        className="accordion-collapse collapse"
+        className={`accordion-collapse collapse ${isActive ? "show" : ""}`}
         aria-labelledby="headingOne"
         data-bs-parent="#packagesAccordion"
       >

@@ -47,6 +47,7 @@ function PackageList({ styles }: IPackageListProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState<boolean>(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -118,9 +119,14 @@ function PackageList({ styles }: IPackageListProps) {
     }
   };
 
+  const handleToggleAccordion = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
   return (
     <div className="tab-pane fade show active" id="packages" role="tabpanel">
-        {combinedServices?.services.map((service, index)=>(<PackageCard key={service.id} styles={styles} service={service} index={index} vehicleTypes={combinedServices.vehicle_types} onSelect={handleSelectProduct} />))}
+        {combinedServices?.services.map((service, index)=>(<PackageCard key={service.id} styles={styles} service={service} index={index} isActive={activeIndex === index}
+        vehicleTypes={combinedServices.vehicle_types} onSelect={handleSelectProduct} onToggle={() => handleToggleAccordion(index)} />))}
     </div>
   );
 }
