@@ -80,7 +80,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
 "http://localhost:3000",
-    # os.getenv("FRONTEND_URL"),
+    os.getenv("FRONTEND_URL"),
 ]
 
 CORS_ALLOW_METHODS = (
@@ -110,7 +110,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASE_HOST = "db" if DEBUG is not True else "localhost"
+DATABASE_HOST = "postgres_db" if DEBUG is not True else "localhost"
 
 DATABASES = {
     'default': {
