@@ -29,7 +29,7 @@ def load_json_data():
 # Function to delete existing data
 def delete_existing_data():
     User = get_user_model()
-    email = "mdsamsuzzoha5222@gmail.com"
+    email = "mdshayon0@gmail.com"
 
     # Delete existing superuser
     existing_user = User.objects.filter(username=email).first()
@@ -51,7 +51,7 @@ def delete_existing_data():
 
 def create_superuser():
     # Uncomment the next line to delete data before running the rest of the operations
-    # delete_existing_data()
+    delete_existing_data()
     User = get_user_model()
     email = "mdshayon0@gmail.com"
 
