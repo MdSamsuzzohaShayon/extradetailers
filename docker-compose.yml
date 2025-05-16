@@ -1,5 +1,5 @@
 services:
-  db:
+  postgres_db:
     image: postgres:17
     container_name: postgres_db
     restart: always
@@ -15,11 +15,11 @@ services:
   backend:
     build: 
       context: ./server
-    container_name: extradetailer_backend
+    container_name: backend
     env_file:
       - ./server/.env
     depends_on:
-      - db
+      - postgres_db
     networks:
       - app-network
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
   frontend:
     build: 
       context: ./client
-    container_name: extradetailer_frontend
+    container_name: frontend
     env_file:
       - ./client/.env
     depends_on:
@@ -38,7 +38,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: extradetailer_nginx_server
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
@@ -53,6 +53,9 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
 
 
 volumes:
