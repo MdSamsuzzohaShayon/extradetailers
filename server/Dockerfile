@@ -14,6 +14,8 @@ ARG SECRET_KEY
 ENV SECRET_KEY=$SECRET_KEY
 
 RUN chmod +x /app/entrypoint.sh
+
+RUN python seed_data.py
       
 # gunicorn server.wsgi:application --bind 0.0.0.0:8000 --workers 3
 
