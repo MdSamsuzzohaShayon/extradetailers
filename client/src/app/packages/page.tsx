@@ -6,7 +6,6 @@ import PackageList from "@/components/packages/PackageList";
 import { getQueryClient } from "@/lib/get-query-client";
 import {
   combinedServicesOptions,
-  servicesOptions,
 } from "../_requests/services";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import AddOnServiceList from "@/components/packages/AddOnServiceList";
