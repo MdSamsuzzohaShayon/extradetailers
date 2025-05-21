@@ -391,3 +391,37 @@ class ResetPasswordView(PublicPermissionMixin, generics.CreateAPIView):
 class UserListView(AdminPermissionMixin, generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        params = self.request.query_params
+
+        username = params.get('username')
+        if username:
+            queryset = queryset.filter(username=username)
+
+        email = params.get('email')
+        if email:
+            queryset = queryset.filter(email=email)
+
+        first_name = params.get('first_name')
+        if first_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+
+        last_name = params.get('last_name')
+        if last_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+
+        role = params.get('role')
+        if role:
+            queryset = queryset.filter(role=role)
+
+        is_active = params.get('is_active')
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active.lower() == 'true')
+
+        is_validated = params.get('is_validated')
+        if is_validated is not None:
+            queryset = queryset.filter(is_validated=is_validated.lower() == 'true')
+
+        return queryset

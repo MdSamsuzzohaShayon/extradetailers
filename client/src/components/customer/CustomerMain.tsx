@@ -10,26 +10,26 @@ import {
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
-import { useCreateUserOptions, useUsersOptions } from "@/app/_requests/users";
-import UserAdd from "./UserAdd";
-import UserList from "./UserList";
+import CustomerAdd from "./CustomerAdd";
+import CustomerList from "./CustomerList";
 import { EUserRole, TModuleStyle } from "@/types";
 import { useMessage } from "@/lib/ToastProvider";
 import { userBoolFields } from "@/utils/staticData";
+import { useCreateUserOptions, useUsersOptions } from "@/app/_requests/users";
 
-interface UserMainProps {
+interface CustomerMainProps {
   styles: TModuleStyle;
 }
-function UserMain({ styles }: UserMainProps) {
+function CustomerMain({ styles }: CustomerMainProps) {
   const {setMessage} = useMessage();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const queryClient = useQueryClient();
-  const createUserMutation = useMutation<unknown, DefaultError, FormData>(useCreateUserOptions(queryClient));
+  const createCustomerMutation = useMutation<unknown, DefaultError, FormData>(useCreateUserOptions(queryClient));
 
-  const {data: userList} = useQuery(useUsersOptions());
+  const {data: userList} = useQuery(useUsersOptions({role: EUserRole.CUSTOMER}));
 
 
-  const handleCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleCreateCustomer = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -58,36 +58,36 @@ function UserMain({ styles }: UserMainProps) {
 
     formData.set("username", formData.get("email")?.toString() || "");
   
-    createUserMutation.mutate(formData);
+    createCustomerMutation.mutate(formData);
     form.reset();
     setIsOpen(false);
   };
 
-  if(createUserMutation.isPending) return <Loader />
+  if(createCustomerMutation.isPending) return <Loader />
 
 
   return (
-    <div className="UserMain">
+    <div className="CustomerMain">
       <button className="btn btn-primary d-flex justify-content-center align-items-center gap-1" onClick={() => setIsOpen(!isOpen)}>
         <IoMdAdd size={25} />
         Create New
       </button>
       <Modal
         isOpen={isOpen}
-        title="Create a new User"
+        title="Create a new Customer"
         submitButtonText="Create"
         children={
-          <UserAdd
+          <CustomerAdd
           roles={[EUserRole.ADMIN, EUserRole.CUSTOMER, EUserRole.DETAILER]}
           groups={[]}
           permissions={[]}  />
         }
-        onSubmit={handleCreateUser}
+        onSubmit={handleCreateCustomer}
         onClose={() => setIsOpen(!isOpen)}
       /> 
-      <UserList styles={styles} userList={userList || []} />
+      <CustomerList styles={styles} userList={userList || []} />
     </div>
   );
 }
 
-export default UserMain;
+export default CustomerMain;

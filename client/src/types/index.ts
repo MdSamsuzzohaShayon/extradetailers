@@ -102,17 +102,11 @@ interface IUser{
 
 */
 
-interface ISubMenuItem {
-  id: number;
-  text: string;
-  link: string;
-}
 
 interface IMenuItem {
-  id: number;
-  text: string;
-  link: string;
-  subMenu?: ISubMenuItem[];
+  title: string;
+  path: string;
+  children?: IMenuItem[]; // recursive for submenus
 }
 
 interface IMessage {
@@ -153,5 +147,4 @@ export type {
   IUser,
   IMenuItem,
   IPaymentIntentResponse,
-  ISubMenuItem,
 };

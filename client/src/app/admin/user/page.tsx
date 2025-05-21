@@ -1,4 +1,4 @@
-import { usersOptions } from "@/app/_requests/users";
+import { useUsersOptions } from "@/app/_requests/users";
 import styles from "./user.module.scss";
 import { getQueryClient } from "@/lib/get-query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ async function UserPage() {
 
   const queryClient = getQueryClient()
 
-  await queryClient.prefetchQuery(usersOptions);
+  await queryClient.prefetchQuery(useUsersOptions());
 
   return (
     <div className={styles.userContainer}>

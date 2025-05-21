@@ -11,8 +11,8 @@ import {
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
 import { useCreateUserOptions, useUsersOptions } from "@/app/_requests/users";
-import UserAdd from "./UserAdd";
-import UserList from "./UserList";
+import UserAdd from "./DetailerAdd";
+import UserList from "./DetailerList";
 import { EUserRole, TModuleStyle } from "@/types";
 import { useMessage } from "@/lib/ToastProvider";
 import { userBoolFields } from "@/utils/staticData";

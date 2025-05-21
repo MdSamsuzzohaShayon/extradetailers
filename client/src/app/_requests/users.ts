@@ -9,23 +9,26 @@ import { QueryClient } from "@tanstack/react-query";
 
 
 
-
-export const usersOptions = {
-  queryKey: ["users"],
-  queryFn: async (): Promise<IUser[]> => {
-    try {
-      const response = await axiosInstance.get("/accounts/main/");
-      return response.data;
-    } catch (error: unknown) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+const getUsers = async (params: Record<string, any> = {}): Promise<IUser[]> => {
+  try {
+    const response = await axiosInstance.get("/accounts/main/", { params });
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(
       // @ts-ignore
-      throw new Error(
-        // @ts-ignore
-        error?.response?.data?.message || "Failed to fetch users."
-      );
-    }
-  },
+      error?.response?.data?.message || "Failed to fetch users."
+    );
+  }
 };
+
+
+
+
+export const useUsersOptions = (params: Record<string, any> = {}) => ({
+  queryKey: ["users", params],
+  queryFn: () => getUsers(params),
+});
+
 
 async function createUser(formData: FormData) {
   const response = await axiosInstance.post("/accounts/main/create/", formData, {

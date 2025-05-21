@@ -8,8 +8,8 @@ import {
 } from "@tanstack/react-query";
 import Loader from "@/components/elements/Loader";
 import Modal from "@/components/elements/Modal";
-import UserAdd from "./UserAdd";
-import UserCard from "./UserCard";
+import UserAdd from "./CustomerAdd";
+import UserCard from "./CustomerCard";
 import { deleteUserOptions, useUpdateUserOptions } from "@/app/_requests/users";
 
 interface UserListProps {
