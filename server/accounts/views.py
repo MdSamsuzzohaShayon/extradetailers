@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
-from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer
-from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin
+from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer, UserSerializer, UserCreationSerializer, UserUpdateSerializer
+from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin, AdminPermissionMixin
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
 # Validate COOKIE_HTTP_ONLY, COOKIE_SECURE, and COOKIE_SAMESITE
@@ -20,6 +20,14 @@ COOKIE_ACCESS_TOKEN_AGE = 60 * ACCESS_TOKEN_LIFETIME_IN_MINUTES
 # 7 Days
 COOKIE_REFRESH_TOKEN_AGE = 60 * 60 * 24 * REFRESH_TOKEN_LIFETIME_IN_DAYS
 
+
+# Helper to convert checkbox/form strings to bool
+def to_bool(value):
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in ['true', '1', 'on', 'yes']
+    return False
 
 
 class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
@@ -75,6 +83,83 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
             {"message": "User registered successfully. Check your email for validation link."},
             status=status.HTTP_201_CREATED
         )
+
+# Unlike signup, it needs admin permission and this can create any kind of user
+class CreateUserView(AdminPermissionMixin, generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreationSerializer
+
+    def create(self, request, *args, **kwargs):
+        email = request.data.get('email')
+
+        user = User.objects.filter(email=email).first()
+
+        if user and user.is_validated:
+            return Response(
+                {"error": "User with this email already exists and is validated."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Copy the request data so we can modify it
+        mutable_data = request.data.copy()
+
+
+        # Parse booleans from input or set defaults
+        mutable_data['is_validated'] = to_bool(mutable_data.get('is_validated', False))
+        mutable_data['is_active'] = to_bool(mutable_data.get('is_active', True))  # e.g. active by default
+        mutable_data['is_admin'] = to_bool(mutable_data.get('is_admin', False))
+        mutable_data['is_staff'] = to_bool(mutable_data.get('is_staff', False))
+        mutable_data['is_superuser'] = to_bool(mutable_data.get('is_superuser', False))
+
+        serializer = self.get_serializer(data=mutable_data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(
+            {"message": "User created successfully."},
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )
+
+class UpdateUserView(AdminPermissionMixin, generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserUpdateSerializer
+    lookup_field = 'pk'  # Adjust to 'id' or 'uuid' if needed
+
+    def update(self, request, *args, **kwargs):
+        # Copy and safely convert booleans from incoming data
+        mutable_data = request.data.copy()
+
+        # Handle optional boolean fields
+        for field in ['is_validated', 'is_active', 'is_admin', 'is_staff', 'is_superuser']:
+            if field in mutable_data:
+                mutable_data[field] = to_bool(mutable_data.get(field))
+
+        partial = kwargs.pop('partial', True)  # Allow partial update by default
+        instance = self.get_object()
+
+        serializer = self.get_serializer(instance, data=mutable_data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response({"message": "User updated successfully."}, status=status.HTTP_200_OK)
+
+
+class DeleteUserView(AdminPermissionMixin, generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreationSerializer  # Can be any serializer; not used for deletion
+
+
+class DeleteUserView(AdminPermissionMixin, generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreationSerializer  # Can be any serializer; not used for deletion
+    lookup_field = 'pk'  # or 'id' or 'uuid'
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ValidateUserView(PublicPermissionMixin, generics.CreateAPIView):
@@ -301,3 +386,8 @@ class ResetPasswordView(PublicPermissionMixin, generics.CreateAPIView):
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserListView(AdminPermissionMixin, generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

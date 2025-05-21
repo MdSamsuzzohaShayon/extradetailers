@@ -57,4 +57,12 @@ const adminMenuList: IMenuItem[] = [
   ];
 
 
-  export {adminMenuList};
+  const userBoolFields = [
+    "is_validated",
+    "is_admin",
+    "is_active",
+    "is_staff",
+    "is_superuser",
+  ];
+
+  export {adminMenuList, userBoolFields};

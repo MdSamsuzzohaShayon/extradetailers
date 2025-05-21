@@ -3,6 +3,8 @@ from services.models import Service, VehicleType
 from accounts.models import User
 
 
+
+
 # Create your models here.
 class Booking(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")

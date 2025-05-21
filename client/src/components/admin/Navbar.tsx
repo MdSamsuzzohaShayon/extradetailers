@@ -153,6 +153,37 @@ function Navbar({ className, title }: INavbarProps) {
             </Link>
           </div>
         </li>
+
+        <li className="nav-item mb-1">
+          <div className="d-flex align-items-center justify-content-between">
+            <Link
+              href="/admin/user"
+              className={`nav-link flex-grow-1 text-truncate ${
+                pathname === "/admin/user"
+                  ? "active bg-primary"
+                  : "text-white"
+              }`}
+            >
+              Users
+            </Link>
+          </div>
+        </li>
+
+        <li className="nav-item mb-1">
+          <div className="d-flex align-items-center justify-content-between">
+            <Link
+              href="/admin/detailer"
+              className={`nav-link flex-grow-1 text-truncate ${
+                pathname === "/admin/detailer"
+                  ? "active bg-primary"
+                  : "text-white"
+              }`}
+            >
+              Detailers
+            </Link>
+          </div>
+          </li>
+
       </ul>
     </nav>
   );

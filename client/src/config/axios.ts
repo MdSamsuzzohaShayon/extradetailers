@@ -47,6 +47,11 @@ axiosInstance.interceptors.request.use(
 
 
 const PROTECTED_API_ROUTES = [
+  {url: "/accounts/main/", method: "GET"},
+  {url: "/accounts/main/create/", method: "POST"},
+  {url: "/accounts/main<int:pk>/update/", method: "PATCH"},
+  {url: "/accounts/main/<int:pk>/delete/", method: "POST"},
+
   {url: "/accounts/protected/", method: "GET"},
 
   {url: "/bookings/", method: "GET"},

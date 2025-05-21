@@ -2,6 +2,14 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 
 
+# Add multiple location of customer, and select one location in the time of booking
+# Add promo codes
+# Create another user types, that is detailer -> Manually or automatically assign jobs to available detailers.
+# Detailer -> Manage detailer availability, location, and ratings.
+# Receive notifications for new job assignments.
+# Accept or decline jobs.
+# Track completed jobs and payment history.
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
