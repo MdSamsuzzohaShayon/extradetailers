@@ -50,13 +50,13 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
                 
 
                 try:
-                send_mail(
-                    "Validate Your Account",
-                    f"Click the link to validate your account: {validation_link}",
-                    os.getenv('EMAIL_HOST_USER'),
-                    [user.email],
-                    fail_silently=False,
-                )
+                    send_mail(
+                        "Validate Your Account",
+                        f"Click the link to validate your account: {validation_link}",
+                        os.getenv('EMAIL_HOST_USER'),
+                        [user.email],
+                        fail_silently=False,
+                    )
                 except Exception as e:
                     logger.exception("Email sending failed")
                     return Response({"error": "User created but failed to send validation email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
