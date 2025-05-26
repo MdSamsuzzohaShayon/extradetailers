@@ -78,9 +78,17 @@ export async function middleware(request: NextRequest) {
     } 
 
     else if (user_role === EUserRole.CUSTOMER || user_role === EUserRole.DETAILER) {
+      // Detailer can not go to checkout
+      if (pathname.startsWith('/dashboard/checkout') && user_role === EUserRole.DETAILER) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+
+
       if (pathname.startsWith('/dashboard')) {
         return NextResponse.next();
       }
+
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 

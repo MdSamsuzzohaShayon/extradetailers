@@ -6,8 +6,9 @@ from payments.utils import calculate_order_amount
 from payments.serializers import PaymentIntentSerializer
 from accounts.mixins import GeneralUserPermissionMixin, PublicPermissionMixin
 from accounts.serializers import EmptySerializer
+from accounts.models import User
 from bookings.models import Booking  # Assuming app is `bookings`
-from services.models import Service
+from services.models import Service, VehicleType, AddOnService, ServicePrice
 
 
 # Create your views here.
@@ -21,26 +22,38 @@ class CreatePaymentIntentView(GeneralUserPermissionMixin, generics.CreateAPIView
         bookings_data = serializer.validated_data['bookings']
 
         try:
-            amount = calculate_order_amount(bookings_data)
+            amount = calculate_order_amount(bookings=bookings_data)
+
             intent = stripe.PaymentIntent.create(
                 amount=amount,
                 currency='usd',
                 automatic_payment_methods={'enabled': True}
             )
+            print("Payment Intent ID: ", intent['id'])
 
-            print("Payment Intent ID: ",intent['id'])
-
-            # Save bookings in database with 'pending' status and this payment_intent.id
             for item in bookings_data:
-                service = Service.objects.get(id=item['service'])
-                Booking.objects.create(
-                    user=request.user,
+                # These are already model instances
+                service = item['service']
+                vehicle_type = item['vehicle_type']
+                service_price = item['service_price']
+                booking_date = item['booking_date']
+                slot = item['slot']
+                addons = item.get('addons', [])
+
+                booking = Booking.objects.create(
+                    customer=request.user,
                     service=service,
-                    slot=item.get('slot'),
-                    payment_intent_id=intent['id'],
+                    service_price=service_price,
+                    vehicle_type=vehicle_type,
+                    slot=slot,
                     status='initialized',
-                    paid=False
+                    paid=False,
+                    payment_intent_id=intent['id'],
+                    booking_date=booking_date
                 )
+
+                if addons:
+                    booking.addons.set(addons)
 
             return Response({'clientSecret': intent['client_secret']}, status=status.HTTP_200_OK)
 
@@ -103,13 +116,33 @@ class StripeWebhookView(PublicPermissionMixin, generics.CreateAPIView):
                 print("Payment Intent ID: ", payment_intent_id)
 
                 bookings = Booking.objects.filter(payment_intent_id=payment_intent_id)
-                print(f"Bookings matched: {bookings.count()}")
-                updated_count = bookings.update(status='completed', paid=True)
 
-                return Response(
-                    {'message': f'Payment succeeded — {updated_count} bookings updated.'},
-                    status=status.HTTP_200_OK
-                )
+                # 🔍 Find an available detailer with no assigned (incomplete) bookings
+                available_detailer = User.objects.filter(
+                    role='detailer'
+                ).exclude(
+                    assigned_jobs__status__in=['initialized', 'pending']
+                ).first()
+
+                print(f"Bookings matched: {bookings.count()}")
+                # Find a user with role detailer who do not have any other booking, assign that detailer to this booking
+                # Update bookings
+                updated_count = 0
+                for booking in bookings:
+                    booking.status = 'pending'
+                    booking.paid = True
+                    if available_detailer:
+                        booking.detailer = available_detailer
+                    booking.save()
+                    updated_count += 1
+
+                message = f'Payment succeeded — {updated_count} bookings updated.'
+                if available_detailer:
+                    message += f" Assigned detailer: {available_detailer.email}"
+                else:
+                    message += " No available detailer found."
+
+                return Response({'message': message}, status=status.HTTP_200_OK)
 
             return Response(
                 {'message': f'Unhandled event type: {event_type}'},

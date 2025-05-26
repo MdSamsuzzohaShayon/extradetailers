@@ -10,7 +10,7 @@ import {
 interface IPackageCardProps {
   styles: TModuleStyle;
   service: IServicePopulated;
-  vehicleTypes: IVehicleType[];
+  vehicleTypeMap: Map<number, IVehicleType>;
   index: number;
   isActive: boolean;
   onToggle: () => void;
@@ -21,16 +21,13 @@ function PackageCard({
   styles,
   service,
   index,
-  vehicleTypes,
+  vehicleTypeMap,
   isActive,
   onToggle,
   onSelect,
 }: IPackageCardProps) {
   
-  const vehicleTypeMap: Map<number, IVehicleType> = useMemo(() => {
-    if (!vehicleTypes) return new Map();
-    return new Map(vehicleTypes.map((vt) => [vt.id, vt]));
-  }, [vehicleTypes]);
+
 
   return (
     <div className="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
@@ -90,7 +87,7 @@ function PackageCard({
                 </li>))}
                 
               </ul>
-              <button className="btn btn-primary w-100 mt-3">
+              <button className="btn btn-primary w-100 mt-3" onClick={() => onSelect(service)}>
                 Select Package
               </button>
             </div>

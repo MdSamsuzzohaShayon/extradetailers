@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
 
+######################
+# Clean up location
+# Booking
+######################
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')  # Change if your settings module is different
 django.setup()
 

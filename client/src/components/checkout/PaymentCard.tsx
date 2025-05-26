@@ -1,8 +1,6 @@
 "use client";
 
 import { TModuleStyle } from "@/types";
-import LocalStorage from "@/utils/LocalStorage";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import { loadStripe } from "@stripe/stripe-js";
@@ -14,6 +12,8 @@ interface IPaymentCardProps {
   total: number;
   styles: TModuleStyle;
   clientSecret: string | null;
+  subTotal: number;
+  tax: number;
 }
 
 // Make sure to call loadStripe outside of a component's render to avoid
@@ -25,9 +25,9 @@ const stripePromise = loadStripe(
   "pk_test_51E42CcE15Lqo4v04FHj1EOv6iAY09udHeoDXN1JN10OcnBN0Ifx002HhH6mGQCxTTJiE1kKQeK6FAD721vg3dflD00a6EctJsj"
 );
 
-function PaymentCard({ total, styles, clientSecret }: IPaymentCardProps) {
+function PaymentCard({ total, styles, clientSecret, tax, subTotal }: IPaymentCardProps) {
   const appearance: Appearance = {
-    theme: "stripe" as const
+    theme: "stripe" as const,
   };
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";
@@ -38,11 +38,11 @@ function PaymentCard({ total, styles, clientSecret }: IPaymentCardProps) {
         <h4 className="card-title mb-4 border-bottom pb-2">🧾 Order Summary</h4>
         <div className="d-flex justify-content-between mb-3">
           <span className="text-muted">Subtotal</span>
-          <span>${total}</span>
+          <span>${subTotal}</span>
         </div>
         <div className="d-flex justify-content-between mb-3">
           <span className="text-muted">Tax</span>
-          <span>$0.00</span>
+          <span>$${tax}</span>
         </div>
         <div className="d-flex justify-content-between mb-4 fw-bold fs-5">
           <span>Total</span>

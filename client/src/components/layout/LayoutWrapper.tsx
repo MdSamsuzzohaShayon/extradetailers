@@ -9,16 +9,18 @@ import { IMenuItem, TModuleStyle } from "@/types";
 import { IoClose, IoOpen } from "react-icons/io5";
 import { CiMenuBurger } from "react-icons/ci";
 
-interface IAdminDashboardLayoutProps extends React.PropsWithChildren {
+interface ILayoutWrapperProps extends React.PropsWithChildren {
   title: string;
+  menuList: IMenuItem[];
   styles: TModuleStyle;
 }
 
-function AdminDashboardLayout({
+function LayoutWrapper({
   children,
   title,
   styles,
-}: IAdminDashboardLayoutProps) {
+  menuList,
+}: ILayoutWrapperProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   return (
@@ -66,7 +68,7 @@ function AdminDashboardLayout({
             </div>
             <hr className="my-2" />
             <div className="flex-grow-1 overflow-hidden d-flex flex-column">
-              <Navbar className="overflow-y-auto" title={isOpen ? title : ''} />
+              <Navbar className="overflow-y-auto" title={isOpen ? title : ''} menuList={menuList} />
               <hr className="my-2" />
               <UserMenu />
             </div>
@@ -93,4 +95,4 @@ function AdminDashboardLayout({
   );
 }
 
-export default AdminDashboardLayout;
+export default LayoutWrapper;

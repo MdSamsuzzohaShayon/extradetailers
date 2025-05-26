@@ -1,6 +1,7 @@
 import React from 'react';
-import AdminDashboardLayout from '@/components/layout/AdminDashboardLayout';
+import LayoutWrapper from '@/components/layout/LayoutWrapper';
 import styles from './admin.module.scss';
+import { adminMenuList } from '@/utils/staticData';
 
 
 
@@ -8,9 +9,9 @@ import styles from './admin.module.scss';
 function AdminLayout({children}: React.PropsWithChildren) {
   return (
     <React.Fragment>
-      <AdminDashboardLayout title='Admin Panel' styles={styles} >
+      <LayoutWrapper title='Admin Panel' styles={styles} menuList={adminMenuList} >
         {children}
-      </AdminDashboardLayout>
+      </LayoutWrapper>
     </React.Fragment>
   )
 }

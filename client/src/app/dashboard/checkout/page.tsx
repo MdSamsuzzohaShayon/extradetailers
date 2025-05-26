@@ -5,7 +5,7 @@ https://docs.stripe.com/payments/quickstart?client=react&lang=python
 import styles from "./checkout.module.scss";
 import { getQueryClient } from "@/lib/get-query-client";
 import Checkout from "@/components/checkout/Checkout";
-import { servicesOptions } from "../_requests/services";
+import { combinedServicesOptions, servicesOptions } from "../../_requests/services";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,12 +15,10 @@ async function CheckoutPage() {
   const queryClient = getQueryClient();
 
   try {
-    // Always use await to properly handle errors
-    await queryClient.prefetchQuery(servicesOptions);
+    await queryClient.prefetchQuery(combinedServicesOptions);
   } catch (error) {
     console.error("Prefetch error:", error);
-    // The error will automatically propagate to error.tsx
-    throw error;
+    throw error; // propagate to /error
   }
 
   return (

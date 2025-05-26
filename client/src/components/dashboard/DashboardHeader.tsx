@@ -16,7 +16,7 @@ function DashboardHeader() {
         error: false, 
         text: 'If data is not showing properly try reloading in a minute!' 
       });
-      LocalStorage.clearOrders();
+      LocalStorage.clearBookings();
     }
   }, [searchParams, setMessage]);
 

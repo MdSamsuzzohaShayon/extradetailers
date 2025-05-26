@@ -1,60 +1,66 @@
-import { IMenuItem } from "@/types";
+import { EBookingStatus, IMenuItem } from "@/types";
 
 const adminMenuList: IMenuItem[] = [
-    // admin, admin/bookings, admin/services, admin/customers
-    {
-      id: 1,
-      text: "Admin",
-      link: "/admin"
-    },
-    {
-      id: 2,
-      text: "Bookings",
-      link: "/admin/booking"
-    },
-    {
-      id: 3,
-      text: "Services",
-      link: "/admin/service",
-      subMenu: [
-        {
-          id: 1,
-          text: "All",
-          link: "/"
-        },
-        {
-          id: 2,
-          text: "Service Category",
-          link: "/service-category"
-        },
-        {
-          id: 3,
-          text: "Vehicle Type",
-          link: "/vehicle-type"
-        },
-        {
-          id: 4,
-          text: "Service Price",
-          link: "/service-price"
-        },
-        {
-          id: 5,
-          text: "Service Feature",
-          link: "/service-feature"
-        },
-        {
-          id: 6,
-          text: "Add-On Service",
-          link: "/add-on-service"
-        }
-      ]
-    },
-    {
-      id: 4,
-      text: "Customers",
-      link: "/admin/customer"
-    },
+  {
+    title: "Admin",
+    path: "/admin",
+  },
+  {
+    title: "Bookings",
+    path: "/admin/booking",
+  },
+  {
+    title: "Services",
+    path: "/admin/service",
+    children: [
+      { title: "All", path: "/admin/service" },
+      { title: "Service Category", path: "/admin/service/service-category" },
+      { title: "Vehicle Type", path: "/admin/service/vehicle-type" },
+      { title: "Service Price", path: "/admin/service/service-price" },
+      { title: "Service Feature", path: "/admin/service/service-feature" },
+      { title: "Add-On Service", path: "/admin/service/add-on-service" },
+    ],
+  },
+  {
+    title: "Customers",
+    path: "/admin/customer",
+  },
+  {
+    title: "Users",
+    path: "/admin/user",
+  },
+  {
+    title: "Detailers",
+    path: "/admin/detailer",
+  },
+];
+
+const dashboardMenuList: IMenuItem[] = [
+  {
+    title: "Dashboard",
+    path: "/dashboard"
+  },
+  {
+    title: "Bookings",
+    path: "/dashboard/bookings"
+  },
+  {
+    title: "Checkout",
+    path: "/dashboard/checkout"
+  }
+];
+
+
+
+  const userBoolFields = [
+    "is_validated",
+    "is_admin",
+    "is_active",
+    "is_staff",
+    "is_superuser",
   ];
 
 
-  export {adminMenuList};
+  const bookingStatuses = [EBookingStatus.INITIALIZED, EBookingStatus.PENDING, EBookingStatus.COMPLETED, EBookingStatus.CANCELED];
+
+  export {adminMenuList, userBoolFields, dashboardMenuList, bookingStatuses};
