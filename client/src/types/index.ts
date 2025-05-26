@@ -107,8 +107,11 @@ interface IBookingCommon extends IDefaultModel{
   slot: string;
   status?: EBookingStatus;
 }
+
+
+
 interface IBooking extends IBookingCommon {
-  customer: number;
+  customer?: number;
   detailer?: number;
   service: number;
   service_details?: IService;
