@@ -39,7 +39,7 @@ function Header() {
   };
 
   useEffect(() => {
-    const items = LocalStorage.getOrders();
+    const items = LocalStorage.getBookings();
     setCartItems(items);
   }, []);
 
@@ -88,7 +88,7 @@ function Header() {
             ))}
           </ul>
           <div className="d-flex gap-2 align-items-center">
-            <Link href="/checkout" className="mb-4">
+            <Link href="/dashboard/checkout" className="mb-4">
               <MdShoppingCartCheckout size={40} />{" "}
               {cartItems.length > 0 ? cartItems.length : ""}
             </Link>

@@ -36,7 +36,9 @@ python manage.py migrate
 python manage.py migrate accounts
 
 
+ngrok http 8000
 python seed_data.py
+
 
 
 

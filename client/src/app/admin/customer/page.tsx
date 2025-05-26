@@ -14,14 +14,6 @@ async function CustomerPage() {
   return (
     <div className={styles.customerContainer}>
       <h1 className={styles.title}>Manage Customers</h1>
-
-      <ul>
-        <ol>List all customers</ol>
-        <ol>Assign a customer to specific job/booking</ol>
-        <ol>List of all requested</ol>
-        <ol>Each booking/job must have a location</ol>
-        <ol>(In customer dashboard) Customer can chat, customer can request to cancel, a notification panel</ol>
-      </ul>
       
       {/* Create / Edit Form */}
       

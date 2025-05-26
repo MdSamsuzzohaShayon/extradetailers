@@ -60,14 +60,8 @@ interface IServicePrice extends IDefaultModel {
 }
 
 // Booking Interface
-interface IBooking extends IDefaultModel {
-  user?: string;
-  service: number;
-  service_details?: IService;
-  order_date: string;
-  slot: string;
-  status?: EBookingStatus;
-}
+
+
 
 interface IAPIError {
   response?: {
@@ -102,6 +96,41 @@ interface IUser{
 
 */
 
+interface IAuthUser {
+  accessToken: string;
+  userRole: EUserRole;
+}
+
+
+interface IBookingCommon extends IDefaultModel{
+  booking_date: string;
+  slot: string;
+  status?: EBookingStatus;
+}
+interface IBooking extends IBookingCommon {
+  customer: number;
+  detailer?: number;
+  service: number;
+  service_details?: IService;
+
+  // New fields
+  service_price: number | null;
+  vehicle_type: number | null;
+  addons: number[];
+  // location: number | null;
+}
+
+interface IBookingPopulated extends IBookingCommon {
+  customer: IUser;
+  detailer?: IUser;
+  service: IService;
+
+  // New fields
+  service_price: IServicePrice;
+  vehicle_type: IVehicleType;
+  addons: IAddOnService[];
+}
+
 
 interface IMenuItem {
   title: string;
@@ -126,6 +155,7 @@ export enum EUserRole {
 }
 
 export enum EBookingStatus {
+  INITIALIZED = "initialized",
   PENDING = "pending",
   COMPLETED = "completed",
   CANCELED = "canceled",
@@ -142,9 +172,11 @@ export type {
   IServicePopulated,
   IAddOnServicePopulated,
   IBooking,
+  IBookingPopulated,
   IAPIError,
   IMessage,
   IUser,
   IMenuItem,
   IPaymentIntentResponse,
+  IAuthUser,
 };

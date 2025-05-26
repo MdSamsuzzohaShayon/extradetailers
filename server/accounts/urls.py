@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import UserSignupView, ValidateUserView, LoginView, LogoutView, RefreshTokenView, ProtectedView, ForgotPasswordView, ResetPasswordView, CreateUserView, UserListView, UpdateUserView, DeleteUserView
+from .views import (UserSignupView, ValidateUserView, LoginView, LogoutView, RefreshTokenView,
+                    ProtectedView, ForgotPasswordView, ResetPasswordView, CreateUserView, UserListView, UpdateUserView, DeleteUserView,
+                    LocationListView, LocationCreateView, LocationDeleteView, LocationUpdateView, LocationDetailView)
 
 urlpatterns = [
     # Authentication system
@@ -17,4 +19,10 @@ urlpatterns = [
     path("main/create/", CreateUserView.as_view(), name="create-user"),
     path("main/<pk>/cdelete/", DeleteUserView.as_view(), name="delete-user"),
     path("main/<pk>/update/", UpdateUserView.as_view(), name="update-user"),
+
+    path('locations/create/', LocationCreateView.as_view(), name='location-create'),
+    path('locations/', LocationListView.as_view(), name='location-list'),
+    path('locations/<int:pk>/', LocationDetailView.as_view(), name='location-detail'),
+    path('locations/<int:pk>/update/', LocationUpdateView.as_view(), name='location-update'),
+    path('locations/<int:pk>/delete/', LocationDeleteView.as_view(), name='location-delete'),
 ]

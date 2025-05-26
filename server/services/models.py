@@ -34,7 +34,7 @@ class ServicePrice(models.Model):
     price = models.DecimalField(max_digits=7, decimal_places=2)
 
     def __str__(self):
-        return f"{self.service.name} - {self.vehicle_type.name}"
+        return f"{self.service.title} - {self.vehicle_type.name}"
 
 
 # Features like "Hand wash & dry", "Steam cleaning", "Bug & tar removal"
@@ -43,7 +43,7 @@ class ServiceFeature(models.Model):
     feature_description = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.service.name} - {self.feature_description}"
+        return f"{self.service.title} - {self.feature_description}"
 
 
 # Standalone add-on services like "Ceramic Coating", "Ozone Treatment"

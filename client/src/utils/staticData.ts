@@ -1,4 +1,4 @@
-import { IMenuItem } from "@/types";
+import { EBookingStatus, IMenuItem } from "@/types";
 
 const adminMenuList: IMenuItem[] = [
   {
@@ -43,6 +43,10 @@ const dashboardMenuList: IMenuItem[] = [
   {
     title: "Bookings",
     path: "/dashboard/bookings"
+  },
+  {
+    title: "Checkout",
+    path: "/dashboard/checkout"
   }
 ];
 
@@ -56,4 +60,7 @@ const dashboardMenuList: IMenuItem[] = [
     "is_superuser",
   ];
 
-  export {adminMenuList, userBoolFields, dashboardMenuList};
+
+  const bookingStatuses = [EBookingStatus.INITIALIZED, EBookingStatus.PENDING, EBookingStatus.COMPLETED, EBookingStatus.CANCELED];
+
+  export {adminMenuList, userBoolFields, dashboardMenuList, bookingStatuses};

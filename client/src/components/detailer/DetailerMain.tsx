@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import {
   DefaultError,
@@ -63,6 +63,12 @@ function UserMain({ styles }: UserMainProps) {
     setIsOpen(false);
   };
 
+  const detailerUsers = useMemo(()=>{
+    if(!userList) return [];
+    const newUsers = userList.filter(u=> u.role === EUserRole.DETAILER);
+    return newUsers;
+  }, [userList]);
+
   if(createUserMutation.isPending) return <Loader />
 
 
@@ -85,7 +91,7 @@ function UserMain({ styles }: UserMainProps) {
         onSubmit={handleCreateUser}
         onClose={() => setIsOpen(!isOpen)}
       /> 
-      <UserList styles={styles} userList={userList || []} />
+      <UserList styles={styles} userList={detailerUsers || []} />
     </div>
   );
 }

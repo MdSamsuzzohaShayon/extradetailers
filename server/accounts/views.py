@@ -6,8 +6,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
-from .models import User
-from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer, UserSerializer, UserCreationSerializer, UserUpdateSerializer
+from .models import User, Location
+from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer, UserSerializer, UserCreationSerializer, UserUpdateSerializer, LocationSerializer
 from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin, AdminPermissionMixin
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
 
@@ -145,10 +145,57 @@ class UpdateUserView(AdminPermissionMixin, generics.UpdateAPIView):
 
         return Response({"message": "User updated successfully."}, status=status.HTTP_200_OK)
 
+# Location start
+class LocationCreateView(GeneralUserPermissionMixin, generics.CreateAPIView):
+    serializer_class = LocationSerializer
 
-class DeleteUserView(AdminPermissionMixin, generics.DestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserCreationSerializer  # Can be any serializer; not used for deletion
+    def perform_create(self, serializer):
+        # If admin, allow user to be specified in serializer (if provided), else default to request.user
+        if self.request.user.role == 'admin':
+            # Admin can set user explicitly, so don't override user here
+            serializer.save()
+        else:
+            # Normal users can only create locations for themselves
+            serializer.save(user=self.request.user)
+
+class LocationListView(GeneralUserPermissionMixin, generics.ListAPIView):
+    serializer_class = LocationSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == 'admin':
+            # Admin sees all locations
+            return Location.objects.all()
+        else:
+            # Others only see their own
+            return Location.objects.filter(user=self.request.user)
+
+class LocationDetailView(GeneralUserPermissionMixin, generics.RetrieveAPIView):
+    serializer_class = LocationSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == 'admin':
+            return Location.objects.all()
+        else:
+            return Location.objects.filter(user=self.request.user)
+
+class LocationUpdateView(GeneralUserPermissionMixin, generics.UpdateAPIView):
+    serializer_class = LocationSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == 'admin':
+            return Location.objects.all()
+        else:
+            return Location.objects.filter(user=self.request.user)
+
+class LocationDeleteView(GeneralUserPermissionMixin, generics.DestroyAPIView):
+    serializer_class = LocationSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == 'admin':
+            return Location.objects.all()
+        else:
+            return Location.objects.filter(user=self.request.user)
+# Location ends
 
 
 class DeleteUserView(AdminPermissionMixin, generics.DestroyAPIView):

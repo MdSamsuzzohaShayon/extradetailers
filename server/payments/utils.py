@@ -1,5 +1,5 @@
-from services.models import Service
-from django.core.exceptions import ObjectDoesNotExist
+from services.models import Service, ServicePrice, AddOnService
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 def calculate_order_amount(bookings):
     """
@@ -8,16 +8,12 @@ def calculate_order_amount(bookings):
     total_price = 0
 
     for booking in bookings:
-        service_id = booking.get('service')
-        if not service_id:
-            raise ValueError("Each booking must have a 'service' ID.")
+        service_price = booking['service_price']  # already a model instance
+        total_price += float(service_price.price)
 
-        try:
-            service = Service.objects.get(id=service_id)
-            total_price += service.price
-        except ObjectDoesNotExist:
-            raise ValueError(f"Service with id {service_id} does not exist.")
+        addon_objs = booking.get('addons', [])
+        if addon_objs:
+            addons_total = sum(float(addon.price_min) for addon in addon_objs)
+            total_price += addons_total
 
-    # Stripe expects amount in cents
-    return int(total_price * 100)
-
+    return int(total_price * 100)  # Stripe expects amount in cents

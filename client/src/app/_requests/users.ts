@@ -9,7 +9,7 @@ import { QueryClient } from "@tanstack/react-query";
 
 
 
-const getUsers = async (params: Record<string, any> = {}): Promise<IUser[]> => {
+export const getUsers = async (params: Record<string, any> = {}): Promise<IUser[]> => {
   try {
     const response = await axiosInstance.get("/accounts/main/", { params });
     return response.data;
