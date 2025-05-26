@@ -47,6 +47,9 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
 
                 # Resend Validation Email
                 validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
+                
+
+                try:
                 send_mail(
                     "Validate Your Account",
                     f"Click the link to validate your account: {validation_link}",
@@ -54,6 +57,10 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
                     [user.email],
                     fail_silently=False,
                 )
+                except Exception as e:
+                    logger.exception("Email sending failed")
+                    return Response({"error": "User created but failed to send validation email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
                 return Response(
                     {"message": "User already exists but is not validated. A new validation email has been sent."},
