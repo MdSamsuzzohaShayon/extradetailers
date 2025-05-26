@@ -117,8 +117,9 @@ function PackageList({ styles }: IPackageListProps) {
 
   const handleAddToCart = () => {
     if (selectedService && selectedDate && selectedTimeSlot) {
+      
       const booking: IBooking = {
-        service: selectedService.id as number,
+        service: selectedService.id || 0,
         booking_date: selectedDate.toISOString(),
         slot: selectedTimeSlot,
 
