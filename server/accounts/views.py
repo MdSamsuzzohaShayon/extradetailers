@@ -1,15 +1,15 @@
 import os
 from rest_framework import generics, status
 from rest_framework.response import Response
-from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User, Location
-from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer, UserSerializer, UserCreationSerializer, UserUpdateSerializer, LocationSerializer
+from .serializers import UserRegistrationSerializer, UserValidationSerializer, LoginSerializer, EmptySerializer, ForgotPasswordSerializer, UserSerializer, UserCreationSerializer, UserUpdateSerializer, LocationSerializer, ResetPasswordSerializer
 from .mixins import PublicPermissionMixin, GeneralUserPermissionMixin, CustomerPermissionMixin, DetailerPermissionMixin, AdminPermissionMixin
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
+from utils.send_email import send_transactional_email
 
 # Validate COOKIE_HTTP_ONLY, COOKIE_SECURE, and COOKIE_SAMESITE
 COOKIE_HTTP_ONLY = os.getenv("HTTP_ONLY", "false").lower() == "true"
@@ -40,25 +40,29 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
         # Check if user already exists but is not validated
         user = User.objects.filter(email=email).first()
 
+
         if user:
             if not user.is_validated:
                 # Generate a new validation token
                 token = RefreshToken.for_user(user)
 
                 # Resend Validation Email
-                validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
+
                 
 
                 try:
-                    send_mail(
-                        "Validate Your Account",
-                        f"Click the link to validate your account: {validation_link}",
-                        os.getenv('EMAIL_HOST_USER'),
-                        [user.email],
-                        fail_silently=False,
-                    )
+                    validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
+                    html_message = f"""
+                        <html>
+                            <body>
+                                <h2>Welcome!</h2>
+                                <p>Click the link below to verify your account:</p>
+                                <a href="{validation_link}">Verify Account</a>
+                            </body>
+                        </html>
+                    """
+                    send_transactional_email(user.email, "Validate Your Account", html_message)
                 except Exception as e:
-                    logger.exception("Email sending failed")
                     return Response({"error": "User created but failed to send validation email."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -78,13 +82,16 @@ class UserSignupView(PublicPermissionMixin, generics.CreateAPIView):
 
         # Send Validation Email
         validation_link = f"{os.getenv('FRONTEND_URL')}/auth/validate-user/?token={str(token.access_token)}"
-        send_mail(
-            "Validate Your Account",
-            f"Click the link to validate your account: {validation_link}",
-            os.getenv('EMAIL_HOST_USER'),
-            [user.email],
-            fail_silently=False,
-        )
+        html_message = f"""
+                                <html>
+                                    <body>
+                                        <h2>Welcome!</h2>
+                                        <p>Click the link below to verify your account:</p>
+                                        <a href="{validation_link}">Verify Account</a>
+                                    </body>
+                                </html>
+                            """
+        send_transactional_email(user.email, "Validate Your Account", html_message)
 
         return Response(
             {"message": "User registered successfully. Check your email for validation link."},
@@ -395,16 +402,19 @@ class ForgotPasswordView(PublicPermissionMixin, generics.CreateAPIView):
             existing_token = RefreshToken.for_user(user)
             existing_access_token = str(existing_token.access_token)
 
-            reset_link = f"{os.getenv('FRONTEND_URL')}/auth/reset-password/?token={existing_access_token}"
+            reset_link = f"{os.getenv('FRONTEND_URL')}/reset-password/?token={existing_access_token}"
 
             # Send email with reset link
-            send_mail(
-                "Reset Your Password",
-                f"Click the link to reset your password: {reset_link}",
-                os.getenv('EMAIL_HOST_USER'),
-                [user.email],
-                fail_silently=False,
-            )
+            html_message = f"""
+                                    <html>
+                                        <body>
+                                            <h2>Welcome!</h2>
+                                            <p>Click the link below to reset the password:</p>
+                                            <a href="{reset_link}">Reset Password</a>
+                                        </body>
+                                    </html>
+                                """
+            send_transactional_email(email, "Reset Your Password", html_message)
 
             return Response({"message": "Password reset link sent to your email."}, status=status.HTTP_200_OK)
 
@@ -415,11 +425,11 @@ class ForgotPasswordView(PublicPermissionMixin, generics.CreateAPIView):
 
 
 class ResetPasswordView(PublicPermissionMixin, generics.CreateAPIView):
-    serializer_class = EmptySerializer
+    serializer_class = ResetPasswordSerializer
 
     def create(self, request, *args, **kwargs):
         token = request.data.get("token")
-        new_password = request.data.get("new_password")
+        new_password = request.data.get("password")
 
         if not token or not new_password:
             return Response({"error": "Token and new password are required"}, status=status.HTTP_400_BAD_REQUEST)

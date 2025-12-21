@@ -17,7 +17,7 @@ urlpatterns = [
     # User crud
     path("main/", UserListView.as_view(), name="all-users"),
     path("main/create/", CreateUserView.as_view(), name="create-user"),
-    path("main/<pk>/cdelete/", DeleteUserView.as_view(), name="delete-user"),
+    path("main/<pk>/delete/", DeleteUserView.as_view(), name="delete-user"),
     path("main/<pk>/update/", UpdateUserView.as_view(), name="update-user"),
 
     path('locations/create/', LocationCreateView.as_view(), name='location-create'),

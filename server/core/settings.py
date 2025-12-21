@@ -110,7 +110,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASE_HOST = "postgres_db" if DEBUG is not True else "localhost"
+DATABASE_HOST = os.getenv( "DB_HOST", "localhost" )
 
 DATABASES = {
     'default': {

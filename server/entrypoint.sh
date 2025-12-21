@@ -1,12 +1,17 @@
 #!/bin/bash
 set -e
 
-python manage.py makemigrations --noinput
+echo "Running migrations..."
+# makemigrations should NOT run in production (can cause schema drift)
+# python manage.py makemigrations --noinput
 python manage.py migrate --noinput
+
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-exec "$@"
-
-
-# Start the Django application
-# exec gunicorn server.wsgi:application --bind 0.0.0.0:8000 --workers 3
+echo "Starting Gunicorn..."
+exec "$@" \
+  --bind 0.0.0.0:${PORT} \
+  --workers ${GUNICORN_WORKERS:-2} \
+  --threads 4 \
+  --timeout 0

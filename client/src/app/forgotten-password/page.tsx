@@ -1,25 +1,14 @@
 import React from "react";
-import styles from "./reset-password.module.scss";
+import styles from "./forgotten-password.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
-import { notFound } from "next/navigation";
+import { MdLogin } from "react-icons/md";
+import ForgottenPasswordForm from "@/components/auth/ForgottenPasswordForm";
 
-interface IResetPasswordPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-async function ResetPasswordPage({ searchParams }: IResetPasswordPageProps) {
-  const token = (await searchParams).token;
-  if (!token) {
-    notFound();
-  }
-
+function ForgottenPasswordPage() {
+  
   return (
-    <main
-      className={`${
-        styles.resetPassword || ""
-      } w-100 d-flex align-items-center justify-content-center`}
-    >
+    <main className={`${styles.forgottenPassword || ""} w-100 d-flex align-items-center justify-content-center`}>
       {/* Let&apos;s access to your account */}
       <div className="col col-md-5 d-flex flex-column justify-content-center">
         <div
@@ -35,13 +24,13 @@ async function ResetPasswordPage({ searchParams }: IResetPasswordPageProps) {
             />
           </Link>
           <h2 className="mb-3">Get Started</h2>
-          <p className="mb-4">Welcome to Extradetailer - Reset Password </p>
+          <p className="mb-4">Welcome to Extradetailer - Forgotten Password </p>
           <hr className="mb-4 border border-primary" />
-          <ResetPasswordForm token={token as string} />
+          <ForgottenPasswordForm />
         </div>
       </div>
     </main>
   );
 }
 
-export default ResetPasswordPage;
+export default ForgottenPasswordPage;

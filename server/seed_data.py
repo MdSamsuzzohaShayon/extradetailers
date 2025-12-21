@@ -25,6 +25,10 @@ from services.models import (
     AddOnService
 )
 
+# Delete all users
+
+
+
 
 # Load the JSON data
 def load_json_data():

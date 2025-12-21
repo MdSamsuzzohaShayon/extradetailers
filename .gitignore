@@ -10,6 +10,7 @@ res
 /server/.venv
 /server/.idea
 /server/.env
+/server/.env.prod
 /server/**__pycache__**
 
 certbot/*

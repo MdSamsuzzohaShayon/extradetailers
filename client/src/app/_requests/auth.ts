@@ -140,3 +140,51 @@ export function useSignoutOptions(): Record<string, unknown> {
     },
   }
 };
+
+
+export const passwordForgotten = async (userData: FormData) => {
+  const response = await axiosInstance.post("/accounts/forgot-password/", userData);
+  return response.data;
+};
+
+export function usePasswordForgottenOptions(): Record<string, unknown> {
+  const { setMessage } = useMessage();
+  // const router = useRouter(); // Initialize Next.js router
+
+  return {
+    mutationFn: passwordForgotten,
+    onSuccess: (data: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      setMessage({ error: false, text: data?.message || "Sent Validation code via email successfully!" });
+    },
+    onError: (error: never) => {
+      const errorMessage = handleApiError(error);
+      setMessage({ error: true, text: errorMessage });
+    },
+  }
+};
+
+
+export const resetPassword = async (userData: FormData) => {
+  const response = await axiosInstance.post("/accounts/reset-password/", userData);
+  return response.data;
+};
+
+export function useResetPasswordOptions(): Record<string, unknown> {
+  const { setMessage } = useMessage();
+  // const router = useRouter(); // Initialize Next.js router
+
+  return {
+    mutationFn: resetPassword,
+    onSuccess: (data: unknown) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      setMessage({ error: false, text: data?.message || "Password reset successfully!" });
+    },
+    onError: (error: never) => {
+      const errorMessage = handleApiError(error);
+      setMessage({ error: true, text: errorMessage });
+    },
+  }
+};

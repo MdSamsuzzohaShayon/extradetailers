@@ -1,23 +1,36 @@
 FROM python:3.13-slim
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Python runtime settings
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-copy requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt 
+# Install system deps (safe default for Django)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
+# Install Python deps (layer caching)
+COPY requirements.txt .
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy app code
 COPY . .
 
-ARG SECRET_KEY
-ENV SECRET_KEY=$SECRET_KEY
-
+# Make entrypoint executable
 RUN chmod +x /app/entrypoint.sh
 
-# RUN python seed_data.py
-      
-# gunicorn server.wsgi:application --bind 0.0.0.0:8000 --workers 3
+# Cloud Run injects PORT
+ENV PORT=8080
 
+# Run as non-root (Cloud Run best practice)
+RUN useradd -m appuser
+USER appuser
 
-CMD ["/app/entrypoint.sh", "gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Entrypoint handles migrations + gunicorn
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD ["gunicorn", "core.wsgi:application"]
