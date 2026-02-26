@@ -15,6 +15,7 @@ from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
+import dj_database_url
 
 
 
@@ -115,19 +116,17 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASE_HOST = os.getenv( "DB_HOST", "localhost" )
 
-USE_CLOUD_SQL = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
+# USE_CLOUD_SQL = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-if USE_CLOUD_SQL:
-    # ✅ Production / GitHub Actions / Cloud Run
+if not DEBUG:
+    # ✅ Railway Production Database
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.environ["POSTGRES_DB"],
-            "USER": os.environ["POSTGRES_USER"],
-            "PASSWORD": os.environ["POSTGRES_PASSWORD"],
-            "HOST": f"/cloudsql/{os.environ['INSTANCE_CONNECTION_NAME']}",
-            "PORT": "5432",
-        }
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
 else:
     # ✅ Local / Docker / Development
@@ -186,8 +185,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ✅ Allow session-based authentication with cookies
-CSRF_COOKIE_SECURE = False  # Set True in production
-SESSION_COOKIE_SECURE = False  # Set True in production
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 
