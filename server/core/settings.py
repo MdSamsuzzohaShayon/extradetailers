@@ -15,10 +15,12 @@ from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
+import dj_database_url
 
 
 
-load_dotenv()  # take environment variables from .env.
+if os.getenv("ENVIRONMENT") != "production":
+    load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +30,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY environment variable is not set")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
@@ -110,18 +114,33 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASE_HOST = "postgres_db" if DEBUG is not True else "localhost"
+DATABASE_HOST = os.getenv( "DB_HOST", "localhost" )
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB", "extradetailers_db"),
-        'USER': os.getenv("POSTGRES_USER", "shayon"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "Test1234"),
-        'HOST': DATABASE_HOST,  # 'db' is the name of the PostgreSQL container in docker-compose
-        'PORT': os.getenv("DB_PORT", "5432"),
+# USE_CLOUD_SQL = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DEBUG:
+    # ✅ Railway Production Database
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
-}
+else:
+    # ✅ Local / Docker / Development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("POSTGRES_DB", "extradetailers_db"),
+            "USER": os.getenv("POSTGRES_USER", "shayon"),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "Test1234"),
+            "HOST": os.getenv("DATABASE_HOST", "localhost"),
+            "PORT": os.getenv("DB_PORT", "5432"),
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -166,8 +185,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ✅ Allow session-based authentication with cookies
-CSRF_COOKIE_SECURE = False  # Set True in production
-SESSION_COOKIE_SECURE = False  # Set True in production
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_HTTPONLY = True
 

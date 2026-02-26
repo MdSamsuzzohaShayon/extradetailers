@@ -4,14 +4,14 @@ import { EUserRole } from './types';
 // import { refreshAccessToken } from './app/_requests/auth';
 
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
 
 
 
   // Define an array of protected pages
   const protectedPages = ["/dashboard", "/admin", "/checkout"];
 
-  const unauthenticatedPages = ["/signin", "/signup"];
+  const unauthenticatedPages = ["/signin", "/signup", "/forgotten-password", "reset-password"];
 
   // Check to access protected pages
   const { pathname } = request.nextUrl;

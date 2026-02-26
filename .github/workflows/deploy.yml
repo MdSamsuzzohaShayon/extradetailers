@@ -1,32 +1,51 @@
-name: Deploy to DigitalOcean
+name: Deploy Django to Cloud Run
 
 on:
   push:
     branches:
       - master
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
-  deploy:
+  deploy_backend:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
+      # 1. Authenticate via Workload Identity Federation
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          workload_identity_provider: projects/570378881850/locations/global/workloadIdentityPools/github-identity-pool/providers/extradetailers-github-provider
+          service_account: extradetailers-service-account@extra-detailers-project.iam.gserviceaccount.com
 
-      - name: Deploy to Droplet
+      # 2. Install gcloud SDK (runner-side only)
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      # 3. Configure Docker for Artifact Registry (THIS FIXES IT)
+      - name: Configure Docker authentication
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd ${{ secrets.DEPLOY_DIR }}
-            git pull origin master
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
-            # Stop and remove old containers
-            sudo docker compose down
+      # 4. Build & push image
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          push: true
+          tags: |
+            us-central1-docker.pkg.dev/extra-detailers-project/extradetailers-backend-repo/django-backend:latest
+            us-central1-docker.pkg.dev/extra-detailers-project/extradetailers-backend-repo/django-backend:${{ github.sha }}
 
-            # Rebuild and start containers (no certbot)
-            sudo docker compose up -d --build
-          EOF
+      # 5. Deploy to Cloud Run
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v3
+        with:
+          service: django-backend
+          region: us-central1
+          image: us-central1-docker.pkg.dev/extra-detailers-project/extradetailers-backend-repo/django-backend:${{ github.sha }}

@@ -103,9 +103,10 @@ async function deleteUser(userId: number) {
   return response.data;
 }
 
-export function deleteUserOptions(
+export function useDeleteUserOptions(
   queryClient: QueryClient
 ): Record<string, unknown> {
+  const { setMessage } = useMessage();
   return {
     mutationFn: deleteUser,
     onSuccess: () => {
@@ -114,6 +115,8 @@ export function deleteUserOptions(
     },
     onError: (error: never) => {
       console.error("Create User Error:", error);
+      const errorMessage = handleApiError(error);
+      setMessage({ error: true, text: errorMessage });
     },
   };
 }
