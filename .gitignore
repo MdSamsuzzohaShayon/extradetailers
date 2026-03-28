@@ -12,6 +12,9 @@ res
 /server/.env
 /server/.env.prod
 /server/**__pycache__**
+/server/__pycache__/
+/server/*.pyc
+/server/db.sqlite3
 
 certbot/*
 !certbot/README.md  # Optional: keep a readme or any instruction file

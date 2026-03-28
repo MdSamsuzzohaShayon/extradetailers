@@ -27,8 +27,8 @@ class Booking(models.Model):
     # service_price = models.ForeignKey(ServicePrice, on_delete=models.CASCADE, related_name='bookings')
     service_price = models.ForeignKey(ServicePrice, on_delete=models.CASCADE, related_name='bookings')
     vehicle_type = models.ForeignKey(VehicleType, on_delete=models.CASCADE)
-    booking_date = models.CharField(null=False, blank=False)
-    slot=models.CharField(null=True, blank=True) # Time slot
+    booking_date = models.CharField(max_length=20, null=False, blank=False)
+    slot = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=[("initialized", "Initialized"), ("pending", "Pending"), ("completed", "Completed"), ("canceled", "Canceled")],
@@ -43,3 +43,5 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
+
+

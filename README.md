@@ -48,7 +48,7 @@ This project is a car detailing booking platform built with **Next.js** for the 
 
 ## Project Structure
 ```
-project-root/
+extradetailers/
 │── client/  (Next.js frontend)
 │── server/  (Django backend)
 │── README.md

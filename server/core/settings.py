@@ -15,7 +15,6 @@ from corsheaders.defaults import default_methods
 from datetime import timedelta
 from dotenv import load_dotenv
 from utils.keys import REFRESH_TOKEN_LIFETIME_IN_DAYS, ACCESS_TOKEN_LIFETIME_IN_MINUTES
-import dj_database_url
 
 
 
@@ -119,28 +118,12 @@ DATABASE_HOST = os.getenv( "DB_HOST", "localhost" )
 # USE_CLOUD_SQL = os.getenv("USE_CLOUD_SQL", "false").lower() == "true"
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if not DEBUG:
-    # ✅ Railway Production Database
-    DATABASES = {
-        "default": dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True,
-        )
-    }
-else:
-    # ✅ Local / Docker / Development
-    DATABASES = {
+DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("POSTGRES_DB", "extradetailers_db"),
-            "USER": os.getenv("POSTGRES_USER", "shayon"),
-            "PASSWORD": os.getenv("POSTGRES_PASSWORD", "Test1234"),
-            "HOST": os.getenv("DATABASE_HOST", "localhost"),
-            "PORT": os.getenv("DB_PORT", "5432"),
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
